@@ -11,6 +11,7 @@ import { useBlocks } from "../hooks/useBlocks";
 import BlocksTable from "../components/blocks/BlocksTable";
 import { NetworkStats } from "../components/network";
 import { useStats } from "../hooks/useStats";
+import { TokenDistributionChart } from "../components/network/TokenDistributionChart";
 import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
 
@@ -28,14 +29,25 @@ const contentInner = css`
   margin-bottom: 48px;
 `;
 
-// const tokenDistributionStyle = (theme: Theme) => css`
-//   flex: 0 0 auto;
-//   width: 400px;
+const statsContainer = css`
+  flex-grow: 1;
+`;
 
-//   ${theme.breakpoints.down("lg")} {
-//     width: auto;
-//   }
-// `;
+const chartContainer = css`
+  width: 400px;
+  flex-grow: 0;
+  @media only screen and (max-width: 767px) {
+    flex-grow: 1;
+    width: auto;
+  }
+`;
+
+const infoSection = css`
+  display: flex;
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+`;
 
 export const HomePage = () => {
 	const extrinsics = useExtrinsicsWithoutTotalCount(
@@ -50,14 +62,15 @@ export const HomePage = () => {
 	return (
 		<div css={contentStyle}>
 			<div css={contentInner}>
-				<CardRow>
-					<Card>
+				<CardRow css={infoSection}>
+					<Card css={statsContainer}>
 						<NetworkStats stats={stats} />
 					</Card>
-					{/* <Card css={tokenDistributionStyle}>
-						<CardHeader>Token Distribution</CardHeader>
-						<TokenDistribution stats={stats} />
-					</Card> */}
+					<Card css={chartContainer}>
+						{stats.data?.token && (
+							<TokenDistributionChart token={stats.data?.token} />
+						)}
+					</Card>
 				</CardRow>
 				<Card>
 					<TabbedContent>

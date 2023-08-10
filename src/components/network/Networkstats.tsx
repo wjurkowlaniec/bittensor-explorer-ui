@@ -10,36 +10,17 @@ import NotFound from "../NotFound";
 import { Theme } from "@mui/material";
 import TaoIcon from "../../assets/tao_icon.png";
 import { formatNumber, nFormatter } from "../../utils/number";
+import Decimal from "decimal.js";
+import { StatItem } from "./StatItem";
 
 const stakingDataBlock = css`
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
 
-  @media only screen and (max-width: 1279px) {
-    padding-right: 0;
-  }
-`;
-
-const stakingDataBox = css`
-  padding: 0 35px 0 0;
-
-  @media only screen and (max-width: 1279px) {
-    padding: 0 26px 0 0;
-  }
-  @media only screen and (max-width: 799px) {
-    width: 33%;
-    padding: 0;
-    padding-bottom: 5px;
-  }
-  @media only screen and (max-width: 479px) {
-    width: 50%;
-    padding: 0;
-    padding-bottom: 5px;
-  }
-  :last-child {
-    padding-right: 0;
+  @media only screen and (max-width: 1399px) {
+    flex-direction: column;
+    align-items: flex-start;
   }
 `;
 
@@ -57,30 +38,11 @@ const statItemLabel = (theme: Theme) => css`
   }
 `;
 
-const statItemValue = (theme: Theme) => css`
-  font-weight: 300;
-  color: ${theme.palette.secondary.light};
-  margin: 0;
-  line-height: 1.3em;
-
-  @media only screen and (max-width: 1279px) {
-    font-size: 15px;
-  }
-  @media only screen and (max-width: 767px) {
-    font-size: 14px;
-  }
-  @media only screen and (max-width: 639px) {
-    font-size: 13px;
-    letter-spacing: 0.02em;
-  }
-`;
-
 const bittensorBlock = css`
-  width: auto;
   padding: 8px 27px 8px 0;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
+  gap: 8px;
 `;
 
 const taoIcon = css`
@@ -130,6 +92,9 @@ const priceValue = (theme: Theme) => css`
   margin: 0;
   line-height: 1.3;
   font-size: 30px;
+  @media only screen and (max-width: 1199px) {
+    font-size: 24px;
+  }
 `;
 
 const priceUp = css`
@@ -148,24 +113,29 @@ const priceDown = css`
 
 const statItems = css`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+  @media only screen and (max-width: 1399px) {
+    width: 100%;
+  }
 `;
 
-type StatItemProps = {
-	title: string;
-	value: string | number;
-};
+const statItemsRow = css`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  @media only screen and (max-width: 1199px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media only screen and (max-width: 767px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`;
 
-const StatItem = (props: StatItemProps) => {
-	const { title, value } = props;
-
-	return (
-		<div css={stakingDataBox}>
-			<label css={statItemLabel}>{title}</label>
-			<div css={statItemValue}>{value}</div>
-		</div>
-	);
-};
+const priceContainer = css`
+  display: flex;
+`;
 
 export type NetworkInfoTableProps = {
 	stats: Resource<Stats>;
@@ -196,61 +166,76 @@ export const NetworkStats = (props: NetworkInfoTableProps) => {
 		return null;
 	}
 
+	const { token, chain } = stats.data;
+
 	return (
 		<div css={stakingDataBlock}>
 			<div css={bittensorBlock}>
-				<div css={taoIcon}>
-					<img src={TaoIcon} alt='Taostats Tao Icon' />
-				</div>
-				<div css={priceBox}>
-					<div css={stakingDataLabelContainer}>
-						<label css={statItemLabel}>Bittensor price</label>
-						<div css={stakingDataLabelTag}>TAO</div>
+				<div css={priceContainer}>
+					<div css={taoIcon}>
+						<img src={TaoIcon} alt='Taostats Tao Icon' />
 					</div>
-					<div css={stakingDataPrice}>
-						<div css={priceValue}>${stats.data.price}</div>
-						<span
-							css={
-								stats.data.priceChange24h > 0
-									? priceUp
-									: stats.data.priceChange24h < 0
-										? priceDown
-										: ""
-							}
-						>
-							{stats.data.priceChange24h > 0
-								? "▴"
-								: stats.data.priceChange24h < 0
-									? "▾"
-									: ""}
-							{` ${stats.data.priceChange24h}%`}
-						</span>
+					<div css={priceBox}>
+						<div css={stakingDataLabelContainer}>
+							<label css={statItemLabel}>Bittensor price</label>
+							<div css={stakingDataLabelTag}>TAO</div>
+						</div>
+						<div css={stakingDataPrice}>
+							<div css={priceValue}>${token.price}</div>
+							<span
+								css={
+									token.priceChange24h > 0
+										? priceUp
+										: token.priceChange24h < 0
+											? priceDown
+											: ""
+								}
+							>
+								{token.priceChange24h > 0
+									? "▴"
+									: token.priceChange24h < 0
+										? "▾"
+										: ""}
+								{` ${token.priceChange24h}%`}
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div css={statItems}>
-				<StatItem
-					title='Market Cap'
-					value={`$${nFormatter(stats.data.marketCap, 2)}`}
-				/>
-				<StatItem
-					title='24h Volume'
-					value={`$${nFormatter(stats.data.volume24h, 2)}`}
-				/>
-				<StatItem
-					title='Total Issuance'
-					value={`${formatNumber(stats.data.currentSupply)} 𝞃`}
-				/>
-				<StatItem
-					title='Total Supply'
-					value={`${formatNumber(stats.data.totalSupply)} 𝞃`}
-				/>
-				{/* <StatItem title='Next Halvening' value={`${stats.data.totalSupply} 𝞃`} /> */}
-				<StatItem
-					title='Validating APY'
-					value={`${stats.data.validationAPY}%`}
-				/>
-				<StatItem title='Staking APY' value={`${stats.data.stakingAPY}%`} />
+				<div css={statItemsRow}>
+					<StatItem
+						title='Market Cap'
+						value={`$${nFormatter(token.marketCap, 2)}`}
+					/>
+					<StatItem
+						title='24h Volume'
+						value={`$${nFormatter(token.volume24h, 2)}`}
+					/>
+
+					{/* <StatItem title='Next Halvening' value={`${stats.data.totalSupply} 𝞃`} /> */}
+					<StatItem title='Validating APY' value={`${token.validationAPY}%`} />
+					<StatItem title='Staking APY' value={`${token.stakingAPY}%`} />
+				</div>
+
+				<div css={statItemsRow}>
+					<StatItem
+						title='Finalized blocks'
+						value={formatNumber(new Decimal(chain.blocksFinalized.toString()))}
+					/>
+					<StatItem
+						title='Signed extrinsics'
+						value={formatNumber(new Decimal(chain.extrinsicsSigned.toString()))}
+					/>
+					<StatItem
+						title='Accounts'
+						value={formatNumber(new Decimal(chain.accounts.toString()))}
+					/>
+					<StatItem
+						title='Transfers'
+						value={formatNumber(new Decimal(chain.transfers.toString()))}
+					/>
+				</div>
 			</div>
 		</div>
 	);
