@@ -50,10 +50,6 @@ const infoSection = css`
 `;
 
 export const HomePage = () => {
-	const extrinsics = useExtrinsicsWithoutTotalCount(
-		undefined,
-		"BLOCK_HEIGHT_DESC"
-	);
 	const blocks = useBlocks(undefined, "HEIGHT_DESC");
 	const transfers = useTransfers(undefined, "BLOCK_NUMBER_DESC");
 	const stats = useStats();
@@ -82,15 +78,6 @@ export const HomePage = () => {
 							value='blocks'
 						>
 							<BlocksTable blocks={blocks} showTime />
-						</TabPane>
-						<TabPane
-							label='Extrinsics'
-							count={extrinsics.pagination.totalCount}
-							loading={extrinsics.loading}
-							error={extrinsics.error}
-							value='extrinsics'
-						>
-							<ExtrinsicsTable extrinsics={extrinsics} showAccount showTime />
 						</TabPane>
 						<TabPane
 							label='Transfers'
