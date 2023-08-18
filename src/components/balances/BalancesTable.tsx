@@ -49,7 +49,6 @@ function BalancesTable(props: BalancesTableProps) {
 		Object.entries(orderMappings).forEach(([property, value]) => { 
 			Object.entries(value).forEach(([dir, orderKey]) => { 
 				if (orderKey === initialSort) {
-					console.log(property, dir);
 					setSort({ property, direction: (dir === "1" ? SortDirection.ASC : SortDirection.DESC) });
 				}
 			});
@@ -73,7 +72,6 @@ function BalancesTable(props: BalancesTableProps) {
 
 	useEffect(() => {
 		if (!onSortChange || !sort?.property || sort.direction === undefined) return;
-		console.log(sort);
 		onSortChange((orderMappings as any)[sort.property][sort.direction]);
 	}, [JSON.stringify(sort)]);
 
