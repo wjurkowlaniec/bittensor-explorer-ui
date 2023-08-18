@@ -27,7 +27,8 @@ import { SortDirection } from "../model/sortDirection";
 
 const tableStyle = css`
   table-layout: auto;
-  min-width: 400px;
+  width: max-content;
+  min-width: 100%;
 
   & > thead > tr > th,
   & > tbody > tr > td {
