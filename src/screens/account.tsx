@@ -80,7 +80,10 @@ export const AccountPage = () => {
 	const balance = useBalance({address: {equalTo: address}});
 
 	const account = useAccount(address);
-	const extrinsics = useExtrinsics({ signer: { equalTo: address } }, undefined, undefined, false);
+	const extrinsics = useExtrinsics(
+		{ signer: { equalTo: address } },
+		"BLOCK_HEIGHT_DESC"
+	);
 	const transfers = useTransfers({
 		or: [{ from: { equalTo: address } }, { to: { equalTo: address } }],
 	});
@@ -109,7 +112,7 @@ export const AccountPage = () => {
 
 	useEffect(() => {
 		if (extrinsics.pagination.offset === 0) {
-			const interval = setInterval(extrinsics.refetch, 6 * 1000);
+			const interval = setInterval(extrinsics.refetch, 60 * 1000);
 			return () => clearInterval(interval);
 		}
 	}, [extrinsics]);
