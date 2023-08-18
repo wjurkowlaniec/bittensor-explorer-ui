@@ -11,9 +11,9 @@ import { BlockTimestamp } from "../BlockTimestamp";
 import { css, Theme } from "@mui/material";
 
 const dirContainer = css`
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const dirIn = (theme: Theme) => css`
@@ -74,7 +74,9 @@ function TransfersTable(props: TransfersTableProps) {
 				label='Extrinsic'
 				render={(transfer) =>
 					transfer.extrinsicId && (
-						<Link to={`/extrinsic/${transfer.id}`}>{transfer.id}</Link>
+						<Link
+							to={`/extrinsic/${transfer.blockNumber}-${transfer.extrinsicId}`}
+						>{`${transfer.blockNumber}-${transfer.extrinsicId}`}</Link>
 					)
 				}
 			/>
