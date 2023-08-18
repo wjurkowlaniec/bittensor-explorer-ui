@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { BlockInfoTable } from "../components/blocks/BlockInfoTable";
@@ -21,23 +20,13 @@ export const BlockPage = () => {
 
 	const block = useBlock({ id: { equalTo: id } });
 
-	const extrinsics = useExtrinsics(
-		{ blockHeight: { equalTo: id } },
-		"BLOCK_HEIGHT_DESC"
-	);
+	const extrinsics = useExtrinsics({ blockHeight: { equalTo: id } }, "ID_ASC");
 	const events = useEvents(
 		{ blockHeight: { equalTo: id } },
-		"BLOCK_HEIGHT_DESC"
+		"EXTRINSIC_ID_ASC"
 	);
 
 	useDOMEventTrigger("data-loaded", !block.loading && !extrinsics.loading && !events.loading);
-
-	useEffect(() => {
-		if (extrinsics.pagination.offset === 0) {
-			const interval = setInterval(extrinsics.refetch, 3000);
-			return () => clearInterval(interval);
-		}
-	}, [extrinsics]);
 
 	return (
 		<>
