@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { css, Theme } from "@emotion/react";
 
@@ -16,11 +16,9 @@ import { useTransfers } from "../hooks/useTransfers";
 import { AccountInfoTable } from "../components/account/AccountInfoTable";
 import { AccountPortfolio } from "../components/account/AccountPortfolio";
 import { useTaoPrice } from "../hooks/useTaoPrice";
-import { useApi } from "../contexts";
-import { Balance } from "../model/balance";
-import { Resource } from "../model/resource";
-import Decimal from "decimal.js";
-import { rawAmountToDecimal } from "../utils/number";
+import { useBalance } from "../hooks/useBalance";
+import { StatItem } from "../components/network/StatItem";
+import { formatCurrency, rawAmountToDecimal } from "../utils/number";
 
 const accountInfoStyle = css`
   display: flex;
@@ -52,57 +50,34 @@ const portfolioStyle = (theme: Theme) => css`
   }
 `;
 
+const accountHeader = css`
+  display: flex;
+  align-items: center;
+`;
+
+const infoSection = css`
+  display: flex;
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+`;
+
+const summary = css`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+  @media only screen and (max-width: 767px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+`;
+
 export type AccountPageParams = {
 	address: string;
 };
 
 export const AccountPage = () => {
 	const { address } = useParams() as AccountPageParams;
-	const {
-		state: { api, apiState },
-	} = useApi();
-
-	const fetchBalance = async () => {
-		if (!api || apiState !== "READY") {
-			setBalance({
-				...balance,
-				loading: true,
-				notFound: false,
-				data: undefined,
-			});
-		} else {
-			setBalance({
-				...balance,
-				loading: true,
-			});
-			const res = await api.query.system.account(address);
-			let free = new Decimal(0);
-			let reserved = new Decimal(0);
-			if (!res.isEmpty) {
-				const accountData = await res.toJSON();
-				const {
-					data: { free: _free, reserved: _reserved },
-				} = accountData;
-				free = rawAmountToDecimal(_free);
-				reserved = rawAmountToDecimal(_reserved);
-			}
-			setBalance({
-				...balance,
-				data: {
-					reserved,
-					free,
-					total: free.add(reserved),
-				},
-				loading: false,
-				notFound: false,
-			});
-		}
-	};
-	const [balance, setBalance] = useState<Resource<Balance>>({
-		loading: true,
-		notFound: false,
-		refetch: fetchBalance,
-	});
+	const balance = useBalance({address: {equalTo: address}});
 
 	const account = useAccount(address);
 	const extrinsics = useExtrinsics({ signer: { equalTo: address } }, undefined, undefined, false);
@@ -110,11 +85,19 @@ export const AccountPage = () => {
 		or: [{ from: { equalTo: address } }, { to: { equalTo: address } }],
 	});
 
-	const taoPrice = useTaoPrice();
+	const delegated = `${formatCurrency(
+		rawAmountToDecimal((balance?.data?.staked || 0).toString()),
+		"USD",
+		{ decimalPlaces: 2 }
+	)} TAO`;
 
-	useEffect(() => {
-		fetchBalance();
-	}, [api, apiState]);
+	const free = `${formatCurrency(
+		rawAmountToDecimal((balance?.data?.free || 0).toString()),
+		"USD",
+		{ decimalPlaces: 2 }
+	)} TAO`;
+
+	const taoPrice = useTaoPrice();
 
 	useDOMEventTrigger(
 		"data-loaded",
@@ -133,10 +116,10 @@ export const AccountPage = () => {
 
 	return (
 		<>
-			<CardRow>
+			<CardRow css={infoSection}>
 				<Card css={accountInfoStyle} data-test='account-info'>
-					<CardHeader>
-            Account
+					<CardHeader css={accountHeader}>
+						Account
 						{(account.loading || account.data) && (
 							<AccountAvatar address={address} size={32} css={avatarStyle} />
 						)}
@@ -150,10 +133,21 @@ export const AccountPage = () => {
 							)}
 						</span>
 					</CardHeader>
-					<AccountInfoTable account={account} />
+					<AccountInfoTable
+						info={{ account, balance, price: taoPrice.data?.toNumber() }}
+					/>
 				</Card>
 				<Card css={portfolioStyle} data-test='account-portfolio'>
-					<CardHeader>Account Balance</CardHeader>
+					<div css={summary}>
+						<StatItem
+							title='Delegated'
+							value={delegated}
+						/>
+						<StatItem
+							title='Free'
+							value={free}
+						/>
+					</div>
 					<AccountPortfolio balance={balance} taoPrice={taoPrice} />
 				</Card>
 			</CardRow>
@@ -177,7 +171,11 @@ export const AccountPage = () => {
 							error={transfers.error}
 							value='transfers'
 						>
-							<TransfersTable transfers={transfers} showTime />
+							<TransfersTable
+								transfers={transfers}
+								showTime
+								direction={{ show: true, source: address }}
+							/>
 						</TabPane>
 					</TabbedContent>
 				</Card>

@@ -17,19 +17,17 @@ import {
 import { css, Interpolation, Theme } from "@emotion/react";
 
 import { Pagination } from "../hooks/usePagination";
-import { SortDirection } from "../model/sortDirection";
 import { SortOrder } from "../model/sortOrder";
 
 import { ErrorMessage } from "./ErrorMessage";
 import Loading from "./Loading";
 import NotFound from "./NotFound";
 import { TablePagination } from "./TablePagination";
-import { TableSortOptions, TableSortOptionsProps } from "./TableSortOptions";
-import { TableSortToggle } from "./TableSortToggle";
+import { SortDirection } from "../model/sortDirection";
 
 const tableStyle = css`
-  table-layout: fixed;
-  min-width: 860px;
+  table-layout: auto;
+  min-width: 400px;
 
   & > thead > tr > th,
   & > tbody > tr > td {
@@ -73,6 +71,61 @@ const cellStyle = (theme: Theme) => css`
   }
 `;
 
+const activeHeader = (theme: Theme) => css`
+  color: ${theme.palette.secondary.light} !important;
+`;
+
+const sortableHeaderBase = css`
+  cursor: pointer;
+`;
+
+const sortableHeaderItem = css`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const sortArrows = css`
+  ::after,
+  ::bottom {
+    display: block;
+    line-height: 8px;
+    font-weight: 500;
+	opacity: 1;
+  }
+
+  ::before {
+    content: '\\25B2';
+    font-size: 10px !important;
+  }
+
+  ::after {
+	margin-left: -4px;
+	content: '\\25BC';
+    font-size: 10px !important;
+  }
+`;
+
+const sortAsc = (theme: Theme) => css`
+  ::before {
+    color: ${theme.palette.secondary.light};
+  }
+
+  ::after {
+    color: ${theme.palette.success.dark};
+  }
+`;
+
+const sortDesc = (theme: Theme) => css`
+  ::after {
+    color: ${theme.palette.secondary.light};
+  }
+
+  ::before {
+    color: ${theme.palette.success.dark};
+  }
+`;
+
 type ItemsTableItem = {
 	id: string;
 };
@@ -86,9 +139,7 @@ export type ItemsTableAttributeProps<T, A extends any[], S> = {
 	label: ReactNode;
 	colCss?: Interpolation<Theme>;
 	sortable?: boolean;
-	sortProperty?: S;
-	startDirection?: SortDirection;
-	sortOptions?: TableSortOptionsProps<S>["options"];
+	sortProperty?: string;
 	onSortChange?: (sortOrder: SortOrder<S>) => void;
 	render: ItemsTableDataFn<T, A, ReactNode>;
 	colSpan?: ItemsTableDataFn<T, A, number>;
@@ -139,6 +190,8 @@ export type ItemsTableProps<
 		| undefined
 		| null
 	)[];
+	showRank?: boolean;
+	onSortChange?: (property: string | undefined) => void;
 };
 
 export const ItemsTable = <
@@ -159,6 +212,8 @@ export const ItemsTable = <
 		sort,
 		pagination,
 		children,
+		showRank,
+		onSortChange,
 		...restProps
 	} = props;
 
@@ -192,42 +247,54 @@ export const ItemsTable = <
 					</colgroup>
 					<TableHead>
 						<TableRow>
-							{Children.map(
-								children,
-								(child) =>
-									child && (
-										<TableCell css={cellStyle}>
-											{child.props.label}
-											{child.props.sortable && (
-												<>
-													{child.props.sortOptions && (
-														<TableSortOptions
-															options={child.props.sortOptions}
-															value={sort}
-															onChange={child.props.onSortChange}
-														/>
-													)}
-													{!child.props.sortOptions && (
-														<TableSortToggle
-															sortProperty={child.props.sortProperty}
-															startDirection={child.props.startDirection}
-															value={sort}
-															onChange={child.props.onSortChange}
-														/>
-													)}
-												</>
-											)}
-										</TableCell>
-									)
-							)}
+							{showRank ? <TableCell>Rank</TableCell> : <></>}
+							{Children.map(children, (child) => {
+								if (!child) return null;
+								const { label, sortable, sortProperty } = child.props;
+								if (sortable !== true)
+									return <TableCell css={cellStyle}>{label}</TableCell>;
+
+								const isActive = sort?.property === sortProperty;
+
+								return (
+									<TableCell
+										css={[cellStyle, sortableHeaderBase]}
+										onClick={() => onSortChange && onSortChange(sortProperty)}
+									>
+										<div css={sortableHeaderItem}>
+											{label}
+											<div
+												css={[
+													sortArrows,
+													...(isActive
+														? [
+															activeHeader,
+															...(sort?.direction === SortDirection.ASC
+																? [sortAsc]
+																: sort?.direction === SortDirection.DESC
+																	? [sortDesc]
+																	: []),
+														]
+														: []),
+												]}
+											></div>
+										</div>
+									</TableCell>
+								);
+							})}
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{data?.map((item) => (
+						{data?.map((item, index) => (
 							<TableRow key={item.id}>
+								{showRank ? (
+									<TableCell>{(pagination?.offset || 0) + index + 1}</TableCell>
+								) : (
+									<></>
+								)}
 								{Children.map(
 									children,
-									(child) => child && cloneElement(child, { _data: item, _additionalData: additionalData })
+									(child) =>child && cloneElement(child, { _data: item, _additionalData: additionalData})
 								)}
 							</TableRow>
 						))}

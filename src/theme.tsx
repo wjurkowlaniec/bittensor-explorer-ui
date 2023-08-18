@@ -169,15 +169,26 @@ export const theme = createTheme({
 		},
 		MuiSelect: {
 			styleOverrides: {
-				select: css`
+				select: ({ theme }) => css`
 					height: 24px;
 					min-height: 24px;
 
 					padding: 12px 24px;
+					font-size: 13px;
+					color: ${theme.palette.secondary.dark};
 
 					&& {
 						padding-right: 40px;
+					},
+
+					> fieldset {
+						border-color: ${theme.palette.secondary.dark};
+						color: ${theme.palette.secondary.dark};
+						border-radius: 4px;
 					}
+				`,
+				icon: ({theme}) => css`
+					color: ${theme.palette.secondary.dark};
 				`
 			}
 		},
@@ -212,7 +223,9 @@ export const theme = createTheme({
 					}
 				`,
 				notchedOutline: css`
-					border-color: ${grey[300]};
+					border-color: rgb(168, 168, 168);
+					color: rgb(168, 168, 168);
+					border-radius: 4px;
 				`,
 			}
 		},
@@ -287,6 +300,27 @@ export const theme = createTheme({
 						padding-left: 12px;
 					}
 				`
+			}
+		},
+		MuiList: {
+			styleOverrides: {
+				root: ({ theme }) => css`
+					background: ${theme.palette.primary.dark};
+				`,
+			},
+		},
+		MuiMenu: {
+			styleOverrides: {
+				paper: css`
+					border-radius: 0;
+				`,
+			}
+		},
+		MuiMenuItem: {
+			styleOverrides: {
+				root: css`
+					font-size: 13px;
+				`,
 			}
 		}
 	}

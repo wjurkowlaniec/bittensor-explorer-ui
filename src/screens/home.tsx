@@ -2,8 +2,6 @@
 import { css } from "@emotion/react";
 
 import { Card, CardRow } from "../components/Card";
-import ExtrinsicsTable from "../components/extrinsics/ExtrinsicsTable";
-import { useExtrinsicsWithoutTotalCount } from "../hooks/useExtrinsicsWithoutTotalCount";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
 import { useTransfers } from "../hooks/useTransfers";
 import TransfersTable from "../components/transfers/TransfersTable";
@@ -11,6 +9,11 @@ import { useBlocks } from "../hooks/useBlocks";
 import BlocksTable from "../components/blocks/BlocksTable";
 import { NetworkStats } from "../components/network";
 import { useStats } from "../hooks/useStats";
+import { TokenDistributionChart } from "../components/network/TokenDistributionChart";
+import { useBalances } from "../hooks/useBalances";
+import BalancesTable from "../components/balances/BalancesTable";
+import { useState } from "react";
+import { BalancesOrder } from "../services/balancesService";
 
 const contentStyle = css`
   position: relative;
@@ -26,35 +29,50 @@ const contentInner = css`
   margin-bottom: 48px;
 `;
 
-// const tokenDistributionStyle = (theme: Theme) => css`
-//   flex: 0 0 auto;
-//   width: 400px;
+const statsContainer = css`
+  flex-grow: 1;
+`;
 
-//   ${theme.breakpoints.down("lg")} {
-//     width: auto;
-//   }
-// `;
+const chartContainer = css`
+  width: 400px;
+  flex-grow: 0;
+  @media only screen and (max-width: 767px) {
+    flex-grow: 1;
+    width: auto;
+  }
+`;
+
+const infoSection = css`
+  display: flex;
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+`;
 
 export const HomePage = () => {
-	const extrinsics = useExtrinsicsWithoutTotalCount(
-		undefined,
-		"BLOCK_HEIGHT_DESC"
-	);
 	const blocks = useBlocks(undefined, "HEIGHT_DESC");
 	const transfers = useTransfers(undefined, "BLOCK_NUMBER_DESC");
 	const stats = useStats();
+	const balancesInitialOrder = "BALANCE_TOTAL_DESC";
+	const [balanceSort, setBalanceSort] = useState<BalancesOrder>(balancesInitialOrder);
+	const balances = useBalances(undefined, balanceSort);
+
+	const onSortChange = (sortKey: BalancesOrder) => { 
+		setBalanceSort(sortKey);
+	};
 
 	return (
 		<div css={contentStyle}>
 			<div css={contentInner}>
-				<CardRow>
-					<Card>
+				<CardRow css={infoSection}>
+					<Card css={statsContainer}>
 						<NetworkStats stats={stats} />
 					</Card>
-					{/* <Card css={tokenDistributionStyle}>
-						<CardHeader>Token Distribution</CardHeader>
-						<TokenDistribution stats={stats} />
-					</Card> */}
+					<Card css={chartContainer}>
+						{stats.data?.token && (
+							<TokenDistributionChart token={stats.data?.token} />
+						)}
+					</Card>
 				</CardRow>
 				<Card>
 					<TabbedContent>
@@ -68,15 +86,6 @@ export const HomePage = () => {
 							<BlocksTable blocks={blocks} showTime />
 						</TabPane>
 						<TabPane
-							label='Extrinsics'
-							count={extrinsics.pagination.totalCount}
-							loading={extrinsics.loading}
-							error={extrinsics.error}
-							value='extrinsics'
-						>
-							<ExtrinsicsTable extrinsics={extrinsics} showAccount showTime />
-						</TabPane>
-						<TabPane
 							label='Transfers'
 							count={transfers.pagination.totalCount}
 							loading={transfers.loading}
@@ -84,6 +93,15 @@ export const HomePage = () => {
 							value='transfers'
 						>
 							<TransfersTable transfers={transfers} showTime />
+						</TabPane>
+						<TabPane
+							label='Accounts'
+							count={balances.pagination.totalCount}
+							loading={balances.loading}
+							error={balances.error}
+							value='accounts'
+						>
+							<BalancesTable balances={balances} onSortChange={onSortChange} initialSort={balancesInitialOrder} />
 						</TabPane>
 					</TabbedContent>
 				</Card>
