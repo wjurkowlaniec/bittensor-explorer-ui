@@ -1,6 +1,5 @@
 import React, { useReducer, useContext, useEffect } from "react";
-import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
-import { DefinitionRpcExt } from "@polkadot/types/types";
+import { rpc, types } from "../../chaintypes";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { RPC_ENDPOINT } from "../../config";
 
@@ -9,7 +8,6 @@ import { RPC_ENDPOINT } from "../../config";
 
 type State = {
 	socket: string;
-	jsonrpc: Record<string, Record<string, DefinitionRpcExt>>;
 	api: any;
 	apiError: any;
 	apiState: any;
@@ -18,7 +16,6 @@ type State = {
 const initialState: State = {
 	// These are the states
 	socket: RPC_ENDPOINT,
-	jsonrpc: { ...jsonrpc },
 	api: null,
 	apiError: null,
 	apiState: null,
@@ -56,14 +53,14 @@ const reducer = (state: any, action: any) => {
 // Connecting to the Substrate node
 
 const connect = (state: any, dispatch: any) => {
-	const { apiState, socket, jsonrpc } = state;
+	const { apiState, socket } = state;
 	// We only want this function to be performed once
 	if (apiState) return;
 
 	dispatch({ type: "CONNECT_INIT" });
 
 	const provider = new WsProvider(socket);
-	const _api = new ApiPromise({ provider, rpc: jsonrpc });
+	const _api = new ApiPromise({ provider, rpc, types });
 
 	// Set listeners for disconnection and reconnection event.
 	_api.on("connected", () => {

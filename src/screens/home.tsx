@@ -7,9 +7,8 @@ import { useTransfers } from "../hooks/useTransfers";
 import TransfersTable from "../components/transfers/TransfersTable";
 import { useBlocks } from "../hooks/useBlocks";
 import BlocksTable from "../components/blocks/BlocksTable";
-import { NetworkStats } from "../components/network";
+import { NetworkStats, TokenDistributionChart } from "../components/network";
 import { useStats } from "../hooks/useStats";
-import { TokenDistributionChart } from "../components/network/TokenDistributionChart";
 import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
 import { useState } from "react";
@@ -69,9 +68,7 @@ export const HomePage = () => {
 						<NetworkStats stats={stats} />
 					</Card>
 					<Card css={chartContainer}>
-						{stats.data?.token && (
-							<TokenDistributionChart token={stats.data?.token} />
-						)}
+						<TokenDistributionChart />
 					</Card>
 				</CardRow>
 				<Card>

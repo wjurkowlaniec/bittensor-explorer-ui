@@ -1,11 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 import { css, useTheme } from "@emotion/react";
-import { Tokenomics } from "../../model/stats";
-
+import LoadingSpinner from "../../assets/loading.gif";
 import Chart from "react-apexcharts";
 import { StatItem } from "./StatItem";
-import { formatNumber, nFormatter } from "../../utils/number";
+import {
+	formatNumber,
+	nFormatter,
+	rawAmountToDecimal,
+} from "../../utils/number";
+import { useStats } from "../../hooks/useStats";
+import { useTotalIssuance } from "../../hooks/useTotalIssuance";
+import { useDelegatedSupply } from "../../hooks/useDelegatedSupply";
 
 const chartContainer = css`
   display: flex;
@@ -22,15 +28,36 @@ const supplyInfo = css`
   }
 `;
 
-export type TokenDistributionChartProps = HTMLAttributes<HTMLDivElement> & {
-	token: Tokenomics;
-};
+const spinnerContainer = css`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`;
 
-export const TokenDistributionChart = (props: TokenDistributionChartProps) => {
-	const { token } = props;
+export type TokenDistributionChartProps = HTMLAttributes<HTMLDivElement>;
+
+export const TokenDistributionChart = () => {
+	const stats = useStats();
+	const token = stats.data?.token;
 	const theme = useTheme();
+	const totalIssuance = useTotalIssuance();
+	const delegated = useDelegatedSupply();
 
-	return (
+	console.log(totalIssuance);
+	console.log(delegated);
+
+	const loading = stats.loading || token === undefined || totalIssuance === undefined || delegated === undefined;
+
+	const delegatedPercent = loading ? 0 : ((token.delegatedSupply / totalIssuance.toNumber()) * 100).toFixed(2);
+	const circulatingPercent = loading ? 0 : (100 - (token.delegatedSupply / totalIssuance.toNumber()) * 100).toFixed(2);
+	const totalIssuanceFormatted = loading ? "" : nFormatter(totalIssuance.toNumber(), 2);
+
+	return loading ? (
+		<div css={spinnerContainer}>
+			<img src={LoadingSpinner} />
+		</div>
+	) : (
 		<div css={chartContainer}>
 			<div css={supplyInfo}>
 				<StatItem
@@ -39,28 +66,24 @@ export const TokenDistributionChart = (props: TokenDistributionChartProps) => {
 				/>
 				<StatItem
 					title='Circulating Supply'
-					value={`${formatNumber(token.currentSupply)} 𝞃`}
+					value={`${formatNumber(totalIssuance, { decimalPlaces: 2 })} 𝞃`}
 				/>
 			</div>
 			<Chart
 				options={{
 					labels: [
-						`Circulating Delegated/Staked (${(
-							(token.delegatedSupply / token.currentSupply) *
-              100
-						).toFixed(2)}% of ${nFormatter(token.currentSupply, 2)})`,
-						`Circulating Free (${(
-							100 -
-              (token.delegatedSupply / token.currentSupply) * 100
-						).toFixed(2)}% of ${nFormatter(token.currentSupply, 2)})`,
+						`Circulating Delegated/Staked (${delegatedPercent}% of ${totalIssuanceFormatted})`,
+						`Circulating Free (${circulatingPercent}% of ${totalIssuanceFormatted})`,
 						`Unissued (${(
-							100 -
-              (token.currentSupply / token.totalSupply) * 100
+							100 - (totalIssuance.toNumber() / token.totalSupply) * 100
 						).toFixed(2)}% of ${nFormatter(token.totalSupply, 2)})`,
 					],
 					colors: ["#14dec2", "#FF9900", "#848484"],
 					dataLabels: {
 						enabled: false,
+						formatter: (text: string | number | number[], op:number) => {
+							return op.toFixed(2);
+						},
 					},
 					stroke: {
 						show: true,
@@ -108,8 +131,8 @@ export const TokenDistributionChart = (props: TokenDistributionChartProps) => {
 				}}
 				series={[
 					token.delegatedSupply,
-					token.currentSupply - token.delegatedSupply,
-					token.totalSupply - token.currentSupply,
+					totalIssuance.toNumber() - token.delegatedSupply,
+					token.totalSupply - totalIssuance.toNumber(),
 				]}
 				type='donut'
 				height={400}

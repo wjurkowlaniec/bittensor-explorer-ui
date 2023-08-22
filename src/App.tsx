@@ -12,7 +12,9 @@ function App() {
 	return (
 		<RollbarProvider instance={rollbar}>
 			<ThemeProvider theme={theme}>
-				<RouterProvider router={router} />
+				<ApiContextProvider>
+					<RouterProvider router={router} />
+				</ApiContextProvider>
 			</ThemeProvider>
 		</RollbarProvider>
 	);
