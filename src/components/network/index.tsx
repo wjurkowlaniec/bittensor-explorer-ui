@@ -1,2 +1,2 @@
 export * from "./Networkstats";
-export * from "./TokenDistribution";
+export * from "./TokenDistributionChart";
