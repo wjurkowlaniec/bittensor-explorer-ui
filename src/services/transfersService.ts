@@ -6,7 +6,14 @@ import { extractItems } from "../utils/extractItems";
 import { fetchIndexer } from "./fetchService";
 
 export type TransfersFilter = object;
-export type TransfersOrder = string | string[];
+export type TransfersOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "AMOUNT_ASC"
+	| "AMOUNT_DESC"
+	| "BLOCK_NUMBER_ASC"
+	| "BLOCK_NUMBER_DESC";
+
 
 export async function getTransfers(
 	filter: TransfersFilter | undefined,

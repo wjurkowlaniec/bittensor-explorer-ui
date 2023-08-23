@@ -13,6 +13,7 @@ import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
 import { useState } from "react";
 import { BalancesOrder } from "../services/balancesService";
+import { TransfersOrder } from "../services/transfersService";
 
 const contentStyle = css`
   position: relative;
@@ -50,15 +51,15 @@ const infoSection = css`
 
 export const HomePage = () => {
 	const blocks = useBlocks(undefined, "HEIGHT_DESC");
-	const transfers = useTransfers(undefined, "BLOCK_NUMBER_DESC");
 	const stats = useStats();
-	const balancesInitialOrder = "BALANCE_TOTAL_DESC";
+
+	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
 	const [balanceSort, setBalanceSort] = useState<BalancesOrder>(balancesInitialOrder);
 	const balances = useBalances(undefined, balanceSort);
 
-	const onSortChange = (sortKey: BalancesOrder) => { 
-		setBalanceSort(sortKey);
-	};
+	const transfersInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
+	const [transferSort, setTransferSort] = useState<TransfersOrder>(transfersInitialOrder);
+	const transfers = useTransfers(undefined, transferSort);
 
 	return (
 		<div css={contentStyle}>
@@ -89,7 +90,10 @@ export const HomePage = () => {
 							error={transfers.error}
 							value='transfers'
 						>
-							<TransfersTable transfers={transfers} showTime />
+							<TransfersTable transfers={transfers} showTime onSortChange={(sortKey: TransfersOrder) =>
+								setTransferSort(sortKey)
+							}
+							initialSort={transfersInitialOrder} />
 						</TabPane>
 						<TabPane
 							label='Accounts'
@@ -98,7 +102,13 @@ export const HomePage = () => {
 							error={balances.error}
 							value='accounts'
 						>
-							<BalancesTable balances={balances} onSortChange={onSortChange} initialSort={balancesInitialOrder} />
+							<BalancesTable
+								balances={balances}
+								onSortChange={(sortKey: BalancesOrder) =>
+									setBalanceSort(sortKey)
+								}
+								initialSort={balancesInitialOrder}
+							/>
 						</TabPane>
 					</TabbedContent>
 				</Card>
