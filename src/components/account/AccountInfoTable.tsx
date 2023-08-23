@@ -28,10 +28,17 @@ const balanceContainer = css`
   display: flex;
   gap: 4px;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 const taoBalance = css`
   font-weight: bold;
+`;
+
+const addressItem = css`
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: keep-all;
 `;
 
 export const AccountInfoTable = (props: AccountInfoTableProps) => {
@@ -65,14 +72,20 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 		>
 			<AccountInfoTableAttribute
 				label='Substrate address'
-				render={(data) => encodeAddress(data.address, NETWORK_CONFIG.prefix)}
+				render={(data) => (
+					<div css={addressItem}>
+						{encodeAddress(data.address, NETWORK_CONFIG.prefix)}
+					</div>
+				)}
 				copyToClipboard={(data) =>
 					encodeAddress(data.address, NETWORK_CONFIG.prefix)
 				}
 			/>
 			<AccountInfoTableAttribute
 				label='Public key'
-				render={(data) => u8aToHex(decodeAddress(data.address))}
+				render={(data) => (
+					<div css={addressItem}>{u8aToHex(decodeAddress(data.address))}</div>
+				)}
 				copyToClipboard={(data) => u8aToHex(decodeAddress(data.address))}
 			/>
 			<AccountInfoTableAttribute
@@ -87,11 +100,9 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 							)} TAO`}
 						</span>
 						<span>
-							{`(${formatCurrency(
-								total.mul(price ?? 0),
-								"USD",
-								{ decimalPlaces: 2 }
-							)} USD)`}
+							{`(${formatCurrency(total.mul(price ?? 0), "USD", {
+								decimalPlaces: 2,
+							})} USD)`}
 						</span>
 					</div>
 				)}
