@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { css, Theme } from "@emotion/react";
 
-import { AccountAvatar } from "../components/AccountAvatar";
 import { Card, CardHeader, CardRow } from "../components/Card";
 import ExtrinsicsTable from "../components/extrinsics/ExtrinsicsTable";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
@@ -23,16 +22,6 @@ import { formatCurrency, rawAmountToDecimal } from "../utils/number";
 const accountInfoStyle = css`
   display: flex;
   flex-direction: column;
-`;
-
-const avatarStyle = css`
-  vertical-align: text-bottom;
-  margin-left: 12px;
-`;
-
-const accountLabel = css`
-  margin-left: 8px;
-  font-weight: 400;
 `;
 
 const accountLabelAddress = css`

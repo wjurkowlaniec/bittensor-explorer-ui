@@ -9,6 +9,10 @@ import { Link } from "../Link";
 import { NETWORK_CONFIG } from "../../config";
 import { BlockTimestamp } from "../BlockTimestamp";
 import { css, Theme } from "@mui/material";
+import { SortDirection } from "../../model/sortDirection";
+import { TransfersOrder } from "../../services/transfersService";
+import { useEffect, useState } from "react";
+import { SortOrder } from "../../model/sortOrder";
 
 const dirContainer = css`
   display: flex;
@@ -51,14 +55,61 @@ export type TransfersTableProps = {
 		show: boolean;
 		source: string;
 	};
+	initialSortOrder?: string;
+	onSortChange?: (orderBy: TransfersOrder) => void;
+	initialSort?: string;
 };
 
 const TransfersTableAttribute = ItemsTableAttribute<Transfer>;
+
+const orderMappings = {
+	amount: {
+		[SortDirection.ASC]: "AMOUNT_DESC",
+		[SortDirection.DESC]: "AMOUNT_ASC",
+	}
+};
 
 function TransfersTable(props: TransfersTableProps) {
 	const { transfers, showTime, direction } = props;
 
 	const { currency, prefix } = NETWORK_CONFIG;
+
+	const { initialSort, onSortChange } = props;
+	const [sort, setSort] = useState<SortOrder<string>>();
+
+	useEffect(() => {
+		Object.entries(orderMappings).forEach(([property, value]) => {
+			Object.entries(value).forEach(([dir, orderKey]) => {
+				if (orderKey === initialSort) {
+					setSort({
+						property,
+						direction: dir === "1" ? SortDirection.ASC : SortDirection.DESC,
+					});
+				}
+			});
+		});
+	}, [initialSort]);
+
+	const handleSortChange = (property?: string) => {
+		if (!property) return;
+		if (property === sort?.property) {
+			setSort({
+				...sort,
+				direction: sort.direction === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC,
+			});
+		} else {
+			setSort({
+				property,
+				direction: SortDirection.DESC,
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (!onSortChange || !sort?.property || sort.direction === undefined)
+			return;
+		onSortChange((orderMappings as any)[sort.property][sort.direction]);
+	}, [JSON.stringify(sort)]);
 
 	return (
 		<ItemsTable
@@ -69,6 +120,9 @@ function TransfersTable(props: TransfersTableProps) {
 			error={transfers.error}
 			pagination={transfers.pagination}
 			data-test='transfers-table'
+			showRank
+			sort={sort}
+			onSortChange={handleSortChange}
 		>
 			<TransfersTableAttribute
 				label='Extrinsic'
@@ -135,6 +189,8 @@ function TransfersTable(props: TransfersTableProps) {
 						showFullInTooltip
 					/>
 				)}
+				sortable
+				sortProperty='amount'
 			/>
 			{showTime && (
 				<TransfersTableAttribute
