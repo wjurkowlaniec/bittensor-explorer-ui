@@ -1,14 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { HTMLAttributes, useEffect, useState } from "react";
+import { HTMLAttributes } from "react";
 import { css, useTheme } from "@emotion/react";
 import LoadingSpinner from "../../assets/loading.gif";
 import Chart from "react-apexcharts";
 import { StatItem } from "./StatItem";
-import {
-	formatNumber,
-	nFormatter,
-	rawAmountToDecimal,
-} from "../../utils/number";
+import { formatNumber, nFormatter } from "../../utils/number";
 import { useStats } from "../../hooks/useStats";
 import { useTotalIssuance } from "../../hooks/useTotalIssuance";
 import { useDelegatedSupply } from "../../hooks/useDelegatedSupply";
@@ -44,14 +40,23 @@ export const TokenDistributionChart = () => {
 	const totalIssuance = useTotalIssuance();
 	const delegated = useDelegatedSupply();
 
-	console.log(totalIssuance);
-	console.log(delegated);
+	const loading =
+    stats.loading ||
+    token === undefined ||
+    totalIssuance === undefined ||
+    delegated === undefined;
 
-	const loading = stats.loading || token === undefined || totalIssuance === undefined || delegated === undefined;
-
-	const delegatedPercent = loading ? 0 : ((token.delegatedSupply / totalIssuance.toNumber()) * 100).toFixed(2);
-	const circulatingPercent = loading ? 0 : (100 - (token.delegatedSupply / totalIssuance.toNumber()) * 100).toFixed(2);
-	const totalIssuanceFormatted = loading ? "" : nFormatter(totalIssuance.toNumber(), 2);
+	const delegatedPercent = loading
+		? 0
+		: ((token.delegatedSupply / totalIssuance.toNumber()) * 100).toFixed(2);
+	const circulatingPercent = loading
+		? 0
+		: (100 - (token.delegatedSupply / totalIssuance.toNumber()) * 100).toFixed(
+			2
+		);
+	const totalIssuanceFormatted = loading
+		? ""
+		: nFormatter(totalIssuance.toNumber(), 2);
 
 	return loading ? (
 		<div css={spinnerContainer}>
@@ -75,13 +80,14 @@ export const TokenDistributionChart = () => {
 						`Circulating Delegated/Staked (${delegatedPercent}% of ${totalIssuanceFormatted})`,
 						`Circulating Free (${circulatingPercent}% of ${totalIssuanceFormatted})`,
 						`Unissued (${(
-							100 - (totalIssuance.toNumber() / token.totalSupply) * 100
+							100 -
+              (totalIssuance.toNumber() / token.totalSupply) * 100
 						).toFixed(2)}% of ${nFormatter(token.totalSupply, 2)})`,
 					],
 					colors: ["#14dec2", "#FF9900", "#848484"],
 					dataLabels: {
 						enabled: false,
-						formatter: (text: string | number | number[], op:number) => {
+						formatter: (text: string | number | number[], op: number) => {
 							return op.toFixed(2);
 						},
 					},
