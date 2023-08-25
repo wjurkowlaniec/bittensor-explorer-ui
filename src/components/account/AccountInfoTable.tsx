@@ -54,12 +54,12 @@ const createdAt = css`
 `;
 
 const blockLink = css`
-	::before {
-		content: '(';
-	}
-	::after {
-		content: ')';
-	}
+  ::before {
+    content: '(';
+  }
+  ::after {
+    content: ')';
+  }
 `;
 
 export const AccountInfoTable = (props: AccountInfoTableProps) => {
@@ -112,14 +112,18 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 			{balance.data?.createdAt ? (
 				<AccountInfoTableAttribute
 					label='Created at'
-					render={(data) => (
-						<div css={createdAt}>
-							<BlockTimestamp blockHeight={data.createdAt} />
-							<Link href={`/block/${data.createdAt}`} css={ blockLink }>
-								{`Block ${data.createdAt}`}
-							</Link>
-						</div>
-					)}
+					render={(data) =>
+						data.createdAt > BigInt(0) ? (
+							<div css={createdAt}>
+								<BlockTimestamp blockHeight={data.createdAt} />
+								<Link href={`/block/${data.createdAt}`} css={blockLink}>
+									{`Block ${data.createdAt}`}
+								</Link>
+							</div>
+						) : (
+							<div>Pre dates Finney chain. Nakamoto data coming soon.</div>
+						)
+					}
 				/>
 			) : (
 				<></>
