@@ -11,7 +11,7 @@ import { NetworkStats, TokenDistributionChart } from "../components/network";
 import { useStats } from "../hooks/useStats";
 import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BalancesOrder } from "../services/balancesService";
 import { TransfersOrder } from "../services/transfersService";
 
@@ -54,12 +54,25 @@ export const HomePage = () => {
 	const stats = useStats();
 
 	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
-	const [balanceSort, setBalanceSort] = useState<BalancesOrder>(balancesInitialOrder);
+	const [balanceSort, setBalanceSort] =
+    useState<BalancesOrder>(balancesInitialOrder);
 	const balances = useBalances(undefined, balanceSort);
 
 	const transfersInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
-	const [transferSort, setTransferSort] = useState<TransfersOrder>(transfersInitialOrder);
+	const [transferSort, setTransferSort] = useState<TransfersOrder>(
+		transfersInitialOrder
+	);
 	const transfers = useTransfers(undefined, transferSort);
+
+	useEffect(() => {
+		const id = setInterval(() => blocks.refetch && blocks.refetch(), 12 * 1000);
+		return () => clearInterval(id);
+	}, []);
+
+	useEffect(() => { 
+		const id = setInterval(() => transfers.refetch && transfers.refetch(), 12 * 1000);
+		return () => clearInterval(id);
+	}, []);
 
 	return (
 		<div css={contentStyle}>
@@ -90,10 +103,14 @@ export const HomePage = () => {
 							error={transfers.error}
 							value='transfers'
 						>
-							<TransfersTable transfers={transfers} showTime onSortChange={(sortKey: TransfersOrder) =>
-								setTransferSort(sortKey)
-							}
-							initialSort={transfersInitialOrder} />
+							<TransfersTable
+								transfers={transfers}
+								showTime
+								onSortChange={(sortKey: TransfersOrder) =>
+									setTransferSort(sortKey)
+								}
+								initialSort={transfersInitialOrder}
+							/>
 						</TabPane>
 						<TabPane
 							label='Accounts'
