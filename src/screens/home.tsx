@@ -65,14 +65,24 @@ export const HomePage = () => {
 	const transfers = useTransfers(undefined, transferSort);
 
 	useEffect(() => {
-		const id = setInterval(() => blocks.refetch && blocks.refetch(), 12 * 1000);
-		return () => clearInterval(id);
-	}, []);
+		if (blocks.pagination.offset === 0) {
+			const id = setInterval(
+				() => blocks.refetch && blocks.refetch(),
+				12 * 1000
+			);
+			return () => clearInterval(id);
+		}
+	}, [blocks]);
 
-	useEffect(() => { 
-		const id = setInterval(() => transfers.refetch && transfers.refetch(), 12 * 1000);
-		return () => clearInterval(id);
-	}, []);
+	useEffect(() => {
+		if (transfers.pagination.offset === 0) {
+			const id = setInterval(
+				() => transfers.refetch && transfers.refetch(),
+				12 * 1000
+			);
+			return () => clearInterval(id);
+		}
+	}, [transfers]);
 
 	return (
 		<div css={contentStyle}>

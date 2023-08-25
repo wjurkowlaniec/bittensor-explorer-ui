@@ -14,7 +14,6 @@ export function useTotalIssuance() {
 		if (!api || apiState !== "READY") return;
 		const _unsub = await api.query.subtensorModule?.totalIssuance(
 			(value: any) => {
-				console.log(value.toString());
 				value && setTotalIssuance(rawAmountToDecimal(value.toString()));
 			}
 		);
