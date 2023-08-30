@@ -127,11 +127,11 @@ export const HomePage = () => {
 							/>
 						</TabPane>
 						<TabPane
-							label='Delegates'
+							label='Delegation'
 							count={delegates.pagination.totalCount}
 							loading={delegates.loading}
 							error={delegates.error}
-							value='delegates'
+							value='delegation'
 						>
 							<DelegatesTable
 								delegates={delegates}
