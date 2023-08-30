@@ -12,6 +12,7 @@ import TaoIcon from "../../assets/tao_icon.png";
 import { formatNumber, nFormatter } from "../../utils/number";
 import Decimal from "decimal.js";
 import { StatItem } from "./StatItem";
+import { useEffect } from "react";
 
 const stakingDataBlock = css`
   width: 100%;
@@ -167,6 +168,11 @@ export const NetworkStats = (props: NetworkInfoTableProps) => {
 	}
 
 	const { token, chain } = stats.data;
+
+	useEffect(() => {
+		const id = setInterval(() => stats.refetch(), 12 * 1000);
+		return () => clearInterval(id);
+	}, []);
 
 	return (
 		<div css={stakingDataBlock}>
