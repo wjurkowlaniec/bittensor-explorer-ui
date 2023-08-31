@@ -12,6 +12,7 @@ import TaoIcon from "../../assets/tao_icon.png";
 import { formatNumber, nFormatter } from "../../utils/number";
 import Decimal from "decimal.js";
 import { StatItem } from "./StatItem";
+import { useEffect } from "react";
 
 const stakingDataBlock = css`
   width: 100%;
@@ -168,6 +169,11 @@ export const NetworkStats = (props: NetworkInfoTableProps) => {
 
 	const { token, chain } = stats.data;
 
+	useEffect(() => {
+		const id = setInterval(() => stats.refetch(), 12 * 1000);
+		return () => clearInterval(id);
+	}, []);
+
 	return (
 		<div css={stakingDataBlock}>
 			<div css={bittensorBlock}>
@@ -219,14 +225,14 @@ export const NetworkStats = (props: NetworkInfoTableProps) => {
 				</div>
 
 				<div css={statItemsRow}>
-					{/* <StatItem
+					<StatItem
 						title='Finalized blocks'
 						value={formatNumber(new Decimal(chain.blocksFinalized.toString()))}
 					/>
 					<StatItem
 						title='Signed extrinsics'
 						value={formatNumber(new Decimal(chain.extrinsicsSigned.toString()))}
-					/> */}
+					/>
 					<StatItem
 						title='Accounts'
 						value={formatNumber(new Decimal(chain.accounts.toString()))}
