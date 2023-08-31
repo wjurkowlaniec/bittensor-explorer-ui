@@ -64,8 +64,12 @@ const TransfersTableAttribute = ItemsTableAttribute<Transfer>;
 
 const orderMappings = {
 	amount: {
-		[SortDirection.ASC]: "AMOUNT_DESC",
-		[SortDirection.DESC]: "AMOUNT_ASC",
+		[SortDirection.ASC]: "AMOUNT_ASC",
+		[SortDirection.DESC]: "AMOUNT_DESC",
+	},
+	time: {
+		[SortDirection.ASC]: "BLOCK_NUMBER_ASC",
+		[SortDirection.DESC]: "BLOCK_NUMBER_DESC",
 	}
 };
 
@@ -120,7 +124,6 @@ function TransfersTable(props: TransfersTableProps) {
 			error={transfers.error}
 			pagination={transfers.pagination}
 			data-test='transfers-table'
-			showRank
 			sort={sort}
 			onSortChange={handleSortChange}
 		>
@@ -204,6 +207,8 @@ function TransfersTable(props: TransfersTableProps) {
 							tooltip
 						/>
 					)}
+					sortable
+					sortProperty='time'
 				/>
 			)}
 		</ItemsTable>
