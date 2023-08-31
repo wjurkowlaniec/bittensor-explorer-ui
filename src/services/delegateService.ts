@@ -6,6 +6,8 @@ import { PaginationOptions } from "../model/paginationOptions";
 import { extractItems } from "../utils/extractItems";
 import { fetchIndexer } from "./fetchService";
 
+import verifiedDelegates from "../delegates.json";
+
 export type DelegateFilter = object;
 export type DelegatesOrder =
 	| "ID_ASC"
@@ -77,7 +79,7 @@ async function fetchDelegates(
 			order,
 		}
 	);
-	const items = extractItems(response.delegates, pagination, (x) => x);
+	const items = extractItems(response.delegates, pagination, addDelegateName);
 
 	return items;
 }
@@ -115,7 +117,13 @@ async function fetchDelegateBalances(
 			order,
 		}
 	);
-	const items = extractItems(response.delegateBalances, pagination, (x) => x);
+	const items = extractItems(response.delegateBalances, pagination, addDelegateName);
 
 	return items;
+}
+
+function addDelegateName<T extends { delegate: string; delegateName?: string; }>(item: T): T {
+	const info = (verifiedDelegates as Record<string, DelegateInfo>)[item.delegate];
+	if (info === undefined) return item;
+	return { ...item, delegateName: info.name } as T;
 }

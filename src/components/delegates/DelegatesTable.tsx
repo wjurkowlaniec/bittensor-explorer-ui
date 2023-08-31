@@ -156,14 +156,18 @@ function DelegatesTable(props: DelegatesTableProps) {
 			/>
 			<DelegatesTableAttribute
 				label='Delegate'
-				render={(delegate) => (
-					<AccountAddress
-						address={delegate.delegate}
-						prefix={prefix}
-						shorten
-						link
-						copyToClipboard='small'
-					/>
+				render={({ delegate, delegateName }) => (
+					delegateName === undefined ?
+						<AccountAddress
+							address={delegate}
+							prefix={prefix}
+							shorten
+							link
+							copyToClipboard='small'
+						/> :
+						<Link to={ `/account/${delegate}`}>
+							{delegateName}
+						</Link>
 				)}
 			/>
 			<DelegatesTableAttribute

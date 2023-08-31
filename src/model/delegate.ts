@@ -8,6 +8,7 @@ export type Delegate = {
 	blockNumber: bigint;
 	extrinsicId: number;
 	action: DelegateAction;
+	delegateName?: string;
 };
 
 export type DelegateBalance = {
@@ -16,10 +17,10 @@ export type DelegateBalance = {
 	delegate: string;
 	amount: bigint;
 	updatedAt: bigint;
+	delegateName?: string;
 };
 
 export type DelegateInfo = {
-	hotkey: string;
 	name: string;
 	url: string;
 	description: string;
