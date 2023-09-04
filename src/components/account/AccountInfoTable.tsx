@@ -161,7 +161,7 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 					render={() => formatNumber(rank)}
 				/>
 			)}
-			{delegates.data !== undefined && delegates.data.length ? (
+			{balance.data !== undefined && balance.data.staked > 0 && delegates.data !== undefined && delegates.data.length ? (
 				<AccountInfoTableAttribute
 					label='Delegated balance'
 					render={() => (
