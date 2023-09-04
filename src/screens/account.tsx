@@ -18,6 +18,7 @@ import { useTaoPrice } from "../hooks/useTaoPrice";
 import { useBalance } from "../hooks/useBalance";
 import { StatItem } from "../components/network/StatItem";
 import { formatCurrency, rawAmountToDecimal } from "../utils/number";
+import { useDelegateBalances } from "../hooks/useDelegateBalances";
 
 const accountInfoStyle = css`
   display: flex;
@@ -76,7 +77,7 @@ export type AccountPageParams = {
 
 export const AccountPage = () => {
 	const { address } = useParams() as AccountPageParams;
-	const balance = useBalance({address: {equalTo: address}});
+	const balance = useBalance({ address: { equalTo: address } });
 
 	const account = useAccount(address);
 	const extrinsics = useExtrinsics(
@@ -86,6 +87,10 @@ export const AccountPage = () => {
 	const transfers = useTransfers({
 		or: [{ from: { equalTo: address } }, { to: { equalTo: address } }],
 	});
+	const delegates = useDelegateBalances(
+		{ account: { equalTo: address } },
+		"AMOUNT_DESC"
+	);
 
 	const delegated = `${formatCurrency(
 		rawAmountToDecimal((balance?.data?.staked || 0).toString()),
@@ -106,7 +111,8 @@ export const AccountPage = () => {
 		!account.loading &&
       !extrinsics.loading &&
       !transfers.loading &&
-      !taoPrice.loading
+      !taoPrice.loading &&
+      !delegates.loading
 	);
 
 	useEffect(() => {
@@ -125,12 +131,10 @@ export const AccountPage = () => {
 						{/* {(account.loading || account.data) && (
 							<AccountAvatar address={address} size={32} css={avatarStyle} />
 						)} */}
-						<div css={accountLabelAddress}>
-							{address}
-						</div>
+						<div css={accountLabelAddress}>{address}</div>
 					</CardHeader>
 					<AccountInfoTable
-						info={{ account, balance, price: taoPrice.data?.toNumber() }}
+						info={{ account, balance, delegates, price: taoPrice.data?.toNumber() }}
 					/>
 				</Card>
 				<Card css={portfolioStyle} data-test='account-portfolio'>

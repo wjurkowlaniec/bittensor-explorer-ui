@@ -19,11 +19,13 @@ import Decimal from "decimal.js";
 import { countBalanceItems } from "../../services/balancesService";
 import { BlockTimestamp } from "../BlockTimestamp";
 import { Link } from "../Link";
+import { DelegateBalance } from "../../model/delegate";
 
 export type AccountInfoTableProps = HTMLAttributes<HTMLDivElement> & {
 	info: {
 		account: Resource<Account>;
 		balance: Resource<Balance>;
+		delegates: Resource<DelegateBalance[]>;
 		price: number | undefined;
 	};
 };
@@ -62,9 +64,14 @@ const blockLink = css`
   }
 `;
 
+const delegateContainer = css`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const AccountInfoTable = (props: AccountInfoTableProps) => {
 	const {
-		info: { account, balance, price },
+		info: { account, balance, price, delegates },
 		...tableProps
 	} = props;
 
@@ -85,10 +92,10 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 	return (
 		<InfoTable
 			data={{ ...account.data, ...balance.data }}
-			loading={account.loading || balance.loading}
-			notFound={account.notFound || balance.notFound}
+			loading={account.loading || balance.loading || delegates.loading}
+			notFound={account.notFound}
 			notFoundMessage="Account doesn't exist"
-			error={account.error || balance.error}
+			error={account.error || balance.error || delegates.error}
 			{...tableProps}
 		>
 			<AccountInfoTableAttribute
@@ -153,6 +160,29 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 					label='Rank'
 					render={() => formatNumber(rank)}
 				/>
+			)}
+			{balance.data !== undefined && balance.data.staked > 0 && delegates.data !== undefined && delegates.data.length ? (
+				<AccountInfoTableAttribute
+					label='Delegated balance'
+					render={() => (
+						<div>
+							{delegates.data?.map(({ delegate, amount, delegateName }, index) => (
+								<div css={delegateContainer} key={index}>
+									<Link to={`/account/${delegate}`}>{`${delegateName ?? delegate}`}</Link>
+									<span>
+										{`${formatCurrency(
+											rawAmountToDecimal(amount.toString()),
+											"𝞃",
+											{ decimalPlaces: 2 }
+										)}`}
+									</span>
+								</div>
+							))}
+						</div>
+					)}
+				/>
+			) : (
+				<></>
 			)}
 		</InfoTable>
 	);
