@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
 import { PaginatedResource } from "../../model/paginatedResource";
-import { Transfer } from "../../model/transfer";
 import { AccountAddress } from "../AccountAddress";
 import { Currency } from "../Currency";
 import { ItemsTable, ItemsTableAttribute } from "../ItemsTable";
@@ -10,9 +9,10 @@ import { NETWORK_CONFIG } from "../../config";
 import { BlockTimestamp } from "../BlockTimestamp";
 import { css, Theme } from "@mui/material";
 import { SortDirection } from "../../model/sortDirection";
-import { TransfersOrder } from "../../services/transfersService";
 import { useEffect, useState } from "react";
 import { SortOrder } from "../../model/sortOrder";
+import { DelegatesOrder } from "../../services/delegateService";
+import { Delegate } from "../../model/delegate";
 
 const dirContainer = css`
   display: flex;
@@ -30,8 +30,8 @@ const dirIn = (theme: Theme) => css`
   font-size: 10px;
   font-weight: 500;
   border: 2px solid ${theme.palette.neutral.main};
-  width: 28px;
   text-align: center;
+  width: 90px;
 `;
 
 const dirOut = (theme: Theme) => css`
@@ -44,23 +44,19 @@ const dirOut = (theme: Theme) => css`
   border: 2px solid ${theme.palette.success.main};
   font-weight: 400;
   border-radius: 4px;
-  width: 28px;
   text-align: center;
+  width: 90px;
 `;
 
-export type TransfersTableProps = {
-	transfers: PaginatedResource<Transfer>;
+export type DelegatesTableProps = {
+	delegates: PaginatedResource<Delegate>;
 	showTime?: boolean;
-	direction?: {
-		show: boolean;
-		source: string;
-	};
 	initialSortOrder?: string;
-	onSortChange?: (orderBy: TransfersOrder) => void;
+	onSortChange?: (orderBy: DelegatesOrder) => void;
 	initialSort?: string;
 };
 
-const TransfersTableAttribute = ItemsTableAttribute<Transfer>;
+const DelegatesTableAttribute = ItemsTableAttribute<Delegate>;
 
 const orderMappings = {
 	amount: {
@@ -70,11 +66,11 @@ const orderMappings = {
 	time: {
 		[SortDirection.ASC]: "BLOCK_NUMBER_ASC",
 		[SortDirection.DESC]: "BLOCK_NUMBER_DESC",
-	}
+	},
 };
 
-function TransfersTable(props: TransfersTableProps) {
-	const { transfers, showTime, direction } = props;
+function DelegatesTable(props: DelegatesTableProps) {
+	const { delegates, showTime } = props;
 
 	const { currency, prefix } = NETWORK_CONFIG;
 
@@ -117,76 +113,67 @@ function TransfersTable(props: TransfersTableProps) {
 
 	return (
 		<ItemsTable
-			data={transfers.data}
-			loading={transfers.loading}
-			notFound={transfers.notFound}
-			notFoundMessage='No transfers found'
-			error={transfers.error}
-			pagination={transfers.pagination}
-			data-test='transfers-table'
+			data={delegates.data}
+			loading={delegates.loading}
+			notFound={delegates.notFound}
+			notFoundMessage='No delegate/undelegate events found'
+			error={delegates.error}
+			pagination={delegates.pagination}
+			data-test='delegates-table'
 			sort={sort}
 			onSortChange={handleSortChange}
 		>
-			<TransfersTableAttribute
+			<DelegatesTableAttribute
 				label='Extrinsic'
-				render={(transfer) =>
-					transfer.extrinsicId && (
+				render={(delegate) =>
+					delegate.extrinsicId && (
 						<Link
-							to={`/extrinsic/${transfer.blockNumber}-${transfer.extrinsicId}`}
-						>{`${transfer.blockNumber}-${transfer.extrinsicId}`}</Link>
+							to={`/extrinsic/${delegate.blockNumber}-${delegate.extrinsicId}`}
+						>{`${delegate.blockNumber}-${delegate.extrinsicId}`}</Link>
 					)
 				}
 			/>
-			<TransfersTableAttribute
-				label='From'
-				render={(transfer) => (
+			<DelegatesTableAttribute
+				label='Account'
+				render={(delegate) => (
 					<AccountAddress
-						address={transfer.from}
+						address={delegate.account}
 						prefix={prefix}
 						shorten
-						link={
-							direction?.show && transfer.to !== direction?.source
-								? false
-								: true
-						}
+						link
 						copyToClipboard='small'
 					/>
 				)}
 			/>
-			{direction?.show && (
-				<TransfersTableAttribute
-					label=''
-					render={(transfer) => {
-						const dir = transfer.from === direction?.source ? "out" : "in";
-						return (
-							<div css={dirContainer}>
-								<div css={dir === "out" ? dirOut : dirIn}>{dir}</div>
-							</div>
-						);
-					}}
-				/>
-			)}
-			<TransfersTableAttribute
-				label='To'
-				render={(transfer) => (
-					<AccountAddress
-						address={transfer.to}
-						prefix={prefix}
-						shorten
-						copyToClipboard='small'
-						link={
-							direction?.show && transfer.from !== direction?.source
-								? false
-								: true
-						}
-					/>
+			<DelegatesTableAttribute
+				label=''
+				render={({action}) => 
+					<div css={dirContainer}>
+						<div css={action === "UNDELEGATE" ? dirIn : dirOut}>{action}</div>
+					</div>
+				}
+			/>
+			<DelegatesTableAttribute
+				label='Delegate'
+				render={({ delegate, delegateName }) => (
+					delegateName === undefined ?
+						<AccountAddress
+							address={delegate}
+							prefix={prefix}
+							shorten
+							link
+							copyToClipboard='small'
+						/> :
+						<Link to={ `/account/${delegate}`}>
+							{delegateName}
+						</Link>
 				)}
 			/>
-			<TransfersTableAttribute
+			<DelegatesTableAttribute
 				label='Amount'
-				render={(transfer) => (
+				render={(delegate) => (
 					<Currency
-						amount={transfer.amount}
+						amount={delegate.amount}
 						currency={currency}
 						decimalPlaces='optimal'
 						showFullInTooltip
@@ -196,23 +183,23 @@ function TransfersTable(props: TransfersTableProps) {
 				sortProperty='amount'
 			/>
 			{showTime && (
-				<TransfersTableAttribute
+				<DelegatesTableAttribute
 					label='Time'
 					colCss={{ width: 200 }}
-					render={(transfer) => (
+					sortable
+					sortProperty='time'
+					render={(delegate) => (
 						<BlockTimestamp
-							blockHeight={transfer.blockNumber}
+							blockHeight={delegate.blockNumber}
 							fromNow
 							utc
 							tooltip
 						/>
 					)}
-					sortable
-					sortProperty='time'
 				/>
 			)}
 		</ItemsTable>
 	);
 }
 
-export default TransfersTable;
+export default DelegatesTable;

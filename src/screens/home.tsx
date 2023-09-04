@@ -5,6 +5,7 @@ import { Card, CardRow } from "../components/Card";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
 import { useTransfers } from "../hooks/useTransfers";
 import TransfersTable from "../components/transfers/TransfersTable";
+import DelegatesTable from "../components/delegates/DelegatesTable";
 import { useBlocks } from "../hooks/useBlocks";
 import BlocksTable from "../components/blocks/BlocksTable";
 import { NetworkStats, TokenDistributionChart } from "../components/network";
@@ -14,6 +15,8 @@ import BalancesTable from "../components/balances/BalancesTable";
 import { useEffect, useState } from "react";
 import { BalancesOrder } from "../services/balancesService";
 import { TransfersOrder } from "../services/transfersService";
+import { useDelegates } from "../hooks/useDelegates";
+import { DelegatesOrder } from "../services/delegateService";
 
 const contentStyle = css`
   position: relative;
@@ -54,15 +57,16 @@ export const HomePage = () => {
 	const stats = useStats();
 
 	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
-	const [balanceSort, setBalanceSort] =
-    useState<BalancesOrder>(balancesInitialOrder);
+	const [balanceSort, setBalanceSort] = useState<BalancesOrder>(balancesInitialOrder);
 	const balances = useBalances(undefined, balanceSort);
 
 	const transfersInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
-	const [transferSort, setTransferSort] = useState<TransfersOrder>(
-		transfersInitialOrder
-	);
+	const [transferSort, setTransferSort] = useState<TransfersOrder>(transfersInitialOrder);
 	const transfers = useTransfers(undefined, transferSort);
+
+	const delegatesInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
+	const [delegateSort, setDelegateSort] = useState<DelegatesOrder>(delegatesInitialOrder);
+	const delegates = useDelegates(undefined, delegateSort);
 
 	useEffect(() => {
 		if (blocks.pagination.offset === 0) {
@@ -120,6 +124,22 @@ export const HomePage = () => {
 									setTransferSort(sortKey)
 								}
 								initialSort={transfersInitialOrder}
+							/>
+						</TabPane>
+						<TabPane
+							label='Delegation'
+							count={delegates.pagination.totalCount}
+							loading={delegates.loading}
+							error={delegates.error}
+							value='delegation'
+						>
+							<DelegatesTable
+								delegates={delegates}
+								showTime
+								onSortChange={(sortKey: DelegatesOrder) =>
+									setDelegateSort(sortKey)
+								}
+								initialSort={delegatesInitialOrder}
 							/>
 						</TabPane>
 						<TabPane
