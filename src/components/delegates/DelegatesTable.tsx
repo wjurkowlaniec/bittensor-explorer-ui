@@ -120,7 +120,6 @@ function DelegatesTable(props: DelegatesTableProps) {
 			error={delegates.error}
 			pagination={delegates.pagination}
 			data-test='delegates-table'
-			showRank
 			sort={sort}
 			onSortChange={handleSortChange}
 		>
