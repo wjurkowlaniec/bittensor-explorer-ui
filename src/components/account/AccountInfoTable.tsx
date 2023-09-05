@@ -66,8 +66,7 @@ const blockLink = css`
 
 const delegateContainer = css`
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
 `;
 
 export const AccountInfoTable = (props: AccountInfoTableProps) => {
@@ -145,7 +144,7 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 								new Decimal(total.toFixed(2).toString()),
 								"USD",
 								{ decimalPlaces: 2 }
-							)} TAO`}
+							)} 𝞃`}
 						</span>
 						<span>
 							{`(${formatCurrency(total.mul(price ?? 0), "USD", {
@@ -169,12 +168,14 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 						<div>
 							{delegates.data?.map(({ delegate, amount, delegateName }, index) => (
 								<div css={delegateContainer} key={index}>
-									{`${formatCurrency(
-										rawAmountToDecimal(amount.toString()),
-										"TAO",
-										{ decimalPlaces: 2 }
-									)}`}
-									<Link to={`/account/${delegate}`}>{`(${delegateName ?? delegate})`}</Link>
+									<Link to={`/account/${delegate}`}>{`${delegateName ?? delegate}`}</Link>
+									<span>
+										{`${formatCurrency(
+											rawAmountToDecimal(amount.toString()),
+											"𝞃",
+											{ decimalPlaces: 2 }
+										)}`}
+									</span>
 								</div>
 							))}
 						</div>
