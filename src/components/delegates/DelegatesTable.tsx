@@ -161,10 +161,10 @@ function DelegatesTable(props: DelegatesTableProps) {
 							address={delegate}
 							prefix={prefix}
 							shorten
-							link
+							delegate
 							copyToClipboard='small'
 						/> :
-						<Link to={ `/account/${delegate}`}>
+						<Link to={ `/validators/${delegate}`}>
 							{delegateName}
 						</Link>
 				)}
