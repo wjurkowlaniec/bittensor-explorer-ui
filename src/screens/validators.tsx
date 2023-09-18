@@ -101,7 +101,7 @@ export const ValidatorPage = () => {
 
 	const balance = useValidatorBalance({ delegate: { equalTo: address } });
 
-	const nominatorsInitialOrder: DelegateBalancesOrder = "AMOUNT_DESC";
+	const nominatorsInitialOrder: DelegateBalancesOrder = "DELEGATE_FROM_ASC";
 	const [nominatorSort, setNominatorSort] = useState<DelegateBalancesOrder>(
 		nominatorsInitialOrder
 	);
@@ -130,7 +130,7 @@ export const ValidatorPage = () => {
 		!balance.loading && !nominators.loading && !delegates.loading
 	);
 
-	const navigateToAbsolutePath = (path: any) => {
+	const navigateToAbsolutePath = (path: string) => {
 		let url;
 
 		if (path.startsWith("http://") || path.startsWith("https://")) {
