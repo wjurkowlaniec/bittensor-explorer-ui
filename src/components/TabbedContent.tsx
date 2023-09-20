@@ -12,6 +12,7 @@ import { Tab, TabProps, Tabs } from "@mui/material";
 import ErrorIcon from "@mui/icons-material/Warning";
 
 import Spinner from "./Spinner";
+import { useNavigate } from "react-router-dom";
 
 const tabsWrapperStyle = css`
   margin-bottom: 16px;
@@ -99,13 +100,16 @@ export const TabPane = (props: TabPaneProps) => {
 };
 
 export type TabbedContentProps = {
+	defaultTab?: string;
 	children: ReactElement<TabPaneProps> | (ReactElement<TabPaneProps> | false)[];
 };
 
 export const TabbedContent = (props: TabbedContentProps) => {
-	const { children } = props;
+	const { defaultTab, children } = props;
 
-	const [tab, setTab] = useState<string | undefined>(undefined);
+	const [tab, setTab] = useState<string | undefined>(defaultTab);
+
+	const navigate = useNavigate();
 
 	const tabHandles = Children.map(children, (child) => {
 		if (!child) {
@@ -156,7 +160,10 @@ export const TabbedContent = (props: TabbedContentProps) => {
 			<div css={tabsWrapperStyle}>
 				<Tabs
 					css={tabsStyle}
-					onChange={(_, tab) => setTab(tab)}
+					onChange={(_, tab) => {
+						setTab(tab);
+						navigate(`#${tab}`);
+					}}
 					value={tab || tabHandles[0]!.props.value}
 					variant="scrollable"
 					scrollButtons={false}
