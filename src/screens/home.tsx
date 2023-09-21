@@ -35,6 +35,7 @@ const contentInner = css`
 
 const statsContainer = css`
   flex-grow: 1;
+  min-height: 400px;
 `;
 
 const chartContainer = css`
