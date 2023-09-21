@@ -101,7 +101,7 @@ export const ValidatorPage = () => {
 
 	const balance = useValidatorBalance({ delegate: { equalTo: address } });
 
-	const nominatorsInitialOrder: DelegateBalancesOrder = "DELEGATE_FROM_ASC";
+	const nominatorsInitialOrder: DelegateBalancesOrder = "AMOUNT_DESC";
 	const [nominatorSort, setNominatorSort] = useState<DelegateBalancesOrder>(
 		nominatorsInitialOrder
 	);
