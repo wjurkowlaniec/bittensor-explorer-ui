@@ -17,6 +17,7 @@ import { BalancesOrder } from "../services/balancesService";
 import { TransfersOrder } from "../services/transfersService";
 import { useDelegates } from "../hooks/useDelegates";
 import { DelegatesOrder } from "../services/delegateService";
+import { useLocation } from "react-router-dom";
 
 const contentStyle = css`
   position: relative;
@@ -34,6 +35,7 @@ const contentInner = css`
 
 const statsContainer = css`
   flex-grow: 1;
+  min-height: 400px;
 `;
 
 const chartContainer = css`
@@ -53,6 +55,8 @@ const infoSection = css`
 `;
 
 export const HomePage = () => {
+	const { hash: tab } = useLocation();
+	
 	const blocksInitialOrder: BlocksOrder = "HEIGHT_DESC";
 	const [blockSort, setBlockSort] = useState<BlocksOrder>(blocksInitialOrder);
 	const blocks = useBlocks(undefined, blockSort);
@@ -101,7 +105,7 @@ export const HomePage = () => {
 					</Card>
 				</CardRow>
 				<Card>
-					<TabbedContent>
+					<TabbedContent defaultTab={tab.slice(1).toString()}>
 						<TabPane
 							label='Blocks'
 							count={blocks.pagination.totalCount}

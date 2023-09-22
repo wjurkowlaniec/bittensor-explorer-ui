@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import verifiedDelegates from "../delegates.json";
 import { DelegateInfo } from "../model/delegate";
 
@@ -97,6 +97,8 @@ export type ValidatorPageParams = {
 
 export const ValidatorPage = () => {
 	const { address } = useParams() as ValidatorPageParams;
+	const { hash: tab } = useLocation();
+
 	const info = (verifiedDelegates as Record<string, DelegateInfo>)[address];
 
 	const balance = useValidatorBalance({ delegate: { equalTo: address } });
@@ -187,7 +189,7 @@ export const ValidatorPage = () => {
 				</Card>
 			</CardRow>
 			<Card>
-				<TabbedContent>
+				<TabbedContent defaultTab={tab.slice(1).toString()}>
 					<TabPane
 						label="Nominator"
 						count={nominators.pagination.totalCount}
