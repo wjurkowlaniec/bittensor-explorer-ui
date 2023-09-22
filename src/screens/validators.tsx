@@ -132,7 +132,7 @@ export const ValidatorPage = () => {
 		!balance.loading && !nominators.loading && !delegates.loading
 	);
 
-	const navigateToAbsolutePath = (path: any) => {
+	const navigateToAbsolutePath = (path: string) => {
 		let url;
 
 		if (path.startsWith("http://") || path.startsWith("https://")) {

@@ -38,7 +38,7 @@ export async function getDelegates(
 
 export async function getDelegateBalances(
 	filter: DelegateBalanceFilter | undefined,
-	order: DelegateBalancesOrder = "DELEGATE_FROM_DESC",
+	order: DelegateBalancesOrder = "UPDATED_AT_DESC",
 	pagination: PaginationOptions,
 ) {
 	return fetchDelegateBalances(filter, order, pagination);

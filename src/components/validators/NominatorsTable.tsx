@@ -28,8 +28,8 @@ const orderMappings = {
 		[SortDirection.DESC]: "AMOUNT_DESC",
 	},
 	delegateFrom: {
-		[SortDirection.ASC]: "DELEGATE_FROM_ASC",
-		[SortDirection.DESC]: "DELEGATE_FROM_DESC",
+		[SortDirection.ASC]: "DELEGATE_FROM_DESC",
+		[SortDirection.DESC]: "DELEGATE_FROM_ASC",
 	},
 };
 
