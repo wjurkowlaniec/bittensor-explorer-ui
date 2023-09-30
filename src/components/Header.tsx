@@ -1,8 +1,19 @@
 import { useState } from "react";
 import Logo from "../assets/logo.png";
 import PolygonGray from "../assets/polygon-gray.svg";
+import { useAppStats } from "../contexts";
+import { formatNumber, nFormatter } from "../utils/number";
+import Decimal from "decimal.js";
 
 export const Header = () => {
+	const {
+		state: { tokenStats, chainStats },
+	} = useAppStats();
+	const price = tokenStats?.price ?? 0;
+	const priceChange24h = tokenStats?.priceChange24h ?? 0;
+	const volume24h = tokenStats?.volume24h ?? 0;
+	const blocksFinalized = chainStats?.blocksFinalized ?? 0;
+
 	const [isFaded, setFaded] = useState(false);
 
 	const toggleFade = () => {
@@ -25,13 +36,27 @@ export const Header = () => {
 						<div className="ht-left">
 							<ul>
 								<li>
-									<label>Price.</label> $56.98 <span className="up">4,47%</span>
+									<label>Price.</label> ${price}{" "}
+									<span
+										className={`${
+											priceChange24h > 0
+												? "up"
+												: priceChange24h < 0
+													? "down"
+													: ""
+										}`}
+									>
+										{priceChange24h > 0 ? "▴" : priceChange24h < 0 ? "▾" : ""}
+										{` ${priceChange24h}%`}%
+									</span>
 								</li>
 								<li>
-									<label>24 Vol.</label> $320,394,438
+									<label>24 Vol.</label> ${nFormatter(volume24h, 2)}
 								</li>
 								<li>
-									<label>Block</label> 4191337
+									<label>Block</label> {formatNumber(
+										new Decimal(blocksFinalized.toString())
+									)}
 								</li>
 							</ul>
 						</div>
@@ -159,13 +184,17 @@ export const Header = () => {
 								</div>
 								<nav>
 									<ul>
-										<li className="current-menu-item">
+										<li className="menu-item">
 											<a href="https://taostats.io">Home</a>
 											<span className="menuItem-glow"></span>
 										</li>
 										<li className="menu-item-has-children">
 											<a href="https://taostats.io/subnets/">
-                        Subnets<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+                        Subnets
+												<span
+													className="has-btn"
+													onClick={(e) => openSubMenu(e)}
+												></span>
 											</a>
 											<ul className="subMenu">
 												<li>
@@ -181,9 +210,13 @@ export const Header = () => {
 											</ul>
 											<span className="menuItem-glow"></span>
 										</li>
-										<li className="menu-item-has-children">
+										<li className="current-menu-item menu-item-has-children">
 											<a href="https://x.taostats.io">
-                        Blockchain<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+                        Blockchain
+												<span
+													className="has-btn"
+													onClick={(e) => openSubMenu(e)}
+												></span>
 											</a>
 											<ul className="subMenu">
 												<li>
@@ -207,7 +240,11 @@ export const Header = () => {
 										</li>
 										<li className="menu-item-has-children">
 											<a href="https://taostats.io/verified-validators/">
-                        Validators<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+                        Validators
+												<span
+													className="has-btn"
+													onClick={(e) => openSubMenu(e)}
+												></span>
 											</a>
 											<ul className="subMenu">
 												<li>
@@ -225,7 +262,11 @@ export const Header = () => {
 										</li>
 										<li className="menu-item-has-children">
 											<a href="https://taostats.io/developers/">
-                        Developers<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+                        Developers
+												<span
+													className="has-btn"
+													onClick={(e) => openSubMenu(e)}
+												></span>
 											</a>
 											<ul className="subMenu">
 												<li>
@@ -239,7 +280,11 @@ export const Header = () => {
 										</li>
 										<li className="menu-item-has-children">
 											<a href="#">
-                        Resources<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+                        Resources
+												<span
+													className="has-btn"
+													onClick={(e) => openSubMenu(e)}
+												></span>
 											</a>
 											<ul className="subMenu">
 												<li className="">
@@ -253,7 +298,11 @@ export const Header = () => {
 										</li>
 										<li className="menu-item-has-children">
 											<a href="#">
-                        More<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+                        More
+												<span
+													className="has-btn"
+													onClick={(e) => openSubMenu(e)}
+												></span>
 											</a>
 											<ul className="megaMenu subMenu">
 												<li>
