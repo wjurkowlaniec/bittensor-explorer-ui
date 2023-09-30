@@ -1,102 +1,130 @@
-/** @jsxImportSource @emotion/react */
-import { FaDiscord } from "react-icons/fa";
-import { Twitter } from "@mui/icons-material";
-import { css, Theme } from "@emotion/react";
-import { HTMLAttributes } from "react";
+import TaoIcon from "../assets/tao_icon.png";
 
-const footerStyle = css`
-	box-sizing: border-box;
-	width: 100%;
-	padding: 24px;
-	padding-top: 48px;
-	padding-bottom: 64px;
-`;
-
-const contentStyle = (theme: Theme) => css`
-	display: flex;
-	box-sizing: border-box;
-	justify-content: space-between;
-	margin: 0 auto;
-	padding: 0 16px;
-	align-items: center;
-	gap: 52px;
-
-	width: 100%;
-
-	z-index: 100;
-
-	font-size: 13px;
-
-	a {
-		color: ${theme.palette.success.main};
-		text-decoration: none;
-	}
-
-	a:hover {
-		color: ${theme.palette.success.light};
-	}
-
-	${theme.breakpoints.down("md")} {
-		flex-direction: column-reverse;
-		gap: 16px;
-	}
-`;
-
-const creditsStyle = css`
-	display: flex;
-	align-items: center;
-
-	> div {
-		text-align: center;
-	}
-
-	a {
-		font-weight: 600;
-	}
-`;
-
-const separatorStyle = css`
-	display: inline-block;
-	width: 1px;
-	height: 10px;
-	background-color: currentColor;
-	margin: 0 16px;
-	margin-top: 2px;
-	opacity: .75;
-`;
-
-const linksStyle = css`
-	display: flex;
-	padding: 0 8px;
-	width: fit-content;
-	align-items: center;
-	gap: 2rem;
-	z-index: 10;
-`;
-
-const iconStyle = css`
-	display: block;
-	font-size: 1.25em;
-`;
-
-export const Footer = (props: HTMLAttributes<HTMLDivElement>) => {
+export const Footer = () => {
 	return (
-		<div css={footerStyle} {...props}>
-			<div css={contentStyle}>
-				<div css={creditsStyle}>
-					<div>Created by <a href="https://taostats.io">Taostats</a></div>
-					<div css={separatorStyle}></div>
-					<div>Built on <a href="https://bittensor.com">Bittensor</a></div>
-				</div>
-				<div css={linksStyle}>
-					<a href="https://twitter.com/taostats">
-						<Twitter css={iconStyle} />
-					</a>
-					<a href="https://discord.com/channels/1086368192521318472/1086369375411507290">
-						<FaDiscord css={iconStyle} />
-					</a>
+		<footer className="new-site-footer">
+			<div className="container">
+				<div className="footer-cover">
+					<div className="footer-top">
+						<div className="ft-left">
+							<div className="logo-tegline">
+								<img src={TaoIcon} /> Powered by Bittensor
+							</div>
+							<p>
+                τaostats is a Block Explorer and Analytics Platform for
+                Bittensor, a decentralized machine learning network.
+							</p>
+							<p>This site is not affiliated with the Opentensor Foundation.</p>
+							<p>
+                The content of this website is provided for information purposes
+                only.
+								<br />
+                No claim is made as to the accuracy or currency of the content
+                on this site at any time.
+							</p>
+							<p>
+                τaosτaτs is created and maintained by{" "}
+								<a
+									href="https://twitter.com/mogmachine"
+									target="_blank"
+									rel="noreferrer"
+								>
+                  mogmachine
+								</a>
+                . We hope you found it helpful, if you have any suggestions or
+                issues please contact us at{" "}
+								<a href="mailto:taostats@mogmachine.com">
+                  taostats@mogmachine.com
+								</a>
+                .
+							</p>
+						</div>
+						<div className="ft-right">
+							<div className="f-col">
+								<h5>Tao Stats</h5>
+								<ul>
+									<li>
+										<a href="#">About Us</a>
+									</li>
+									<li>
+										<a href="#">Contact Us</a>
+									</li>
+									<li>
+										<a href="#">Careers</a>
+									</li>
+									<li>
+										<a href="#">Terms of Service</a>
+									</li>
+									<li>
+										<a href="#">Bug Bounty</a>
+									</li>
+								</ul>
+							</div>
+							<div className="f-col">
+								<h5>Community</h5>
+								<ul>
+									<li>
+										<a href="#">API Documentation</a>
+									</li>
+									<li>
+										<a href="#">Knowledge Base</a>
+									</li>
+									<li>
+										<a href="#">Network Status</a>
+									</li>
+									<li>
+										<a href="#">Newsletters</a>
+									</li>
+									<li>
+										<a href="#">Disqus Comments</a>
+									</li>
+								</ul>
+							</div>
+							<div className="f-col">
+								<h5>Products &amp; Services</h5>
+								<ul>
+									<li>
+										<a href="#">Advertise</a>
+									</li>
+									<li>
+										<a href="#">Explorer as a Service</a>
+									</li>
+									<li>
+										<a href="#">API Plans</a>
+									</li>
+									<li>
+										<a href="#">Item 1</a>
+									</li>
+									<li>
+										<a href="#">Item 2</a>
+									</li>
+									<li>
+										<a href="#">Item 3</a>
+									</li>
+									<li>
+										<a href="#">Item 4</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div className="footer-bottom">
+						<div className="copyright">
+							<p>Taostats ©2023.</p>
+						</div>
+						<p>
+              If you would like to show your support then please consider
+              delegating{" "}
+							<a
+								href="https://delegate.taostats.io/staking?hkey=5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8"
+								style={{ color: "#14dec2" }}
+							>
+                stake to the taostats.io validator
+							</a>
+						</p>
+					</div>
 				</div>
 			</div>
-		</div>
+		</footer>
 	);
 };

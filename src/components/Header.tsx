@@ -1,0 +1,409 @@
+import { useState } from "react";
+import Logo from "../assets/logo.png";
+import PolygonGray from "../assets/polygon-gray.svg";
+
+export const Header = () => {
+	const [isFaded, setFaded] = useState(false);
+
+	const toggleFade = () => {
+		setFaded(!isFaded);
+	};
+
+	const openSubMenu = (
+		event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+	) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		(event.target as any).parentElement.classList.toggle("open-menu");
+		event.preventDefault();
+	};
+
+	return (
+		<header className="new-site-header">
+			<div className="header-top">
+				<div className="container">
+					<div className="ht-inner">
+						<div className="ht-left">
+							<ul>
+								<li>
+									<label>Price.</label> $56.98 <span className="up">4,47%</span>
+								</li>
+								<li>
+									<label>24 Vol.</label> $320,394,438
+								</li>
+								<li>
+									<label>Block</label> 4191337
+								</li>
+							</ul>
+						</div>
+						<div className="ht-right">
+							<div className="ht-search">
+								<form action="https://x.taostats.io/search" method="get">
+									<input
+										type="text"
+										name="query"
+										id="query"
+										placeholder="Search by Address / Validator /Txn Hash"
+									/>
+									<input type="submit" value="" />
+								</form>
+							</div>
+							<div className="ht-btns">
+								<a
+									href="https://delegate.taostats.io"
+									target="_blank"
+									className="btn"
+									rel="noreferrer"
+								>
+                  STAKE TAO
+								</a>
+								<div className="menu-dropdown">
+									<a href="#" className="btn">
+                    BUY TAO
+										<span>
+											<img src={PolygonGray} alt="Taostats down caret" />
+										</span>
+									</a>
+									<ul className="menu">
+										<li>
+											<a
+												href="https://www.mexc.com/register?inviteCode=1M9bg"
+												target="_blank"
+												rel="noreferrer"
+											>
+                        MEXC
+											</a>
+										</li>
+										<li>
+											<a
+												href="https://www.gate.io/trade/TAO_USDT?ref=A1QSXVla&amp;ref_type=106"
+												target="_blank"
+												rel="noreferrer"
+											>
+                        GATE.IO
+											</a>
+										</li>
+										<li>
+											<a
+												href="https://partner.bitget.com/bg/X0Z47N"
+												target="_blank"
+												rel="noreferrer"
+											>
+                        BITGET
+											</a>
+										</li>
+										<li>
+											<a
+												href="https://tensor.exchange/"
+												target="_blank"
+												rel="noreferrer"
+											>
+                        TENSOR EXCHANGE
+											</a>
+										</li>
+										<li>
+											<a
+												href="https://app.uniswap.org/#/swap?outputCurrency=0x77e06c9eccf2e797fd462a92b6d7642ef85b0a44"
+												target="_blank"
+												rel="noreferrer"
+											>
+                        UNISWAP(WTAO)
+											</a>
+										</li>
+									</ul>
+								</div>
+								<a
+									href="https://bitapai.io"
+									target="_blank"
+									className="btn"
+									rel="noreferrer"
+								>
+									<img
+										src="https://app.bitapai.io/images/logo.png"
+										data-xblocker="passed"
+										style={{ visibility: "visible" }}
+									/>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="header-bottom">
+				<div className="container">
+					<div className="hb-inner">
+						<div className="logo">
+							<a href="https://taostats.io">
+								<img src={Logo} alt="Taostats Logo" />
+							</a>
+						</div>
+						<div
+							className="menuBtn"
+							onClick={() => {
+								document.body.classList.toggle("active-menu");
+								toggleFade();
+							}}
+						>
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+
+						<div className={`main-menu fade-in-out ${isFaded ? "active" : ""}`}>
+							<div className="container">
+								<div className="ht-search">
+									<input
+										type="text"
+										placeholder="Search by Address / Validator /Txn Hash"
+									/>
+									<input type="submit" value="" />
+								</div>
+								<nav>
+									<ul>
+										<li className="current-menu-item">
+											<a href="https://taostats.io">Home</a>
+											<span className="menuItem-glow"></span>
+										</li>
+										<li className="menu-item-has-children">
+											<a href="https://taostats.io/subnets/">
+                        Subnets<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+											</a>
+											<ul className="subMenu">
+												<li>
+													<a href="https://taostats.io/subnets/0/">
+                            Subnet 0 - Root
+													</a>
+												</li>
+												<li>
+													<a href="https://taostats.io/subnets/1/">
+                            Subnet 1 - Text Prompting
+													</a>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+										</li>
+										<li className="menu-item-has-children">
+											<a href="https://x.taostats.io">
+                        Blockchain<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+											</a>
+											<ul className="subMenu">
+												<li>
+													<a href="https://x.taostats.io/#accounts">Accounts</a>
+												</li>
+												<li>
+													<a href="https://x.taostats.io/#transfers">
+                            Transfers
+													</a>
+												</li>
+												<li>
+													<a href="https://x.taostats.io/#blocks">Blocks</a>
+												</li>
+												<li>
+													<a href="https://taostats.io/tokenomics/">
+                            Tokenomics
+													</a>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+										</li>
+										<li className="menu-item-has-children">
+											<a href="https://taostats.io/verified-validators/">
+                        Validators<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+											</a>
+											<ul className="subMenu">
+												<li>
+													<a href="https://taostats.io/verified-validators/">
+                            Verified Validators
+													</a>
+												</li>
+												<li>
+													<a href="https://taostats.io/staking/">
+                            Delegation/Staking
+													</a>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+										</li>
+										<li className="menu-item-has-children">
+											<a href="https://taostats.io/developers/">
+                        Developers<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+											</a>
+											<ul className="subMenu">
+												<li>
+													<a href="https://bitapai.io/">BitAPAI</a>
+												</li>
+												<li>
+													<a href="https://x.taostats.io/api/">Taostats API</a>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+										</li>
+										<li className="menu-item-has-children">
+											<a href="#">
+                        Resources<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+											</a>
+											<ul className="subMenu">
+												<li className="">
+													<a href="https://taostats.io/links/">Links</a>
+												</li>
+												<li className="">
+													<a href="https://taostats.io/media/">Media</a>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+										</li>
+										<li className="menu-item-has-children">
+											<a href="#">
+                        More<span className="has-btn" onClick={(e) => openSubMenu(e)}></span>
+											</a>
+											<ul className="megaMenu subMenu">
+												<li>
+													<div className="menu-col-box">
+														<label>Tools and Services</label>
+														<p>
+                              Discover more Mogmachine&apos;s stuff, it&apos;s
+                              cool
+														</p>
+													</div>
+												</li>
+												<li>
+													<ul>
+														<li className="mi-title">
+															<a href="#">Tools</a>
+														</li>
+														<li>
+															<a href="#">Unit Converter</a>
+														</li>
+														<li>
+															<a href="#">CSV Export</a>
+														</li>
+														<li>
+															<a href="#">Account Balance Checker</a>
+														</li>
+													</ul>
+												</li>
+												<li>
+													<ul>
+														<li className="mi-title">
+															<a href="#">Explore</a>
+														</li>
+														<li>
+															<a href="#">Item 1</a>
+														</li>
+														<li>
+															<a href="#">Item 2</a>
+														</li>
+														<li>
+															<a href="#">Item 3</a>
+														</li>
+														<li>
+															<a href="#">Item 3</a>
+														</li>
+														<li>
+															<a href="#">Item 3</a>
+														</li>
+														<li>
+															<a href="#">Item 3</a>
+														</li>
+													</ul>
+												</li>
+												<li>
+													<ul>
+														<li className="mi-title">
+															<a href="#">Services</a>
+														</li>
+														<li>
+															<a href="#">Item 1</a>
+														</li>
+														<li>
+															<a href="#">Item 2</a>
+														</li>
+														<li>
+															<a href="#">Item 3</a>
+														</li>
+													</ul>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+										</li>
+									</ul>
+								</nav>
+								<div className="ht-btns">
+									<a href="https://delegate.taostats.io" className="btn">
+                    Stake Tao
+									</a>
+									<div className="menu-dropdown">
+										<a href="#" className="btn">
+                      BUY TAO
+											<span>
+												<img src={PolygonGray} alt="Taostats down caret" />
+											</span>
+										</a>
+										<ul className="menu">
+											<li>
+												<a
+													href="https://www.mexc.com/register?inviteCode=1M9bg"
+													target="_blank"
+													rel="noreferrer"
+												>
+                          MEXC
+												</a>
+											</li>
+											<li>
+												<a
+													href="https://www.gate.io/trade/TAO_USDT?ref=A1QSXVla&amp;ref_type=106"
+													target="_blank"
+													rel="noreferrer"
+												>
+                          GATE.IO
+												</a>
+											</li>
+											<li>
+												<a
+													href="https://partner.bitget.com/bg/X0Z47N"
+													target="_blank"
+													rel="noreferrer"
+												>
+                          BITGET
+												</a>
+											</li>
+											<li>
+												<a
+													href="https://tensor.exchange/"
+													target="_blank"
+													rel="noreferrer"
+												>
+                          TENSOR EXCHANGE
+												</a>
+											</li>
+											<li>
+												<a
+													href="https://app.uniswap.org/#/swap?outputCurrency=0x77e06c9eccf2e797fd462a92b6d7642ef85b0a44"
+													target="_blank"
+													rel="noreferrer"
+												>
+                          UNISWAP(WTAO)
+												</a>
+											</li>
+										</ul>
+									</div>
+									<a
+										href="https://bitapai.io"
+										target="_blank"
+										className="btn"
+										rel="noreferrer"
+									>
+										<img
+											src="https://app.bitapai.io/images/logo.png"
+											data-xblocker="passed"
+											style={{ visibility: "visible" }}
+										/>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+	);
+};
