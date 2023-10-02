@@ -195,13 +195,18 @@ export const Header = () => {
 											</a>
 											<ul className="subMenu">
 												<li>
-													<a href="https://taostats.io/subnets/0/">
-                            Subnet 0 - Root
+													<a href="https://taostats.io/subnets/netuid-0/">
+														Subnet 0 - Root
 													</a>
 												</li>
 												<li>
-													<a href="https://taostats.io/subnets/1/">
-                            Subnet 1 - Text Prompting
+													<a href="https://taostats.io/subnets/netuid-1/">
+														Subnet 1 - Text Prompting
+													</a>
+												</li>
+												<li>
+													<a href="https://taostats.io/subnets/netuid-11/">
+														Subnet 11 - Text Prompting
 													</a>
 												</li>
 											</ul>
@@ -270,7 +275,7 @@ export const Header = () => {
 													<a href="https://bitapai.io/">BitAPAI</a>
 												</li>
 												<li>
-													<a href="https://x.taostats.io/api/">Taostats API</a>
+													<a href="https://taostats.io/api/">Taostats API</a>
 												</li>
 											</ul>
 											<span className="menuItem-glow"></span>
@@ -293,84 +298,7 @@ export const Header = () => {
 											</ul>
 											<span className="menuItem-glow"></span>
 										</li>
-										<li className="menu-item-has-children">
-											<a href="#">
-                        More
-												<span
-													className="has-btn"
-													onClick={(e) => openSubMenu(e)}
-												></span>
-											</a>
-											<ul className="megaMenu subMenu">
-												<li>
-													<div className="menu-col-box">
-														<label>Tools and Services</label>
-														<p>
-                              Discover more Mogmachine&apos;s stuff, it&apos;s
-                              cool
-														</p>
-													</div>
-												</li>
-												<li>
-													<ul>
-														<li className="mi-title">
-															<a href="#">Tools</a>
-														</li>
-														<li>
-															<a href="#">Unit Converter</a>
-														</li>
-														<li>
-															<a href="#">CSV Export</a>
-														</li>
-														<li>
-															<a href="#">Account Balance Checker</a>
-														</li>
-													</ul>
-												</li>
-												<li>
-													<ul>
-														<li className="mi-title">
-															<a href="#">Explore</a>
-														</li>
-														<li>
-															<a href="#">Item 1</a>
-														</li>
-														<li>
-															<a href="#">Item 2</a>
-														</li>
-														<li>
-															<a href="#">Item 3</a>
-														</li>
-														<li>
-															<a href="#">Item 3</a>
-														</li>
-														<li>
-															<a href="#">Item 3</a>
-														</li>
-														<li>
-															<a href="#">Item 3</a>
-														</li>
-													</ul>
-												</li>
-												<li>
-													<ul>
-														<li className="mi-title">
-															<a href="#">Services</a>
-														</li>
-														<li>
-															<a href="#">Item 1</a>
-														</li>
-														<li>
-															<a href="#">Item 2</a>
-														</li>
-														<li>
-															<a href="#">Item 3</a>
-														</li>
-													</ul>
-												</li>
-											</ul>
-											<span className="menuItem-glow"></span>
-										</li>
+										
 									</ul>
 								</nav>
 								<div className="ht-btns">
