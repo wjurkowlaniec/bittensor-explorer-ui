@@ -39,8 +39,8 @@ export const Footer = () => {
                 .
 							</p>
 						</div>
-						<div class="ft-right">
-							<div class="f-col">
+						<div className="ft-right">
+							<div className="f-col">
 								<h5>Subnets</h5>
 								<ul>
 									<li><a href="https://taostats.io/subnets/netuid-0/">Subnet 0</a></li>
@@ -48,7 +48,7 @@ export const Footer = () => {
 									<li><a href="https://taostats.io/subnets/netuid-11/">Subnet 11</a></li>                               
 								</ul>
 							</div>
-							<div class="f-col">
+							<div className="f-col">
 								<h5>Blockchain</h5>                             
 								<ul>
 									<li><a href="https://x.taostats.io/#accounts">Accounts</a></li>
@@ -57,7 +57,7 @@ export const Footer = () => {
 									<li><a href="https://taostats.io/tokenomics/">Tokenomics</a></li>
 								</ul>
 							</div>
-							<div class="f-col">
+							<div className="f-col">
 								<h5>Validators</h5> 
 								<ul>
 									<li><a href="https://taostats.io/verified-validators/">Verified Validators</a></li>
@@ -70,8 +70,8 @@ export const Footer = () => {
 								</ul>
 								<h5>Resources</h5> 
 								<ul>
-									<li class=""><a href="https://taostats.io/links/">Links</a></li>
-									<li class=""><a href="https://taostats.io/media/">Media</a></li>
+									<li className=""><a href="https://taostats.io/links/">Links</a></li>
+									<li className=""><a href="https://taostats.io/media/">Media</a></li>
 								</ul>
 							</div>
 						</div>
