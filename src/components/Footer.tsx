@@ -1,102 +1,97 @@
-/** @jsxImportSource @emotion/react */
-import { FaDiscord } from "react-icons/fa";
-import { Twitter } from "@mui/icons-material";
-import { css, Theme } from "@emotion/react";
-import { HTMLAttributes } from "react";
+import TaoIcon from "../assets/tao_icon.png";
 
-const footerStyle = css`
-	box-sizing: border-box;
-	width: 100%;
-	padding: 24px;
-	padding-top: 48px;
-	padding-bottom: 64px;
-`;
-
-const contentStyle = (theme: Theme) => css`
-	display: flex;
-	box-sizing: border-box;
-	justify-content: space-between;
-	margin: 0 auto;
-	padding: 0 16px;
-	align-items: center;
-	gap: 52px;
-
-	width: 100%;
-
-	z-index: 100;
-
-	font-size: 13px;
-
-	a {
-		color: ${theme.palette.success.main};
-		text-decoration: none;
-	}
-
-	a:hover {
-		color: ${theme.palette.success.light};
-	}
-
-	${theme.breakpoints.down("md")} {
-		flex-direction: column-reverse;
-		gap: 16px;
-	}
-`;
-
-const creditsStyle = css`
-	display: flex;
-	align-items: center;
-
-	> div {
-		text-align: center;
-	}
-
-	a {
-		font-weight: 600;
-	}
-`;
-
-const separatorStyle = css`
-	display: inline-block;
-	width: 1px;
-	height: 10px;
-	background-color: currentColor;
-	margin: 0 16px;
-	margin-top: 2px;
-	opacity: .75;
-`;
-
-const linksStyle = css`
-	display: flex;
-	padding: 0 8px;
-	width: fit-content;
-	align-items: center;
-	gap: 2rem;
-	z-index: 10;
-`;
-
-const iconStyle = css`
-	display: block;
-	font-size: 1.25em;
-`;
-
-export const Footer = (props: HTMLAttributes<HTMLDivElement>) => {
+export const Footer = () => {
 	return (
-		<div css={footerStyle} {...props}>
-			<div css={contentStyle}>
-				<div css={creditsStyle}>
-					<div>Created by <a href="https://taostats.io">Taostats</a></div>
-					<div css={separatorStyle}></div>
-					<div>Built on <a href="https://bittensor.com">Bittensor</a></div>
-				</div>
-				<div css={linksStyle}>
-					<a href="https://twitter.com/taostats">
-						<Twitter css={iconStyle} />
-					</a>
-					<a href="https://discord.com/channels/1086368192521318472/1086369375411507290">
-						<FaDiscord css={iconStyle} />
-					</a>
+		<footer className="new-site-footer">
+			<div className="container">
+				<div className="footer-cover">
+					<div className="footer-top">
+						<div className="ft-left">
+							<div className="logo-tegline">
+								<img src={TaoIcon} /> Powered by Bittensor
+							</div>
+							<p>
+                τaostats is a Block Explorer and Analytics Platform for
+                Bittensor, a decentralized machine learning network.
+							</p>
+							<p>This site is not affiliated with the Opentensor Foundation.</p>
+							<p>
+                The content of this website is provided for information purposes
+                only.
+								<br />
+                No claim is made as to the accuracy or currency of the content
+                on this site at any time.
+							</p>
+							<p>
+                τaosτaτs is created and maintained by{" "}
+								<a
+									href="https://twitter.com/mogmachine"
+									target="_blank"
+									rel="noreferrer"
+								>
+                  mogmachine
+								</a>
+                . We hope you found it helpful, if you have any suggestions or
+                issues please contact us at{" "}
+								<a href="mailto:taostats@mogmachine.com">
+                  taostats@mogmachine.com
+								</a>
+                .
+							</p>
+						</div>
+						<div className="ft-right">
+							<div className="f-col">
+								<h5>Subnets</h5>
+								<ul>
+									<li><a href="https://taostats.io/subnets/netuid-0/">Subnet 0</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-1/">Subnet 1</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-11/">Subnet 11</a></li>                               
+								</ul>
+							</div>
+							<div className="f-col">
+								<h5>Blockchain</h5>                             
+								<ul>
+									<li><a href="https://x.taostats.io/#accounts">Accounts</a></li>
+									<li><a href="https://x.taostats.io/#transfers">Transfers</a></li>
+									<li><a href="https://x.taostats.io/#blocks">Blocks</a></li>
+									<li><a href="https://taostats.io/tokenomics/">Tokenomics</a></li>
+								</ul>
+							</div>
+							<div className="f-col">
+								<h5>Validators</h5> 
+								<ul>
+									<li><a href="https://taostats.io/verified-validators/">Verified Validators</a></li>
+									<li><a href="https://taostats.io/staking/">Delegation/Staking</a></li>
+								</ul>
+								<h5>Developers</h5> 
+								<ul>
+									<li><a href="https://bitapai.io/">BitAPAI</a></li>
+									<li><a href="https://taostats.io/api/">Taostats API</a></li>
+								</ul>
+								<h5>Resources</h5> 
+								<ul>
+									<li className=""><a href="https://taostats.io/links/">Links</a></li>
+									<li className=""><a href="https://taostats.io/media/">Media</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div className="footer-bottom">
+						<div className="copyright">
+							<p>Taostats ©2023.</p>
+						</div>
+						<p>
+              Taostats is funded by public delegation. Support us by delegating{" "}
+							<a
+								href="https://delegate.taostats.io/staking?hkey=5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8"
+								style={{ color: "#14dec2" }}
+							>
+                stake to the taostats.io validator
+							</a>
+						</p>
+					</div>
 				</div>
 			</div>
-		</div>
+		</footer>
 	);
 };
