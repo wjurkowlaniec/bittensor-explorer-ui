@@ -39,71 +39,39 @@ export const Footer = () => {
                 .
 							</p>
 						</div>
-						<div className="ft-right">
-							<div className="f-col">
-								<h5>Tao Stats</h5>
+						<div class="ft-right">
+							<div class="f-col">
+								<h5>Subnets</h5>
 								<ul>
-									<li>
-										<a href="#">About Us</a>
-									</li>
-									<li>
-										<a href="#">Contact Us</a>
-									</li>
-									<li>
-										<a href="#">Careers</a>
-									</li>
-									<li>
-										<a href="#">Terms of Service</a>
-									</li>
-									<li>
-										<a href="#">Bug Bounty</a>
-									</li>
+									<li><a href="https://taostats.io/subnets/netuid-0/">Subnet 0</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-1/">Subnet 1</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-11/">Subnet 11</a></li>                               
 								</ul>
 							</div>
-							<div className="f-col">
-								<h5>Community</h5>
+							<div class="f-col">
+								<h5>Blockchain</h5>                             
 								<ul>
-									<li>
-										<a href="#">API Documentation</a>
-									</li>
-									<li>
-										<a href="#">Knowledge Base</a>
-									</li>
-									<li>
-										<a href="#">Network Status</a>
-									</li>
-									<li>
-										<a href="#">Newsletters</a>
-									</li>
-									<li>
-										<a href="#">Disqus Comments</a>
-									</li>
+									<li><a href="https://x.taostats.io/#accounts">Accounts</a></li>
+									<li><a href="https://x.taostats.io/#transfers">Transfers</a></li>
+									<li><a href="https://x.taostats.io/#blocks">Blocks</a></li>
+									<li><a href="https://taostats.io/tokenomics/">Tokenomics</a></li>
 								</ul>
 							</div>
-							<div className="f-col">
-								<h5>Products &amp; Services</h5>
+							<div class="f-col">
+								<h5>Validators</h5> 
 								<ul>
-									<li>
-										<a href="#">Advertise</a>
-									</li>
-									<li>
-										<a href="#">Explorer as a Service</a>
-									</li>
-									<li>
-										<a href="#">API Plans</a>
-									</li>
-									<li>
-										<a href="#">Item 1</a>
-									</li>
-									<li>
-										<a href="#">Item 2</a>
-									</li>
-									<li>
-										<a href="#">Item 3</a>
-									</li>
-									<li>
-										<a href="#">Item 4</a>
-									</li>
+									<li><a href="https://taostats.io/verified-validators/">Verified Validators</a></li>
+									<li><a href="https://taostats.io/staking/">Delegation/Staking</a></li>
+								</ul>
+								<h5>Developers</h5> 
+								<ul>
+									<li><a href="https://bitapai.io/">BitAPAI</a></li>
+									<li><a href="https://taostats.io/api/">Taostats API</a></li>
+								</ul>
+								<h5>Resources</h5> 
+								<ul>
+									<li class=""><a href="https://taostats.io/links/">Links</a></li>
+									<li class=""><a href="https://taostats.io/media/">Media</a></li>
 								</ul>
 							</div>
 						</div>
@@ -113,8 +81,7 @@ export const Footer = () => {
 							<p>Taostats ©2023.</p>
 						</div>
 						<p>
-              If you would like to show your support then please consider
-              delegating{" "}
+              Taostats is funded by public delegation. Support us by delegating{" "}
 							<a
 								href="https://delegate.taostats.io/staking?hkey=5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8"
 								style={{ color: "#14dec2" }}
