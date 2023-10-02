@@ -2,8 +2,7 @@ import { useState } from "react";
 import Logo from "../assets/logo.png";
 import PolygonGray from "../assets/polygon-gray.svg";
 import { useAppStats } from "../contexts";
-import { formatNumber, nFormatter } from "../utils/number";
-import Decimal from "decimal.js";
+import { nFormatter } from "../utils/number";
 
 export const Header = () => {
 	const {
