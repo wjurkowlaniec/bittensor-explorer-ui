@@ -46,14 +46,14 @@ export const Header = () => {
 										}`}
 									>
 										{priceChange24h > 0 ? "▴" : priceChange24h < 0 ? "▾" : ""}
-										{` ${priceChange24h}%`}%
+										{` ${priceChange24h}%`}
 									</span>
 								</li>
 								<li>
 									<label>24 Vol.</label> ${nFormatter(volume24h, 2)}
 								</li>
 								<li>
-									<label>Market Cap</label> {nFormatter(marketCap, 2)}
+									<label>Market Cap</label> ${nFormatter(marketCap, 2)}
 								</li>
 							</ul>
 						</div>
