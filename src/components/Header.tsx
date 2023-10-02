@@ -7,12 +7,12 @@ import Decimal from "decimal.js";
 
 export const Header = () => {
 	const {
-		state: { tokenStats, chainStats },
+		state: { tokenStats },
 	} = useAppStats();
 	const price = tokenStats?.price ?? 0;
 	const priceChange24h = tokenStats?.priceChange24h ?? 0;
 	const volume24h = tokenStats?.volume24h ?? 0;
-	const blocksFinalized = chainStats?.blocksFinalized ?? 0;
+	const marketCap = tokenStats?.marketCap ?? 0;
 
 	const [isFaded, setFaded] = useState(false);
 
@@ -54,9 +54,7 @@ export const Header = () => {
 									<label>24 Vol.</label> ${nFormatter(volume24h, 2)}
 								</li>
 								<li>
-									<label>Block</label> {formatNumber(
-										new Decimal(blocksFinalized.toString())
-									)}
+									<label>Market Cap</label> {nFormatter(marketCap, 2)}
 								</li>
 							</ul>
 						</div>
