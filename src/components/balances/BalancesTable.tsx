@@ -11,6 +11,7 @@ import { AccountAddress } from "../AccountAddress";
 import { Currency } from "../Currency";
 import { ItemsTable, ItemsTableAttribute } from "../ItemsTable";
 import { Link } from "../Link";
+import { rawAmountToDecimaledString } from "../../utils/number";
 
 export type BalancesTableProps = {
 	balances: PaginatedResource<Balance>;
@@ -44,9 +45,16 @@ const orderMappings = {
 
 const filterMappings: BalancesFilter = {
 	balanceTotal: {
-		key: "Balances",
-		labels: ["+100k", "+50k", "+10k", "+5k", "+1k", "..."],
-		values: [100000, 50000, 10000, 5000, 1000, 0],
+		key: "Balance >",
+		labels: ["100k", "50k", "10k", "5k", "1k", "..."],
+		values: [
+			rawAmountToDecimaledString(100000),
+			rawAmountToDecimaledString(50000),
+			rawAmountToDecimaledString(10000),
+			rawAmountToDecimaledString(5000),
+			rawAmountToDecimaledString(1000),
+			0,
+		],
 		operator: "greaterThan",
 	},
 };
@@ -110,12 +118,11 @@ function BalancesTable(props: BalancesTableProps) {
 			...filter,
 			[key]: {
 				[filterMappings[key].operator]: value,
-			}
+			},
 		});
 	};
 	useEffect(() => {
-		if (!onFilterChange)
-			return;
+		if (!onFilterChange) return;
 		onFilterChange(filter);
 	}, [JSON.stringify(filter)]);
 
