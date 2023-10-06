@@ -13,7 +13,7 @@ import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
 import { useEffect, useRef, useState } from "react";
 import { BlocksOrder } from "../services/blocksService";
-import { BalancesOrder } from "../services/balancesService";
+import { BalancesFilter, BalancesOrder } from "../services/balancesService";
 import { TransfersOrder } from "../services/transfersService";
 import { useDelegates } from "../hooks/useDelegates";
 import { DelegatesOrder } from "../services/delegateService";
@@ -62,7 +62,9 @@ export const HomePage = () => {
 	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
 	const [balanceSort, setBalanceSort] =
     useState<BalancesOrder>(balancesInitialOrder);
-	const balances = useBalances(undefined, balanceSort);
+	const balancesInitialFilter: BalancesFilter = { balanceTotal: { greaterThan: 0 } };
+	const [balanceFilter, setBalanceFilter] = useState<BalancesFilter>(balancesInitialFilter);
+	const balances = useBalances(balanceFilter, balanceSort);
 
 	const transfersInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
 	const [transferSort, setTransferSort] = useState<TransfersOrder>(
@@ -180,6 +182,10 @@ export const HomePage = () => {
 										setBalanceSort(sortKey)
 									}
 									initialSort={balancesInitialOrder}
+									onFilterChange={(newFilter: BalancesFilter) =>
+										setBalanceFilter({...balanceFilter, ...newFilter})
+									}
+									initialFilter={balancesInitialFilter}
 								/>
 							</TabPane>
 						</TabbedContent>
