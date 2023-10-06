@@ -60,8 +60,7 @@ export const AccountAddress = (props: AccountLinkProps) => {
 				</Link>
 			);
 		}
-
-		if (link) {
+		else if (link) {
 			content = (
 				<Link to={`/account/${address}`} css={linkStyle}>
 					{content}
