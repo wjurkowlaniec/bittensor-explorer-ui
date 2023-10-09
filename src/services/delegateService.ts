@@ -8,7 +8,9 @@ import { fetchIndexer } from "./fetchService";
 
 import verifiedDelegates from "../delegates.json";
 
-export type DelegateFilter = object;
+export type DelegateFilter = {
+	[key: string]: any;
+};
 export type DelegatesOrder =
 	| "ID_ASC"
 	| "ID_DESC"
