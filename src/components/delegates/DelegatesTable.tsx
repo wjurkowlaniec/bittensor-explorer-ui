@@ -75,13 +75,15 @@ const orderMappings = {
 const filterMappings: DelegateFilter = {
 	amount: {
 		key: "Amount >",
-		labels: ["100k", "50k", "10k", "5k", "1k", "..."],
+		labels: ["100k", "50k", "10k", "5k", "1k", "500", "100", "..."],
 		values: [
 			rawAmountToDecimaledString(100000),
 			rawAmountToDecimaledString(50000),
 			rawAmountToDecimaledString(10000),
 			rawAmountToDecimaledString(5000),
 			rawAmountToDecimaledString(1000),
+			rawAmountToDecimaledString(500),
+			rawAmountToDecimaledString(100),
 			0,
 		],
 		operator: "greaterThan",
