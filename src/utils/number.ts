@@ -3,10 +3,16 @@ import { NETWORK_CONFIG } from "../config";
 
 const supportedFiatCurrencies = ["USD"];
 
-export function rawAmountToDecimal(amount: string | undefined) {
+export function rawAmountToDecimal(amount: string | number | undefined) {
 	const { decimals } = NETWORK_CONFIG;
 	const scale = new Decimal(10).pow(decimals * -1);
 	return new Decimal(amount || 0).mul(scale);
+}
+
+export function rawAmountToDecimaledString(amount: string | number | undefined) {
+	const { decimals } = NETWORK_CONFIG;
+	const scale = new Decimal(10).pow(decimals);
+	return new Decimal(amount || 0).mul(scale).toString();
 }
 
 export type FormatNumberOptions = {

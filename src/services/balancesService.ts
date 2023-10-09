@@ -4,7 +4,9 @@ import { PaginationOptions } from "../model/paginationOptions";
 import { extractItems } from "../utils/extractItems";
 import { fetchIndexer } from "./fetchService";
 
-export type BalancesFilter = object;
+export type BalancesFilter = {
+	[key: string]: any;
+};
 export type BalancesOrder =
 	| "ID_ASC"
 	| "ID_DESC"

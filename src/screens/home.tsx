@@ -13,10 +13,10 @@ import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
 import { useEffect, useRef, useState } from "react";
 import { BlocksOrder } from "../services/blocksService";
-import { BalancesOrder } from "../services/balancesService";
-import { TransfersOrder } from "../services/transfersService";
+import { BalancesFilter, BalancesOrder } from "../services/balancesService";
+import { TransfersFilter, TransfersOrder } from "../services/transfersService";
 import { useDelegates } from "../hooks/useDelegates";
-import { DelegatesOrder } from "../services/delegateService";
+import { DelegateFilter, DelegatesOrder } from "../services/delegateService";
 import { useLocation } from "react-router-dom";
 
 const contentStyle = css`
@@ -62,19 +62,25 @@ export const HomePage = () => {
 	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
 	const [balanceSort, setBalanceSort] =
     useState<BalancesOrder>(balancesInitialOrder);
-	const balances = useBalances(undefined, balanceSort);
+	const balancesInitialFilter: BalancesFilter = { balanceTotal: { greaterThan: 0 } };
+	const [balanceFilter, setBalanceFilter] = useState<BalancesFilter>(balancesInitialFilter);
+	const balances = useBalances(balanceFilter, balanceSort);
 
 	const transfersInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
 	const [transferSort, setTransferSort] = useState<TransfersOrder>(
 		transfersInitialOrder
 	);
-	const transfers = useTransfers(undefined, transferSort);
+	const transfersInitialFilter: TransfersFilter = { amount: { greaterThan: 0 } };
+	const [transfersFilter, setTransfersFilter] = useState<TransfersFilter>(transfersInitialFilter);
+	const transfers = useTransfers(transfersFilter, transferSort);
 
 	const delegatesInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
 	const [delegateSort, setDelegateSort] = useState<DelegatesOrder>(
 		delegatesInitialOrder
 	);
-	const delegates = useDelegates(undefined, delegateSort);
+	const delegatesInitialFilter: DelegateFilter = { amount: { greaterThan: 0 } };
+	const [delegatesFilter, setDelegatesFilter] = useState<DelegateFilter>(delegatesInitialFilter);
+	const delegates = useDelegates(delegatesFilter, delegateSort);
 
 	useEffect(() => {
 		if (blocks.pagination.offset === 0) {
@@ -149,6 +155,10 @@ export const HomePage = () => {
 										setTransferSort(sortKey)
 									}
 									initialSort={transfersInitialOrder}
+									onFilterChange={(newFilter?: TransfersFilter) =>
+										setTransfersFilter({...transfersFilter, ...newFilter})
+									}
+									initialFilter={transfersInitialFilter}
 								/>
 							</TabPane>
 							<TabPane
@@ -165,6 +175,10 @@ export const HomePage = () => {
 										setDelegateSort(sortKey)
 									}
 									initialSort={delegatesInitialOrder}
+									onFilterChange={(newFilter?: DelegateFilter) =>
+										setDelegatesFilter({...delegatesFilter, ...newFilter})
+									}
+									initialFilter={delegatesInitialFilter}
 								/>
 							</TabPane>
 							<TabPane
@@ -180,6 +194,10 @@ export const HomePage = () => {
 										setBalanceSort(sortKey)
 									}
 									initialSort={balancesInitialOrder}
+									onFilterChange={(newFilter?: BalancesFilter) =>
+										setBalanceFilter({...balanceFilter, ...newFilter})
+									}
+									initialFilter={balancesInitialFilter}
 								/>
 							</TabPane>
 						</TabbedContent>

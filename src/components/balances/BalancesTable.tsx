@@ -5,18 +5,21 @@ import { Balance } from "../../model/balance";
 import { PaginatedResource } from "../../model/paginatedResource";
 import { SortDirection } from "../../model/sortDirection";
 import { SortOrder } from "../../model/sortOrder";
-import { BalancesOrder } from "../../services/balancesService";
+import { BalancesFilter, BalancesOrder } from "../../services/balancesService";
 import { decodeAddress } from "../../utils/formatAddress";
 import { AccountAddress } from "../AccountAddress";
 import { Currency } from "../Currency";
 import { ItemsTable, ItemsTableAttribute } from "../ItemsTable";
 import { Link } from "../Link";
+import { rawAmountToDecimaledString } from "../../utils/number";
 
 export type BalancesTableProps = {
 	balances: PaginatedResource<Balance>;
 	initialSortOrder?: string;
 	onSortChange?: (orderBy: BalancesOrder) => void;
 	initialSort?: string;
+	onFilterChange?: (newFilter?: BalancesFilter) => void;
+	initialFilter?: BalancesFilter;
 };
 
 const BalancesItemsTableAttribute = ItemsTableAttribute<Balance>;
@@ -40,22 +43,44 @@ const orderMappings = {
 	},
 };
 
+const filterMappings: BalancesFilter = {
+	balanceTotal: {
+		key: "Balance >",
+		labels: ["100k", "50k", "10k", "5k", "1k", "500", "100", "..."],
+		values: [
+			rawAmountToDecimaledString(100000),
+			rawAmountToDecimaledString(50000),
+			rawAmountToDecimaledString(10000),
+			rawAmountToDecimaledString(5000),
+			rawAmountToDecimaledString(1000),
+			rawAmountToDecimaledString(500),
+			rawAmountToDecimaledString(100),
+			0,
+		],
+		operator: "greaterThan",
+	},
+};
 
 function BalancesTable(props: BalancesTableProps) {
-	const { balances, initialSort, onSortChange } = props;
+	const { balances, initialSort, onSortChange, initialFilter, onFilterChange } =
+    props;
 	const [sort, setSort] = useState<SortOrder<string>>();
+	const [filter, setFilter] = useState<BalancesFilter | undefined>();
 
 	useEffect(() => {
-		Object.entries(orderMappings).forEach(([property, value]) => { 
-			Object.entries(value).forEach(([dir, orderKey]) => { 
+		Object.entries(orderMappings).forEach(([property, value]) => {
+			Object.entries(value).forEach(([dir, orderKey]) => {
 				if (orderKey === initialSort) {
-					setSort({ property, direction: (dir === "1" ? SortDirection.ASC : SortDirection.DESC) });
+					setSort({
+						property,
+						direction: dir === "1" ? SortDirection.ASC : SortDirection.DESC,
+					});
 				}
 			});
 		});
 	}, [initialSort]);
 
-	const handleSortChange = (property?: string) => { 
+	const handleSortChange = (property?: string) => {
 		if (!property) return;
 		if (property === sort?.property) {
 			setSort({
@@ -71,9 +96,37 @@ function BalancesTable(props: BalancesTableProps) {
 	};
 
 	useEffect(() => {
-		if (!onSortChange || !sort?.property || sort.direction === undefined) return;
+		if (!onSortChange || !sort?.property || sort.direction === undefined)
+			return;
 		onSortChange((orderMappings as any)[sort.property][sort.direction]);
 	}, [JSON.stringify(sort)]);
+
+	useEffect(() => {
+		Object.entries(filterMappings).forEach(([property, mapping]) => {
+			mapping.values.forEach((value: number) => {
+				if (value === initialFilter?.[property]?.[mapping.operator]) {
+					setFilter({
+						...filter,
+						[property]: {
+							[mapping.operator]: value,
+						},
+					});
+				}
+			});
+		});
+	}, [JSON.stringify(initialFilter)]);
+	const handleFilterChange = (key: string, value: number) => {
+		setFilter({
+			...filter,
+			[key]: {
+				[filterMappings[key].operator]: value,
+			},
+		});
+	};
+	useEffect(() => {
+		if (!onFilterChange) return;
+		onFilterChange(filter);
+	}, [JSON.stringify(filter)]);
 
 	return (
 		<ItemsTable
@@ -81,72 +134,75 @@ function BalancesTable(props: BalancesTableProps) {
 			additionalData={[]}
 			loading={balances.loading}
 			notFound={balances.notFound}
-			notFoundMessage='No balances found'
+			notFoundMessage="No balances found"
 			error={balances.error}
 			pagination={balances.pagination}
-			data-test='balances-table'
+			data-test="balances-table"
 			showRank
 			sort={sort}
 			onSortChange={handleSortChange}
+			filterMappings={filterMappings}
+			filter={filter}
+			onFilterChange={handleFilterChange}
 		>
 			<BalancesItemsTableAttribute
-				label='Account'
+				label="Account"
 				render={(balance) => (
 					<AccountAddress
 						address={decodeAddress(balance.address)}
 						prefix={NETWORK_CONFIG.prefix}
-						copyToClipboard='normal'
+						copyToClipboard="normal"
 						shorten
 					/>
 				)}
 			/>
 
 			<BalancesItemsTableAttribute
-				label='Free'
+				label="Free"
 				sortable
-				sortProperty='free'
+				sortProperty="free"
 				render={(balance) => (
 					<Currency
 						amount={balance.free}
 						currency={NETWORK_CONFIG.currency}
-						decimalPlaces='optimal'
+						decimalPlaces="optimal"
 						showFullInTooltip
 					/>
 				)}
 			/>
 
 			<BalancesItemsTableAttribute
-				label='Delegated'
+				label="Delegated"
 				sortable
-				sortProperty='delegated'
+				sortProperty="delegated"
 				render={(balance) => (
 					<Currency
 						amount={balance.staked}
 						currency={NETWORK_CONFIG.currency}
-						decimalPlaces='optimal'
+						decimalPlaces="optimal"
 						showFullInTooltip
 					/>
 				)}
 			/>
 
 			<BalancesItemsTableAttribute
-				label='Total'
+				label="Total"
 				sortable
-				sortProperty='total'
+				sortProperty="total"
 				render={(balance) => (
 					<Currency
 						amount={balance.total}
 						currency={NETWORK_CONFIG.currency}
-						decimalPlaces='optimal'
+						decimalPlaces="optimal"
 						showFullInTooltip
 					/>
 				)}
 			/>
 
 			<BalancesItemsTableAttribute
-				label='Last update'
+				label="Last update"
 				sortable
-				sortProperty='updated_at'
+				sortProperty="updated_at"
 				render={(balance) => (
 					<Link to={`/block/${balance.updatedAt.toString()}`}>
 						{balance.updatedAt.toString()}

@@ -25,6 +25,7 @@ import NotFound from "./NotFound";
 import { TablePagination } from "./TablePagination";
 import { SortDirection } from "../model/sortDirection";
 import { TablePaginationHeader } from "./TablePaginationHeader";
+import { TableFilter } from "./TableFilter";
 
 const tableStyle = css`
   table-layout: auto;
@@ -93,17 +94,17 @@ const sortArrows = css`
     display: block;
     line-height: 8px;
     font-weight: 500;
-	opacity: 1;
+    opacity: 1;
   }
 
   ::before {
-    content: '\\25B2';
+    content: "\\25B2";
     font-size: 10px !important;
   }
 
   ::after {
-	margin-left: -4px;
-	content: '\\25BC';
+    margin-left: -4px;
+    content: "\\25BC";
     font-size: 10px !important;
   }
 `;
@@ -194,6 +195,9 @@ export type ItemsTableProps<
 	)[];
 	showRank?: boolean;
 	onSortChange?: (property: string | undefined) => void;
+	filterMappings?: any;
+	filter?: any;
+	onFilterChange?: (key: string, value: any) => void;
 };
 
 export const ItemsTable = <
@@ -216,6 +220,9 @@ export const ItemsTable = <
 		children,
 		showRank,
 		onSortChange,
+		filterMappings,
+		filter,
+		onFilterChange,
 		...restProps
 	} = props;
 
@@ -238,8 +245,18 @@ export const ItemsTable = <
 	}
 
 	return (
-		<div {...restProps} data-class='table'>
+		<div {...restProps} data-class="table">
 			{pagination && <TablePaginationHeader {...pagination} />}
+			{filterMappings && filter &&
+			Object.entries(filterMappings).map(([property, value], index) => (
+				<TableFilter
+					property={property}
+					filter={value}
+					value={filter[property][(value as any).operator]}
+					key={`filter-${property}-${index}`}
+					onFilterChange={onFilterChange}
+				/>
+			))}
 			<TableContainer>
 				<Table css={tableStyle}>
 					<colgroup>
@@ -297,7 +314,12 @@ export const ItemsTable = <
 								)}
 								{Children.map(
 									children,
-									(child) =>child && cloneElement(child, { _data: item, _additionalData: additionalData})
+									(child) =>
+										child &&
+										cloneElement(child, {
+											_data: item,
+											_additionalData: additionalData,
+										})
 								)}
 							</TableRow>
 						))}

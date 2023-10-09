@@ -11,8 +11,9 @@ import { css, Theme } from "@mui/material";
 import { SortDirection } from "../../model/sortDirection";
 import { useEffect, useState } from "react";
 import { SortOrder } from "../../model/sortOrder";
-import { DelegatesOrder } from "../../services/delegateService";
+import { DelegateFilter, DelegatesOrder } from "../../services/delegateService";
 import { Delegate } from "../../model/delegate";
+import { rawAmountToDecimaledString } from "../../utils/number";
 
 const dirContainer = css`
   display: flex;
@@ -54,6 +55,8 @@ export type DelegatesTableProps = {
 	initialSortOrder?: string;
 	onSortChange?: (orderBy: DelegatesOrder) => void;
 	initialSort?: string;
+	onFilterChange?: (newFilter?: DelegateFilter) => void;
+	initialFilter?: DelegateFilter;
 };
 
 const DelegatesTableAttribute = ItemsTableAttribute<Delegate>;
@@ -69,13 +72,32 @@ const orderMappings = {
 	},
 };
 
+const filterMappings: DelegateFilter = {
+	amount: {
+		key: "Amount >",
+		labels: ["100k", "50k", "10k", "5k", "1k", "500", "100", "..."],
+		values: [
+			rawAmountToDecimaledString(100000),
+			rawAmountToDecimaledString(50000),
+			rawAmountToDecimaledString(10000),
+			rawAmountToDecimaledString(5000),
+			rawAmountToDecimaledString(1000),
+			rawAmountToDecimaledString(500),
+			rawAmountToDecimaledString(100),
+			0,
+		],
+		operator: "greaterThan",
+	},
+};
+
 function DelegatesTable(props: DelegatesTableProps) {
-	const { delegates, showTime } = props;
+	const { delegates, showTime, initialFilter, onFilterChange } = props;
 
 	const { currency, prefix } = NETWORK_CONFIG;
 
 	const { initialSort, onSortChange } = props;
 	const [sort, setSort] = useState<SortOrder<string>>();
+	const [filter, setFilter] = useState<DelegateFilter | undefined>();
 
 	useEffect(() => {
 		Object.entries(orderMappings).forEach(([property, value]) => {
@@ -111,6 +133,33 @@ function DelegatesTable(props: DelegatesTableProps) {
 		onSortChange((orderMappings as any)[sort.property][sort.direction]);
 	}, [JSON.stringify(sort)]);
 
+	useEffect(() => {
+		Object.entries(filterMappings).forEach(([property, mapping]) => {
+			mapping.values.forEach((value: number) => {
+				if (value === initialFilter?.[property]?.[mapping.operator]) {
+					setFilter({
+						...filter,
+						[property]: {
+							[mapping.operator]: value,
+						},
+					});
+				}
+			});
+		});
+	}, [JSON.stringify(initialFilter)]);
+	const handleFilterChange = (key: string, value: number) => {
+		setFilter({
+			...filter,
+			[key]: {
+				[filterMappings[key].operator]: value,
+			},
+		});
+	};
+	useEffect(() => {
+		if (!onFilterChange) return;
+		onFilterChange(filter);
+	}, [JSON.stringify(filter)]);
+
 	return (
 		<ItemsTable
 			data={delegates.data}
@@ -122,6 +171,9 @@ function DelegatesTable(props: DelegatesTableProps) {
 			data-test='delegates-table'
 			sort={sort}
 			onSortChange={handleSortChange}
+			filterMappings={filterMappings}
+			filter={filter}
+			onFilterChange={handleFilterChange}
 		>
 			<DelegatesTableAttribute
 				label='Extrinsic'

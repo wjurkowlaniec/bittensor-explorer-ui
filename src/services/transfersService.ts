@@ -5,7 +5,9 @@ import { Transfer } from "../model/transfer";
 import { extractItems } from "../utils/extractItems";
 import { fetchIndexer } from "./fetchService";
 
-export type TransfersFilter = object;
+export type TransfersFilter = {
+	[key: string]: any;
+};
 export type TransfersOrder =
 	| "ID_ASC"
 	| "ID_DESC"
