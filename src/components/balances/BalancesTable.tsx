@@ -18,7 +18,7 @@ export type BalancesTableProps = {
 	initialSortOrder?: string;
 	onSortChange?: (orderBy: BalancesOrder) => void;
 	initialSort?: string;
-	onFilterChange?: (newFilter: BalancesFilter) => void;
+	onFilterChange?: (newFilter?: BalancesFilter) => void;
 	initialFilter?: BalancesFilter;
 };
 
@@ -63,7 +63,7 @@ function BalancesTable(props: BalancesTableProps) {
 	const { balances, initialSort, onSortChange, initialFilter, onFilterChange } =
     props;
 	const [sort, setSort] = useState<SortOrder<string>>();
-	const [filter, setFilter] = useState<BalancesFilter>({});
+	const [filter, setFilter] = useState<BalancesFilter | undefined>();
 
 	useEffect(() => {
 		Object.entries(orderMappings).forEach(([property, value]) => {

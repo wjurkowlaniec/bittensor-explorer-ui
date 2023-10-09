@@ -247,7 +247,7 @@ export const ItemsTable = <
 	return (
 		<div {...restProps} data-class="table">
 			{pagination && <TablePaginationHeader {...pagination} />}
-			{filterMappings &&
+			{filterMappings && filter &&
 			Object.entries(filterMappings).map(([property, value], index) => (
 				<TableFilter
 					property={property}
