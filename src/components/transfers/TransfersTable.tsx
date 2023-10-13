@@ -45,7 +45,7 @@ const dirOut = (theme: Theme) => css`
   border: 2px solid ${theme.palette.success.main};
   font-weight: 400;
   border-radius: 4px;
-  width: 28px;
+  width: 36px;
   text-align: center;
 `;
 

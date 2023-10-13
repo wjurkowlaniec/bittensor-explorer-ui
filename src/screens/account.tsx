@@ -140,10 +140,31 @@ export const AccountPage = () => {
 
 	useEffect(() => {
 		if (extrinsics.pagination.offset === 0) {
-			const interval = setInterval(extrinsics.refetch, 60 * 1000);
+			const interval = setInterval(extrinsics.refetch, 12 * 1000);
 			return () => clearInterval(interval);
 		}
 	}, [extrinsics]);
+
+	useEffect(() => {
+		if (transfers.pagination.offset === 0) {
+			const interval = setInterval(transfers.refetch, 12 * 1000);
+			return () => clearInterval(interval);
+		}
+	}, [transfers]);
+
+	useEffect(() => {
+		if (delegates.pagination.offset === 0) {
+			const interval = setInterval(delegates.refetch, 12 * 1000);
+			return () => clearInterval(interval);
+		}
+	}, [delegates]);
+
+	useEffect(() => {
+		if (balance.refetch) {
+			const interval = setInterval(balance.refetch, 12 * 1000);
+			return () => clearInterval(interval);
+		}
+	}, [balance]);
 
 	const { hash: tab } = useLocation();
 	const tabRef = useRef(null);
