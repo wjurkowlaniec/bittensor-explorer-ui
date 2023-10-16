@@ -20,6 +20,8 @@ export type BalancesTableProps = {
 	initialSort?: string;
 	onFilterChange?: (newFilter?: BalancesFilter) => void;
 	initialFilter?: BalancesFilter;
+	onSearchChange?: (newSearch?: string) => void;
+	initialSearch?: string;
 };
 
 const BalancesItemsTableAttribute = ItemsTableAttribute<Balance>;
@@ -62,10 +64,11 @@ const filterMappings: BalancesFilter = {
 };
 
 function BalancesTable(props: BalancesTableProps) {
-	const { balances, initialSort, onSortChange, initialFilter, onFilterChange } =
+	const { balances, initialSort, onSortChange, initialFilter, onFilterChange, initialSearch, onSearchChange } =
     props;
 	const [sort, setSort] = useState<SortOrder<string>>();
 	const [filter, setFilter] = useState<BalancesFilter | undefined>();
+	const [search, setSearch] = useState(initialSearch);
 
 	useEffect(() => {
 		Object.entries(orderMappings).forEach(([property, value]) => {
@@ -115,6 +118,7 @@ function BalancesTable(props: BalancesTableProps) {
 			});
 		});
 	}, [JSON.stringify(initialFilter)]);
+
 	const handleFilterChange = (key: string, value: number) => {
 		setFilter({
 			...filter,
@@ -123,10 +127,20 @@ function BalancesTable(props: BalancesTableProps) {
 			},
 		});
 	};
+
 	useEffect(() => {
 		if (!onFilterChange) return;
 		onFilterChange(filter);
 	}, [JSON.stringify(filter)]);
+
+	const handleSearchChange = (value?: string) => {
+		setSearch(value);
+	};
+
+	useEffect(() => {
+		if(!onSearchChange) return;
+		onSearchChange(search);
+	}, [search]);
 
 	return (
 		<ItemsTable
@@ -144,6 +158,9 @@ function BalancesTable(props: BalancesTableProps) {
 			filterMappings={filterMappings}
 			filter={filter}
 			onFilterChange={handleFilterChange}
+			search={search}
+			onSearchChange={handleSearchChange}
+			searchPlaceholder="Account"
 		>
 			<BalancesItemsTableAttribute
 				label="Account"
