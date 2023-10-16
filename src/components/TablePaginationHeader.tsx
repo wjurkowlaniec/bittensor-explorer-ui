@@ -6,7 +6,6 @@ import { Pagination, usePagination } from "../hooks/usePagination";
 
 const paginationStyle = css`
   display: flex;
-  justify-content: space-between;
   margin-bottom: 16px;
   padding: 0 0 0 20px;
   font-size: 14px;
@@ -34,29 +33,6 @@ const showItemStyle = (theme: Theme) => css`
 const showItemSelectedStyle = (theme: Theme) => css`
   color: ${theme.palette.secondary.light};
   cursor: pointer;
-`;
-
-const searchPanelStyle = () => css`
-  display: none;
-`;
-
-const searchSpanStyle = () => css`
-  margin-left: 15px;
-`;
-
-const searchStyle = () => css`
-  background-color: rgb(18, 18, 18);
-  background-image: url(search.svg);
-  background-position: 18px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  border: 0;
-  border-radius: 3px;
-  color: #fff;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 5px 0 41px;
-  width: 200px;
 `;
 
 type TablePaginationProps = Pagination;
@@ -87,12 +63,6 @@ export function TablePaginationHeader(props: TablePaginationProps) {
 					</div>
 				))}
 			</div>
-			<label css={searchPanelStyle}>
-        Search:
-				<span css={searchSpanStyle}>
-					<input type="search" css={searchStyle} />
-				</span>
-			</label>
 		</div>
 	);
 }

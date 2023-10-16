@@ -26,6 +26,7 @@ import { TablePagination } from "./TablePagination";
 import { SortDirection } from "../model/sortDirection";
 import { TablePaginationHeader } from "./TablePaginationHeader";
 import { TableFilter } from "./TableFilter";
+import { TableSearch } from "./TableSearch";
 
 const tableStyle = css`
   table-layout: auto;
@@ -129,6 +130,17 @@ const sortDesc = (theme: Theme) => css`
   }
 `;
 
+const tableOptions = css`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const tableFiltering = css`
+  display: flex;
+  flex-direction: column;
+`;
+
 type ItemsTableItem = {
 	id: string;
 };
@@ -198,6 +210,9 @@ export type ItemsTableProps<
 	filterMappings?: any;
 	filter?: any;
 	onFilterChange?: (key: string, value: any) => void;
+	search?: string;
+	onSearchChange?: (value?: string) => void;
+	searchPlaceholder?: string;
 };
 
 export const ItemsTable = <
@@ -223,23 +238,37 @@ export const ItemsTable = <
 		filterMappings,
 		filter,
 		onFilterChange,
+		search,
+		onSearchChange,
+		searchPlaceholder,
 		...restProps
 	} = props;
 
 	return (
 		<div {...restProps} data-class="table">
-			{pagination && <TablePaginationHeader {...pagination} />}
-			{filterMappings && filter &&
-			Object.entries(filterMappings).map(([property, value], index) => (
-				<TableFilter
-					property={property}
-					filter={value}
-					value={filter[property][(value as any).operator]}
-					key={`filter-${property}-${index}`}
-					onFilterChange={onFilterChange}
-					pagination={pagination}
-				/>
-			))}
+			<div css={tableOptions}>
+				<div css={tableFiltering}>
+					{pagination && <TablePaginationHeader {...pagination} />}
+					{filterMappings &&
+					filter &&
+					Object.entries(filterMappings).map(([property, value], index) => (
+						<TableFilter
+							property={property}
+							filter={value}
+							value={filter[property][(value as any).operator]}
+							key={`filter-${property}-${index}`}
+							onFilterChange={onFilterChange}
+							pagination={pagination}
+						/>
+					))}
+				</div>
+				{search !== undefined && (
+					<TableSearch
+						onChange={onSearchChange}
+						placeholder={searchPlaceholder}
+					/>
+				)}
+			</div>
 			<TableContainer>
 				<Table css={tableStyle}>
 					<colgroup>
@@ -297,11 +326,16 @@ export const ItemsTable = <
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{!loading && !notFound && !error && data?.map((item, index) => (
+						{!loading &&
+						!notFound &&
+						!error &&
+						data?.map((item, index) => (
 							<TableRow key={item.id}>
 								{showRank ? (
 									<TableCell>
-										{pagination ? pagination.limit * (pagination.page - 1) + index + 1 : 0}
+										{pagination
+											? pagination.limit * (pagination.page - 1) + index + 1
+											: 0}
 									</TableCell>
 								) : (
 									<></>
@@ -310,10 +344,10 @@ export const ItemsTable = <
 									children,
 									(child) =>
 										child &&
-										cloneElement(child, {
-											_data: item,
-											_additionalData: additionalData,
-										})
+								cloneElement(child, {
+									_data: item,
+									_additionalData: additionalData,
+								})
 								)}
 							</TableRow>
 						))}
@@ -331,7 +365,9 @@ export const ItemsTable = <
 					/>
 				) : null}
 			</TableContainer>
-			{!loading && !notFound && !error && pagination && <TablePagination {...pagination} />}
+			{!loading && !notFound && !error && pagination && (
+				<TablePagination {...pagination} />
+			)}
 		</div>
 	);
 };

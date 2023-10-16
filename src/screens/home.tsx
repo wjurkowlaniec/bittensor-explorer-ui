@@ -63,24 +63,46 @@ export const HomePage = () => {
 	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
 	const [balanceSort, setBalanceSort] =
     useState<BalancesOrder>(balancesInitialOrder);
-	const balancesInitialFilter: BalancesFilter = { balanceTotal: { greaterThan: 0 } };
-	const [balanceFilter, setBalanceFilter] = useState<BalancesFilter>(balancesInitialFilter);
-	const balances = useBalances(balanceFilter, balanceSort);
+	const balancesInitialFilter: BalancesFilter = {
+		balanceTotal: { greaterThan: 0 },
+	};
+	const [balanceFilter, setBalanceFilter] = useState<BalancesFilter>(
+		balancesInitialFilter
+	);
+	const balancesInitialSearch = "";
+	const [balanceSearch, setBalanceSearch] = useState<string | undefined>(balancesInitialSearch);
+	const balances = useBalances(
+		{
+			address: {
+				includesInsensitive: balanceSearch,
+			},
+			...balanceFilter,
+		},
+		balanceSort
+	);
 
 	const transfersInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
 	const [transferSort, setTransferSort] = useState<TransfersOrder>(
 		transfersInitialOrder
 	);
-	const transfersInitialFilter: TransfersFilter = { amount: { greaterThan: 0 } };
-	const [transfersFilter, setTransfersFilter] = useState<TransfersFilter>(transfersInitialFilter);
+	const transfersInitialFilter: TransfersFilter = {
+		amount: { greaterThan: 0 },
+	};
+	const [transfersFilter, setTransfersFilter] = useState<TransfersFilter>(
+		transfersInitialFilter
+	);
 	const transfers = useTransfers(transfersFilter, transferSort);
 
 	const delegatesInitialOrder: TransfersOrder = "BLOCK_NUMBER_DESC";
 	const [delegateSort, setDelegateSort] = useState<DelegatesOrder>(
 		delegatesInitialOrder
 	);
-	const delegatesInitialFilter: DelegateFilter = { amount: { greaterThan: MIN_DELEGATION_AMOUNT } };
-	const [delegatesFilter, setDelegatesFilter] = useState<DelegateFilter>(delegatesInitialFilter);
+	const delegatesInitialFilter: DelegateFilter = {
+		amount: { greaterThan: MIN_DELEGATION_AMOUNT },
+	};
+	const [delegatesFilter, setDelegatesFilter] = useState<DelegateFilter>(
+		delegatesInitialFilter
+	);
 	const delegates = useDelegates(delegatesFilter, delegateSort);
 
 	useEffect(() => {
@@ -157,7 +179,7 @@ export const HomePage = () => {
 									}
 									initialSort={transfersInitialOrder}
 									onFilterChange={(newFilter?: TransfersFilter) =>
-										setTransfersFilter({...transfersFilter, ...newFilter})
+										setTransfersFilter({ ...transfersFilter, ...newFilter })
 									}
 									initialFilter={transfersInitialFilter}
 								/>
@@ -177,7 +199,7 @@ export const HomePage = () => {
 									}
 									initialSort={delegatesInitialOrder}
 									onFilterChange={(newFilter?: DelegateFilter) =>
-										setDelegatesFilter({...delegatesFilter, ...newFilter})
+										setDelegatesFilter({ ...delegatesFilter, ...newFilter })
 									}
 									initialFilter={delegatesInitialFilter}
 								/>
@@ -196,9 +218,11 @@ export const HomePage = () => {
 									}
 									initialSort={balancesInitialOrder}
 									onFilterChange={(newFilter?: BalancesFilter) =>
-										setBalanceFilter({...balanceFilter, ...newFilter})
+										setBalanceFilter({ ...balanceFilter, ...newFilter })
 									}
 									initialFilter={balancesInitialFilter}
+									onSearchChange={(newSearch?: string) => setBalanceSearch(newSearch)}
+									initialSearch={balancesInitialSearch}
 								/>
 							</TabPane>
 						</TabbedContent>
