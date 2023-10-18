@@ -45,15 +45,24 @@ export const Footer = () => {
 								<ul>
 									<li><a href="https://taostats.io/subnets/netuid-0/">Subnet 0</a></li>
 									<li><a href="https://taostats.io/subnets/netuid-1/">Subnet 1</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-5/">Subnet 5</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-3/">Subnet 3</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-2/">Subnet 2</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-4/">Subnet 4</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-7/">Subnet 7</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-6/">Subnet 6</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-8/">Subnet 8</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-9/">Subnet 9</a></li>
+									<li><a href="https://taostats.io/subnets/netuid-10/">Subnet 10</a></li>
 									<li><a href="https://taostats.io/subnets/netuid-11/">Subnet 11</a></li>                               
 								</ul>
 							</div>
 							<div className="f-col">
 								<h5>Blockchain</h5>                             
 								<ul>
-									<li><a href="https://x.taostats.io/#accounts">Accounts</a></li>
-									<li><a href="https://x.taostats.io/#transfers">Transfers</a></li>
-									<li><a href="https://x.taostats.io/#blocks">Blocks</a></li>
+									<li><a href="/#accounts">Accounts</a></li>
+									<li><a href="/#transfers">Transfers</a></li>
+									<li><a href="/#blocks">Blocks</a></li>
 									<li><a href="https://taostats.io/tokenomics/">Tokenomics</a></li>
 								</ul>
 							</div>
