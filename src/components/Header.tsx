@@ -59,7 +59,7 @@ export const Header = () => {
 						</div>
 						<div className="ht-right">
 							<div className="ht-search">
-								<form action="https://x.taostats.io/search" method="get">
+								<form action="/search" method="get">
 									<input
 										type="text"
 										name="query"
@@ -258,7 +258,7 @@ export const Header = () => {
 											<span className="menuItem-glow"></span>
 										</li>
 										<li className="current-menu-item menu-item-has-children">
-											<a href="https://x.taostats.io">
+											<a href="/">
 												Blockchain
 												<span
 													className="has-btn"
@@ -267,15 +267,15 @@ export const Header = () => {
 											</a>
 											<ul className="subMenu">
 												<li>
-													<a href="https://x.taostats.io/#accounts">Accounts</a>
+													<a href="/#accounts">Accounts</a>
 												</li>
 												<li>
-													<a href="https://x.taostats.io/#transfers">
+													<a href="/#transfers">
 														Transfers
 													</a>
 												</li>
 												<li>
-													<a href="https://x.taostats.io/#blocks">Blocks</a>
+													<a href="/#blocks">Blocks</a>
 												</li>
 												<li>
 													<a href="https://taostats.io/tokenomics/">
