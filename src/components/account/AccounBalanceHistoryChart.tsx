@@ -3,11 +3,12 @@ import { css, useTheme } from "@emotion/react";
 import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
-import { AccountStats, AccountStatsResponse } from "../../model/accountStats";
 import { useMemo } from "react";
-import { formatNumber, nFormatter, rawAmountToDecimal } from "../../utils/number";
-import { AccountBalanceHistory, AccountBalanceHistoryResponse } from "../../model/accountBalanceHistory";
-import Decimal from "decimal.js";
+import { nFormatter, rawAmountToDecimal } from "../../utils/number";
+import {
+	AccountBalanceHistory,
+	AccountBalanceHistoryResponse,
+} from "../../model/accountBalanceHistory";
 
 const spinnerContainer = css`
   display: flex;
@@ -18,9 +19,11 @@ const spinnerContainer = css`
 
 export type AccounBalanceHistoryChartProps = {
 	balanceHistory: AccountBalanceHistoryResponse;
-}
+};
 
-export const AccounBalanceHistoryChart = (props: AccounBalanceHistoryChartProps) => {
+export const AccounBalanceHistoryChart = (
+	props: AccounBalanceHistoryChartProps
+) => {
 	const theme = useTheme();
 
 	const { balanceHistory } = props;
@@ -28,12 +31,8 @@ export const AccounBalanceHistoryChart = (props: AccounBalanceHistoryChartProps)
 	const loading = balanceHistory.loading;
 	const timestamps = useMemo(() => {
 		if (!balanceHistory.data) return [];
-		const resp = (balanceHistory.data as any).reduce(
-			(prev: string[], cur: AccountBalanceHistory) => {
-				prev.push(cur.timestamp);
-				return prev;
-			},
-			[]
+		const resp = balanceHistory.data.map(
+			(x: AccountBalanceHistory) => x.timestamp
 		);
 		return resp;
 	}, [balanceHistory]);
@@ -48,29 +47,14 @@ export const AccounBalanceHistoryChart = (props: AccounBalanceHistoryChartProps)
 		);
 		return resp;
 	}, [balanceHistory]);
-	const totalBalance = useMemo(() => {
+	const staked = useMemo(() => {
 		if (!balanceHistory.data) return [];
-		const resp = (balanceHistory.data as any).reduce(
-			(prev: number[], cur: AccountBalanceHistory) => {
-				prev.push(rawAmountToDecimal(cur.balanceTotal.toString()).toNumber());
-				return prev;
-			},
-			[]
+		const resp = balanceHistory.data.map((x: AccountBalanceHistory) =>
+			rawAmountToDecimal(x.balanceStaked.toString()).toNumber()
 		);
 		return resp;
 	}, [balanceHistory]);
-	const totalStaked = useMemo(() => {
-		if (!balanceHistory.data) return [];
-		const resp = (balanceHistory.data as any).reduce(
-			(prev: number[], cur: AccountBalanceHistory) => {
-				prev.push(rawAmountToDecimal(cur.balanceStaked.toString()).toNumber());
-				return prev;
-			},
-			[]
-		);
-		return resp;
-	}, [balanceHistory]);
-	const totalFree = useMemo(() => {
+	const free = useMemo(() => {
 		if (!balanceHistory.data) return [];
 		const resp = (balanceHistory.data as any).reduce(
 			(prev: number[], cur: AccountBalanceHistory) => {
@@ -93,23 +77,18 @@ export const AccounBalanceHistoryChart = (props: AccounBalanceHistoryChartProps)
 				{
 					name: "Free Balance",
 					type: "area",
-					data: totalFree,
+					data: free,
 				},
 				{
 					name: "Delegated Balance",
 					type: "area",
-					data: totalStaked,
-				},
-				{
-					name: "Total Balance",
-					type: "area",
-					data: totalBalance,
+					data: staked,
 				},
 			]}
 			options={{
 				chart: {
 					toolbar: {
-						show: false,
+						show: true,
 					},
 					zoom: {
 						enabled: false,
@@ -118,7 +97,6 @@ export const AccounBalanceHistoryChart = (props: AccounBalanceHistoryChartProps)
 				colors: [
 					theme.palette.error.main,
 					theme.palette.success.main,
-					theme.palette.neutral.main,
 				],
 				dataLabels: {
 					enabled: false,
