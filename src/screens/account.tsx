@@ -25,6 +25,8 @@ import { useDelegates } from "../hooks/useDelegates";
 import DelegatesTable from "../components/delegates/DelegatesTable";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useAppStats } from "../contexts";
+import { useAccountBalanceHistory } from "../hooks/useAccountBalanceHistory";
+import { AccounBalanceHistoryChart } from "../components/account/AccounBalanceHistoryChart";
 
 const accountInfoStyle = css`
   display: flex;
@@ -84,9 +86,10 @@ export type AccountPageParams = {
 export const AccountPage = () => {
 	const { address } = useParams() as AccountPageParams;
 	const balance = useBalance({ address: { equalTo: address } });
-	const {state } = useAppStats();
-	
-	const blockHeight = Math.floor(Number(state.chainStats?.blocksFinalized ?? 0) / 1000) * 1000;
+	const { state } = useAppStats();
+
+	const blockHeight =
+    Math.floor(Number(state.chainStats?.blocksFinalized ?? 0) / 1000) * 1000;
 
 	const account = useAccount(address);
 	const extrinsics = useExtrinsics(
@@ -100,7 +103,7 @@ export const AccountPage = () => {
 		{
 			account: { equalTo: address },
 			amount: { greaterThan: MIN_DELEGATION_AMOUNT },
-			updatedAt: { greaterThan: (blockHeight > 1000 ? blockHeight - 1000: 0) }
+			updatedAt: { greaterThan: blockHeight > 1000 ? blockHeight - 1000 : 0 },
 		},
 		"AMOUNT_DESC"
 	);
@@ -133,14 +136,17 @@ export const AccountPage = () => {
 
 	const taoPrice = useTaoPrice();
 
+	const accountBalanceHistory = useAccountBalanceHistory(address);
+
 	useDOMEventTrigger(
 		"data-loaded",
 		!account.loading &&
-      !extrinsics.loading &&
-      !transfers.loading &&
-      !taoPrice.loading &&
-      !delegates.loading &&
-      !delegateBalances.loading
+		!extrinsics.loading &&
+		!transfers.loading &&
+		!taoPrice.loading &&
+		!delegates.loading &&
+		!delegateBalances.loading &&
+		!accountBalanceHistory.loading
 	);
 
 	useEffect(() => {
@@ -210,6 +216,22 @@ export const AccountPage = () => {
 					<AccountPortfolio balance={balance} taoPrice={taoPrice} />
 				</Card>
 			</CardRow>
+			{account.data && (
+				<Card data-test="account-historical-items">
+					<div ref={tabRef}>
+						<TabbedContent>
+							<TabPane
+								label="Balances"
+								loading={accountBalanceHistory.loading}
+								error={!!accountBalanceHistory.error}
+								value="balances"
+							>
+								<AccounBalanceHistoryChart balanceHistory={accountBalanceHistory} />
+							</TabPane>
+						</TabbedContent>
+					</div>
+				</Card>
+			)}
 			{account.data && (
 				<Card data-test="account-related-items">
 					<div ref={tabRef}>
