@@ -11,6 +11,7 @@ import {
 	AccountDelegateHistoryResponse,
 } from "../../model/accountDelegateHistory";
 import { DelegateInfo } from "../../model/delegate";
+import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`
   display: flex;
@@ -190,7 +191,7 @@ export const AccounDelegateHistoryChart = (
 						format: "dd MMM yy",
 					},
 					y: {
-						formatter: (val: number) => nFormatter(val, 2).toString(),
+						formatter: (val: number) => NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString(),
 					},
 				},
 				xaxis: {
