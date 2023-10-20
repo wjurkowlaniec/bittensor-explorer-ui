@@ -22,7 +22,6 @@ export async function getAccountDelegateHistory(
 		`query($after: Cursor, $first: Int!) {
 			delegates(after: $after, first: $first, filter: {account: {equalTo: "${address}"}}, orderBy: HEIGHT_ASC) {
 				nodes {
-					height
 					timestamp
 					amount
 					delegate

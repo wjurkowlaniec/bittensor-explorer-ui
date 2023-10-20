@@ -3,7 +3,6 @@ import { DataError } from "../utils/error";
 export type AccountDelegateHistory = {
 	amount: bigint;
 	delegate: string;
-	height: bigint;
 	timestamp: string;
 }
 

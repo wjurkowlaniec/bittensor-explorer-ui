@@ -4,7 +4,6 @@ export type AccountBalanceHistory = {
 	balanceFree: bigint;
 	balanceStaked: bigint;
 	balanceTotal: bigint;
-	height: bigint;
 	timestamp: string;
 }
 

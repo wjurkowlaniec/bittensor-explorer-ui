@@ -22,7 +22,6 @@ export async function getAccountBalanceHistory(
 		`query($after: Cursor, $first: Int!) {
 			accountBalances(after: $after, first: $first, filter: {address: {equalTo: "${address}"}}, orderBy: HEIGHT_ASC) {
 				nodes {
-					height
 					balanceFree
 					balanceStaked
 					balanceTotal
