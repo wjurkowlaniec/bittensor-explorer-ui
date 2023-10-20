@@ -112,6 +112,13 @@ export const AccounDelegateHistoryChart = (
 					theme.palette.error.main,
 					theme.palette.success.main,
 					theme.palette.neutral.main,
+					"#4C3B4D",
+					"#813405",
+					"#247BA0",
+					"#606C38",
+					"#727D71",
+					"#474747",
+					"#511730",
 				],
 				dataLabels: {
 					enabled: false,
@@ -134,8 +141,12 @@ export const AccounDelegateHistoryChart = (
 				labels: timestamps,
 				legend: {
 					show: true,
+					showForSingleSeries: true,
 					position: "top",
 					horizontalAlign: "right",
+					labels: {
+						colors: "#d9d9d9",
+					},
 				},
 				markers: {
 					size: 0,

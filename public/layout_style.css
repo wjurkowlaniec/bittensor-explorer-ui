@@ -3940,3 +3940,13 @@ span.menuItem-glow {
 .apexcharts-menu.apexcharts-menu-open {
   background: rgba(0,0,0,.7);
 }
+
+.apexcharts-legend.apexcharts-align-right.apx-legend-position-top {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  direction: rtl;
+}
+
+.apexcharts-legend.apexcharts-align-right.apx-legend-position-top > div {
+  direction: ltr;
+}

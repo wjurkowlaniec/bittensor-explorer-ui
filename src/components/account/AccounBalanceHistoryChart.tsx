@@ -137,6 +137,9 @@ export const AccounBalanceHistoryChart = (
 					show: true,
 					position: "top",
 					horizontalAlign: "left",
+					labels: {
+						colors: "#d9d9d9",
+					},
 				},
 				markers: {
 					size: 0,

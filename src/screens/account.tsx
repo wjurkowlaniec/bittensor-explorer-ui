@@ -118,7 +118,7 @@ export const AccountPage = () => {
 		{
 			and: [
 				{ account: { equalTo: address } },
-				{ amount: { greaterThan: "1000000" } },
+				{ amount: { greaterThan: MIN_DELEGATION_AMOUNT } },
 			],
 		},
 		delegateSort
