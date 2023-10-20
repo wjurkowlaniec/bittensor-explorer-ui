@@ -3944,9 +3944,4 @@ span.menuItem-glow {
 .apexcharts-legend.apexcharts-align-right.apx-legend-position-top {
   display: grid;
   grid-template-columns: auto auto auto;
-  direction: rtl;
-}
-
-.apexcharts-legend.apexcharts-align-right.apx-legend-position-top > div {
-  direction: ltr;
 }
