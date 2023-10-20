@@ -3,12 +3,14 @@ import { css, useTheme } from "@emotion/react";
 import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
+import verifiedDelegates from "../../delegates.json";
 import { useMemo } from "react";
 import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
-	AccountBalanceHistory,
-	AccountBalanceHistoryResponse,
-} from "../../model/accountBalanceHistory";
+	AccountDelegateHistory,
+	AccountDelegateHistoryResponse,
+} from "../../model/accountDelegateHistory";
+import { DelegateInfo } from "../../model/delegate";
 
 const spinnerContainer = css`
   display: flex;
@@ -17,54 +19,67 @@ const spinnerContainer = css`
   justify-content: center;
 `;
 
-export type AccounBalanceHistoryChartProps = {
-	balanceHistory: AccountBalanceHistoryResponse;
+export type AccounDelegateHistoryChartProps = {
+	delegateHistory: AccountDelegateHistoryResponse;
 };
 
-export const AccounBalanceHistoryChart = (
-	props: AccounBalanceHistoryChartProps
+export const AccounDelegateHistoryChart = (
+	props: AccounDelegateHistoryChartProps
 ) => {
 	const theme = useTheme();
 
-	const { balanceHistory } = props;
+	const { delegateHistory } = props;
 
-	const loading = balanceHistory.loading;
+	const loading = delegateHistory.loading;
 	const timestamps = useMemo(() => {
-		if (!balanceHistory.data) return [];
-		const resp = balanceHistory.data.map(
-			(x: AccountBalanceHistory) => x.timestamp
+		if (!delegateHistory.data) return [];
+		const resp = (delegateHistory.data as any).reduce(
+			(prev: string[], cur: AccountDelegateHistory) => {
+				if(prev.find(x => x === cur.timestamp) === undefined)
+					prev.push(cur.timestamp);
+				return prev;
+			},
+			[]
 		);
 		return resp;
-	}, [balanceHistory]);
-	const maxBalance = useMemo(() => {
-		if (!balanceHistory.data) return 0;
-		const resp = balanceHistory.data.reduce(
-			(prev: number, cur: AccountBalanceHistory) => {
-				const now = rawAmountToDecimal(cur.balanceTotal.toString()).toNumber();
+	}, [delegateHistory]);
+
+	const maxDelegate = useMemo(() => {
+		if (!delegateHistory.data) return 0;
+		const resp = (delegateHistory.data as any).reduce(
+			(prev: number, cur: AccountDelegateHistory) => {
+				const now = rawAmountToDecimal(cur.amount.toString()).toNumber();
 				return now > prev ? now : prev;
 			},
 			0
 		);
 		return resp;
-	}, [balanceHistory]);
-	const staked = useMemo(() => {
-		if (!balanceHistory.data) return [];
-		return balanceHistory.data.map((x: AccountBalanceHistory) =>
-			rawAmountToDecimal(x.balanceStaked.toString()).toNumber()
+	}, [delegateHistory]);
+
+	const delegates = useMemo(() => {
+		if (!delegateHistory.data) return [];
+		const resp = (delegateHistory.data as any).reduce(
+			(prev: ApexAxisChartSeries, cur: AccountDelegateHistory) => {
+				const info = (verifiedDelegates as Record<string, DelegateInfo>)[cur.delegate];
+				const delegate = info?.name || cur.delegate;
+				let serie = prev.find((x) => x.name === delegate);
+				if (serie === undefined)
+					prev.push({
+						name: delegate,
+						type: "area",
+						data: [],
+					});
+				serie = prev.find((x) => x.name === delegate);
+				serie?.data.push({
+					x: cur.timestamp,
+					y: rawAmountToDecimal(cur.amount.toString()).toNumber(),
+				} as any);
+				return prev;
+			},
+			[]
 		);
-	}, [balanceHistory]);
-	const free = useMemo(() => {
-		if (!balanceHistory.data) return [];
-		return balanceHistory.data.map((x: AccountBalanceHistory) =>
-			rawAmountToDecimal(x.balanceFree.toString()).toNumber()
-		);
-	}, [balanceHistory]);
-	const total = useMemo(() => {
-		if (!balanceHistory.data) return [];
-		return balanceHistory.data.map((x: AccountBalanceHistory) =>
-			rawAmountToDecimal(x.balanceTotal.toString()).toNumber()
-		);
-	}, [balanceHistory]);
+		return resp;
+	}, [delegateHistory]);
 
 	return loading ? (
 		<div css={spinnerContainer}>
@@ -73,46 +88,20 @@ export const AccounBalanceHistoryChart = (
 	) : (
 		<Chart
 			height={400}
-			series={[
-				{
-					name: "Free",
-					type: "area",
-					data: free,
-				},
-				{
-					name: "Delegated",
-					type: "area",
-					data: staked,
-				},
-				{
-					name: "Total",
-					type: "area",
-					data: total,
-				},
-			]}
+			series={delegates}
 			options={{
 				chart: {
 					toolbar: {
 						show: true,
-						offsetX: 0,
-						offsetY: 0,
-						autoSelected: "pan",
-						tools: {
-							selection: true,
-							zoom: true,
-							zoomin: true,
-							zoomout: true,
-							pan: true,
-						},
 					},
 					zoom: {
-						enabled: true,
+						enabled: false,
 					},
 				},
 				colors: [
 					theme.palette.error.main,
-					theme.palette.neutral.main,
 					theme.palette.success.main,
+					theme.palette.neutral.main,
 				],
 				dataLabels: {
 					enabled: false,
@@ -134,9 +123,7 @@ export const AccounBalanceHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: true,
-					position: "top",
-					horizontalAlign: "right",
+					show: false,
 				},
 				markers: {
 					size: 0,
@@ -212,7 +199,7 @@ export const AccounBalanceHistoryChart = (
 						show: false,
 					},
 					min: 0,
-					max: maxBalance,
+					max: maxDelegate,
 				},
 			}}
 		/>
