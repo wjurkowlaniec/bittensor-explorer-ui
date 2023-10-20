@@ -136,7 +136,7 @@ export const AccounBalanceHistoryChart = (
 				legend: {
 					show: true,
 					position: "top",
-					horizontalAlign: "right",
+					horizontalAlign: "left",
 				},
 				markers: {
 					size: 0,
@@ -199,6 +199,7 @@ export const AccounBalanceHistoryChart = (
 					type: "datetime",
 				},
 				yaxis: {
+					opposite: false,
 					labels: {
 						style: {
 							colors: "#a8a8a8",
