@@ -3943,5 +3943,5 @@ span.menuItem-glow {
 
 .apexcharts-legend.apexcharts-align-right.apx-legend-position-top {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(3, 1fr);
 }
