@@ -186,7 +186,6 @@ export const AccounDelegateHistoryChart = (
 					type: "datetime",
 				},
 				yaxis: {
-					opposite: true,
 					labels: {
 						style: {
 							colors: "#a8a8a8",
