@@ -225,18 +225,18 @@ export const AccountPage = () => {
 					<div ref={tabRef}>
 						<TabbedContent>
 							<TabPane
-								label="Balances"
+								label="Balance"
 								loading={accountBalanceHistory.loading}
 								error={!!accountBalanceHistory.error}
-								value="balances"
+								value="balance"
 							>
 								<AccounBalanceHistoryChart balanceHistory={accountBalanceHistory} />
 							</TabPane>
 							<TabPane
-								label="Delegates"
+								label="Delegation"
 								loading={accountDelegateHistory.loading}
 								error={!!accountDelegateHistory.error}
-								value="delegates"
+								value="delegation"
 							>
 								<AccounDelegateHistoryChart delegateHistory={accountDelegateHistory} />
 							</TabPane>
