@@ -38,7 +38,7 @@ export const AccounBalanceHistoryChart = (
 	}, [balanceHistory]);
 	const maxBalance = useMemo(() => {
 		if (!balanceHistory.data) return 0;
-		const resp = (balanceHistory.data as any).reduce(
+		const resp = balanceHistory.data.reduce(
 			(prev: number, cur: AccountBalanceHistory) => {
 				const now = rawAmountToDecimal(cur.balanceTotal.toString()).toNumber();
 				return now > prev ? now : prev;
@@ -49,21 +49,21 @@ export const AccounBalanceHistoryChart = (
 	}, [balanceHistory]);
 	const staked = useMemo(() => {
 		if (!balanceHistory.data) return [];
-		const resp = balanceHistory.data.map((x: AccountBalanceHistory) =>
+		return balanceHistory.data.map((x: AccountBalanceHistory) =>
 			rawAmountToDecimal(x.balanceStaked.toString()).toNumber()
 		);
-		return resp;
 	}, [balanceHistory]);
 	const free = useMemo(() => {
 		if (!balanceHistory.data) return [];
-		const resp = (balanceHistory.data as any).reduce(
-			(prev: number[], cur: AccountBalanceHistory) => {
-				prev.push(rawAmountToDecimal(cur.balanceFree.toString()).toNumber());
-				return prev;
-			},
-			[]
+		return balanceHistory.data.map((x: AccountBalanceHistory) =>
+			rawAmountToDecimal(x.balanceFree.toString()).toNumber()
 		);
-		return resp;
+	}, [balanceHistory]);
+	const total = useMemo(() => {
+		if (!balanceHistory.data) return [];
+		return balanceHistory.data.map((x: AccountBalanceHistory) =>
+			rawAmountToDecimal(x.balanceTotal.toString()).toNumber()
+		);
 	}, [balanceHistory]);
 
 	return loading ? (
@@ -75,27 +75,43 @@ export const AccounBalanceHistoryChart = (
 			height={400}
 			series={[
 				{
-					name: "Free Balance",
+					name: "Free",
 					type: "area",
 					data: free,
 				},
 				{
-					name: "Delegated Balance",
+					name: "Delegated",
 					type: "area",
 					data: staked,
+				},
+				{
+					name: "Total",
+					type: "area",
+					data: total,
 				},
 			]}
 			options={{
 				chart: {
 					toolbar: {
 						show: true,
+						offsetX: 0,
+						offsetY: 0,
+						autoSelected: "pan",
+						tools: {
+							selection: true,
+							zoom: true,
+							zoomin: true,
+							zoomout: true,
+							pan: true,
+						},
 					},
 					zoom: {
-						enabled: false,
+						enabled: true,
 					},
 				},
 				colors: [
 					theme.palette.error.main,
+					theme.palette.neutral.main,
 					theme.palette.success.main,
 				],
 				dataLabels: {
@@ -118,7 +134,9 @@ export const AccounBalanceHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: false,
+					show: true,
+					position: "top",
+					horizontalAlign: "right",
 				},
 				markers: {
 					size: 0,
