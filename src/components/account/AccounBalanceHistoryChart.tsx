@@ -199,7 +199,7 @@ export const AccounBalanceHistoryChart = (
 					type: "datetime",
 				},
 				yaxis: {
-					opposite: false,
+					opposite: true,
 					labels: {
 						style: {
 							colors: "#a8a8a8",
