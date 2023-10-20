@@ -93,9 +93,19 @@ export const AccounDelegateHistoryChart = (
 				chart: {
 					toolbar: {
 						show: true,
+						offsetX: 0,
+						offsetY: 0,
+						autoSelected: "pan",
+						tools: {
+							selection: true,
+							zoom: true,
+							zoomin: true,
+							zoomout: true,
+							pan: true,
+						},
 					},
 					zoom: {
-						enabled: false,
+						enabled: true,
 					},
 				},
 				colors: [
@@ -123,7 +133,9 @@ export const AccounDelegateHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: false,
+					show: true,
+					position: "top",
+					horizontalAlign: "left",
 				},
 				markers: {
 					size: 0,

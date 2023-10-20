@@ -3932,3 +3932,11 @@ span.menuItem-glow {
     width: 100%;
   }
 }
+
+.apexcharts-menu-item:hover {
+  background: rgba(34,34,34,.7) !important;
+}
+
+.apexcharts-menu.apexcharts-menu-open {
+  background: rgba(0,0,0,.7);
+}
