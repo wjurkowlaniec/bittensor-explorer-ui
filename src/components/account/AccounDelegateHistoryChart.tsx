@@ -135,7 +135,7 @@ export const AccounDelegateHistoryChart = (
 				legend: {
 					show: true,
 					position: "top",
-					horizontalAlign: "left",
+					horizontalAlign: "right",
 				},
 				markers: {
 					size: 0,
@@ -198,6 +198,7 @@ export const AccounDelegateHistoryChart = (
 					type: "datetime",
 				},
 				yaxis: {
+					opposite: true,
 					labels: {
 						style: {
 							colors: "#a8a8a8",
