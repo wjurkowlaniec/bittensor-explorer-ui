@@ -27,6 +27,8 @@ import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useAppStats } from "../contexts";
 import { useAccountBalanceHistory } from "../hooks/useAccountBalanceHistory";
 import { AccounBalanceHistoryChart } from "../components/account/AccounBalanceHistoryChart";
+import { useAccountDelegateHistory } from "../hooks/useAccountDelegateHistory";
+import { AccounDelegateHistoryChart } from "../components/account/AccounDelegateHistoryChart";
 
 const accountInfoStyle = css`
   display: flex;
@@ -137,6 +139,7 @@ export const AccountPage = () => {
 	const taoPrice = useTaoPrice();
 
 	const accountBalanceHistory = useAccountBalanceHistory(address);
+	const accountDelegateHistory = useAccountDelegateHistory(address);
 
 	useDOMEventTrigger(
 		"data-loaded",
@@ -146,7 +149,8 @@ export const AccountPage = () => {
 		!taoPrice.loading &&
 		!delegates.loading &&
 		!delegateBalances.loading &&
-		!accountBalanceHistory.loading
+		!accountBalanceHistory.loading &&
+		!accountDelegateHistory.loading
 	);
 
 	useEffect(() => {
@@ -227,6 +231,14 @@ export const AccountPage = () => {
 								value="balances"
 							>
 								<AccounBalanceHistoryChart balanceHistory={accountBalanceHistory} />
+							</TabPane>
+							<TabPane
+								label="Delegates"
+								loading={accountDelegateHistory.loading}
+								error={!!accountDelegateHistory.error}
+								value="delegates"
+							>
+								<AccounDelegateHistoryChart delegateHistory={accountDelegateHistory} />
 							</TabPane>
 						</TabbedContent>
 					</div>
