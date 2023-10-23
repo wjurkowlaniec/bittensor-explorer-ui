@@ -1,7 +1,6 @@
 import React, { useReducer, useContext, useEffect } from "react";
 import { getChainStats, getTokenomics } from "../../services/statsService";
 import { ChainStats, Tokenomics } from "../../model/stats";
-import Decimal from "decimal.js";
 
 ///
 // Initial state for `useReducer`
@@ -11,14 +10,11 @@ type State = {
 	tokenStats?: Tokenomics;
 	chainLoading: boolean;
 	chainStats?: ChainStats;
-	delegatedSupplyLoading: boolean;
-	delegatedSupply?: Decimal;
 };
 
 const initialState: State = {
 	tokenLoading: true,
 	chainLoading: true,
-	delegatedSupplyLoading: true,
 };
 
 ///
@@ -37,12 +33,6 @@ const reducer = (state: any, action: any) => {
 				...state,
 				chainLoading: false,
 				chainStats: action.payload,
-			};
-		case "DELEGATED_SUPPLY_FETCHED":
-			return {
-				...state,
-				delegatedSupplyLoading: false,
-				delegatedSupply: action.payload,
 			};
 		default:
 			throw new Error(`Unknown type: ${action.type}`);

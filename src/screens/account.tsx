@@ -25,6 +25,10 @@ import { useDelegates } from "../hooks/useDelegates";
 import DelegatesTable from "../components/delegates/DelegatesTable";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useAppStats } from "../contexts";
+import { useAccountBalanceHistory } from "../hooks/useAccountBalanceHistory";
+import { AccounBalanceHistoryChart } from "../components/account/AccounBalanceHistoryChart";
+import { useAccountDelegateHistory } from "../hooks/useAccountDelegateHistory";
+import { AccounDelegateHistoryChart } from "../components/account/AccounDelegateHistoryChart";
 
 const accountInfoStyle = css`
   display: flex;
@@ -84,9 +88,10 @@ export type AccountPageParams = {
 export const AccountPage = () => {
 	const { address } = useParams() as AccountPageParams;
 	const balance = useBalance({ address: { equalTo: address } });
-	const {state } = useAppStats();
-	
-	const blockHeight = Math.floor(Number(state.chainStats?.blocksFinalized ?? 0) / 1000) * 1000;
+	const { state } = useAppStats();
+
+	const blockHeight =
+    Math.floor(Number(state.chainStats?.blocksFinalized ?? 0) / 1000) * 1000;
 
 	const account = useAccount(address);
 	const extrinsics = useExtrinsics(
@@ -100,7 +105,7 @@ export const AccountPage = () => {
 		{
 			account: { equalTo: address },
 			amount: { greaterThan: MIN_DELEGATION_AMOUNT },
-			updatedAt: { greaterThan: (blockHeight > 1000 ? blockHeight - 1000: 0) }
+			updatedAt: { greaterThan: blockHeight > 1000 ? blockHeight - 1000 : 0 },
 		},
 		"AMOUNT_DESC"
 	);
@@ -113,7 +118,7 @@ export const AccountPage = () => {
 		{
 			and: [
 				{ account: { equalTo: address } },
-				{ amount: { greaterThan: "1000000" } },
+				{ amount: { greaterThan: MIN_DELEGATION_AMOUNT } },
 			],
 		},
 		delegateSort
@@ -133,14 +138,19 @@ export const AccountPage = () => {
 
 	const taoPrice = useTaoPrice();
 
+	const accountBalanceHistory = useAccountBalanceHistory(address);
+	const accountDelegateHistory = useAccountDelegateHistory(address);
+
 	useDOMEventTrigger(
 		"data-loaded",
 		!account.loading &&
-      !extrinsics.loading &&
-      !transfers.loading &&
-      !taoPrice.loading &&
-      !delegates.loading &&
-      !delegateBalances.loading
+		!extrinsics.loading &&
+		!transfers.loading &&
+		!taoPrice.loading &&
+		!delegates.loading &&
+		!delegateBalances.loading &&
+		!accountBalanceHistory.loading &&
+		!accountDelegateHistory.loading
 	);
 
 	useEffect(() => {
@@ -210,6 +220,30 @@ export const AccountPage = () => {
 					<AccountPortfolio balance={balance} taoPrice={taoPrice} />
 				</Card>
 			</CardRow>
+			{account.data && (
+				<Card data-test="account-historical-items">
+					<div ref={tabRef}>
+						<TabbedContent>
+							<TabPane
+								label="Balance"
+								loading={accountBalanceHistory.loading}
+								error={!!accountBalanceHistory.error}
+								value="balance"
+							>
+								<AccounBalanceHistoryChart balanceHistory={accountBalanceHistory} />
+							</TabPane>
+							<TabPane
+								label="Delegation"
+								loading={accountDelegateHistory.loading}
+								error={!!accountDelegateHistory.error}
+								value="delegation"
+							>
+								<AccounDelegateHistoryChart delegateHistory={accountDelegateHistory} />
+							</TabPane>
+						</TabbedContent>
+					</div>
+				</Card>
+			)}
 			{account.data && (
 				<Card data-test="account-related-items">
 					<div ref={tabRef}>
