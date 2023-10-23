@@ -1,0 +1,252 @@
+/** @jsxImportSource @emotion/react */
+import { css, useTheme } from "@emotion/react";
+import Chart from "react-apexcharts";
+
+import LoadingSpinner from "../../assets/loading.svg";
+import { useMemo } from "react";
+import { nFormatter, rawAmountToDecimal } from "../../utils/number";
+import {
+	ValidatorStakeHistory,
+	ValidatorStakeHistoryResponse,
+} from "../../model/validatorHistory";
+
+const spinnerContainer = css`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+`;
+
+export type ValidatorStakeHistoryChartProps = {
+	stakeHistory: ValidatorStakeHistoryResponse;
+};
+
+export const ValidatorStakeHistoryChart = (
+	props: ValidatorStakeHistoryChartProps
+) => {
+	const theme = useTheme();
+
+	const { stakeHistory } = props;
+
+	const loading = stakeHistory.loading;
+	const timestamps = useMemo(() => {
+		if (!stakeHistory.data) return [];
+		const resp = stakeHistory.data.map(
+			(x: ValidatorStakeHistory) => x.timestamp
+		);
+		return resp;
+	}, [stakeHistory]);
+	const maxAmount = useMemo(() => {
+		if (!stakeHistory.data) return 0;
+		const resp = stakeHistory.data.reduce(
+			(prev: number, cur: ValidatorStakeHistory) => {
+				const now = rawAmountToDecimal(cur.amount.toString()).toNumber();
+				return now > prev ? now : prev;
+			},
+			0
+		);
+		return resp;
+	}, [stakeHistory]);
+	const maxRankOrNominator = useMemo(() => {
+		if (!stakeHistory.data) return 0;
+		const resp = stakeHistory.data.reduce(
+			(prev: number, cur: ValidatorStakeHistory) => {
+				let now = parseInt(cur.rank.toString());
+				prev = now > prev ? now : prev;
+				now = parseInt(cur.nominators.toString());
+				return now > prev ? now : prev;
+			},
+			0
+		);
+		return resp;
+	}, [stakeHistory]);
+	const rank = useMemo(() => {
+		if (!stakeHistory.data) return [];
+		return stakeHistory.data.map((x: ValidatorStakeHistory) =>
+			parseInt(x.rank.toString())
+		);
+	}, [stakeHistory]);
+	const nominators = useMemo(() => {
+		if (!stakeHistory.data) return [];
+		return stakeHistory.data.map((x: ValidatorStakeHistory) =>
+			parseInt(x.nominators.toString())
+		);
+	}, [stakeHistory]);
+	const staked = useMemo(() => {
+		if (!stakeHistory.data) return [];
+		return stakeHistory.data.map((x: ValidatorStakeHistory) =>
+			rawAmountToDecimal(x.amount.toString()).toNumber()
+		);
+	}, [stakeHistory]);
+
+	return loading ? (
+		<div css={spinnerContainer}>
+			<img src={LoadingSpinner} />
+		</div>
+	) : (
+		<Chart
+			height={400}
+			series={[
+				{
+					name: "Rank",
+					type: "area",
+					data: rank,
+				},
+				{
+					name: "Nominators",
+					type: "area",
+					data: nominators,
+				},
+				{
+					name: "Staked",
+					type: "area",
+					data: staked,
+				},
+			]}
+			options={{
+				chart: {
+					toolbar: {
+						show: true,
+						offsetX: 0,
+						offsetY: 0,
+						autoSelected: "pan",
+						tools: {
+							selection: true,
+							zoom: true,
+							zoomin: true,
+							zoomout: true,
+							pan: true,
+						},
+					},
+					zoom: {
+						enabled: true,
+					},
+				},
+				colors: [
+					theme.palette.error.main,
+					theme.palette.neutral.main,
+					theme.palette.success.main,
+				],
+				dataLabels: {
+					enabled: false,
+				},
+				fill: {
+					type: "gradient",
+					gradient: {
+						shade: "dark",
+						shadeIntensity: 1,
+						inverseColors: false,
+						type: "vertical",
+						opacityFrom: 0.6,
+						opacityTo: 0.1,
+						stops: [0, 90, 100],
+					},
+				},
+				grid: {
+					show: false,
+				},
+				labels: timestamps,
+				legend: {
+					show: true,
+					position: "top",
+					horizontalAlign: "left",
+					labels: {
+						colors: "#d9d9d9",
+					},
+				},
+				markers: {
+					size: 0,
+				},
+				noData: {
+					text: "Loading ...",
+					align: "center",
+					verticalAlign: "middle",
+					offsetX: 0,
+					offsetY: 0,
+					style: {
+						color: "#FFFFFF",
+					},
+				},
+				responsive: [
+					{
+						breakpoint: 767,
+						options: {
+							chart: {
+								height: 320,
+							},
+						},
+					},
+					{
+						breakpoint: 599,
+						options: {
+							chart: {
+								height: 270,
+							},
+						},
+					},
+				],
+				stroke: {
+					width: 1,
+				},
+				tooltip: {
+					theme: "dark",
+					shared: true,
+					intersect: false,
+					x: {
+						format: "dd MMM yy",
+					},
+					y: {
+						formatter: (val: number) => nFormatter(val, 2).toString(),
+					},
+				},
+				xaxis: {
+					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
+						show: false,
+					},
+					labels: {
+						style: {
+							fontSize: "11px",
+							colors: "#7F7F7F",
+						},
+					},
+					type: "datetime",
+				},
+				yaxis: [{
+					opposite: true,
+					labels: {
+						style: {
+							colors: "#a8a8a8",
+						},
+						formatter: (val: number) => nFormatter(val, 2).toString(),
+					},
+					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
+						show: false,
+					},
+					min: 0,
+					max: maxAmount,
+				}, {
+					labels: {
+						style: {
+							colors: "#a8a8a8",
+						},
+						formatter: (val: number) => parseInt(val.toString()).toString(),
+					},
+					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
+						show: false,
+					},
+					min: 0,
+					max: maxRankOrNominator,
+				}],
+			}}
+		/>
+	);
+};
