@@ -9,7 +9,7 @@ import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
 	AccountDelegateHistory,
 	AccountDelegateHistoryResponse,
-} from "../../model/accountDelegateHistory";
+} from "../../model/accountHistory";
 import { DelegateInfo } from "../../model/delegate";
 import { NETWORK_CONFIG } from "../../config";
 

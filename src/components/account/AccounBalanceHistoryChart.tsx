@@ -8,7 +8,7 @@ import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
 	AccountBalanceHistory,
 	AccountBalanceHistoryResponse,
-} from "../../model/accountBalanceHistory";
+} from "../../model/accountHistory";
 
 const spinnerContainer = css`
   display: flex;
