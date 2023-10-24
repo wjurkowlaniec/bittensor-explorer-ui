@@ -146,12 +146,7 @@ export const ValidatorStakeHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: true,
-					position: "top",
-					horizontalAlign: "left",
-					labels: {
-						colors: "#d9d9d9",
-					},
+					show: false,
 				},
 				markers: {
 					size: 0,
