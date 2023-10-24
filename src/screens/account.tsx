@@ -25,9 +25,11 @@ import { useDelegates } from "../hooks/useDelegates";
 import DelegatesTable from "../components/delegates/DelegatesTable";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useAppStats } from "../contexts";
-import { useAccountBalanceHistory } from "../hooks/useAccountBalanceHistory";
+import {
+	useAccountBalanceHistory,
+	useAccountDelegateHistory,
+} from "../hooks/useAccountHistory";
 import { AccounBalanceHistoryChart } from "../components/account/AccounBalanceHistoryChart";
-import { useAccountDelegateHistory } from "../hooks/useAccountDelegateHistory";
 import { AccounDelegateHistoryChart } from "../components/account/AccounDelegateHistoryChart";
 
 const accountInfoStyle = css`
@@ -144,13 +146,13 @@ export const AccountPage = () => {
 	useDOMEventTrigger(
 		"data-loaded",
 		!account.loading &&
-		!extrinsics.loading &&
-		!transfers.loading &&
-		!taoPrice.loading &&
-		!delegates.loading &&
-		!delegateBalances.loading &&
-		!accountBalanceHistory.loading &&
-		!accountDelegateHistory.loading
+      !extrinsics.loading &&
+      !transfers.loading &&
+      !taoPrice.loading &&
+      !delegates.loading &&
+      !delegateBalances.loading &&
+      !accountBalanceHistory.loading &&
+      !accountDelegateHistory.loading
 	);
 
 	useEffect(() => {
@@ -230,7 +232,9 @@ export const AccountPage = () => {
 								error={!!accountBalanceHistory.error}
 								value="balance"
 							>
-								<AccounBalanceHistoryChart balanceHistory={accountBalanceHistory} />
+								<AccounBalanceHistoryChart
+									balanceHistory={accountBalanceHistory}
+								/>
 							</TabPane>
 							<TabPane
 								label="Delegation"
@@ -238,7 +242,9 @@ export const AccountPage = () => {
 								error={!!accountDelegateHistory.error}
 								value="delegation"
 							>
-								<AccounDelegateHistoryChart delegateHistory={accountDelegateHistory} />
+								<AccounDelegateHistoryChart
+									delegateHistory={accountDelegateHistory}
+								/>
 							</TabPane>
 						</TabbedContent>
 					</div>

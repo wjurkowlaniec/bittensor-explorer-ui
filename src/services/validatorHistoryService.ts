@@ -1,30 +1,31 @@
 import { isAddress } from "@polkadot/util-crypto";
 import { fetchHistorical } from "./fetchService";
 import {
-	AccountDelegateHistory,
-	AccountDelegateHistoryPaginatedResponse,
-} from "../model/accountDelegateHistory";
+	ValidatorStakeHistory,
+	ValidatorStakeHistoryPaginatedResponse,
+} from "../model/validatorHistory";
 import { ResponseItems } from "../model/itemsConnection";
 import { DataError } from "../utils/error";
 
-export async function getAccountDelegateHistory(
+export async function getValidatorStakeHistory(
 	address: string,
 	after?: string,
 	limit = 100
-): Promise<AccountDelegateHistoryPaginatedResponse> {
+): Promise<ValidatorStakeHistoryPaginatedResponse> {
 	if (!isAddress(address)) {
 		throw new DataError("Invalid account address");
 	}
 
 	const response = await fetchHistorical<{
-		delegates: ResponseItems<AccountDelegateHistory>;
+		validators: ResponseItems<ValidatorStakeHistory>;
 	}>(
 		`query($after: Cursor, $first: Int!) {
-			delegates(after: $after, first: $first, filter: {account: {equalTo: "${address}"}}, orderBy: HEIGHT_ASC) {
+			validators(after: $after, first: $first, filter: {address: {equalTo: "${address}"}}, orderBy: HEIGHT_ASC) {
 				nodes {
-					timestamp
 					amount
-					delegate
+					nominators
+					rank
+					timestamp
 				}
 				pageInfo {
 					hasNextPage
@@ -39,8 +40,8 @@ export async function getAccountDelegateHistory(
 	);
 
 	return {
-		hasNextPage: response.delegates?.pageInfo.hasNextPage,
-		endCursor: response.delegates?.pageInfo.endCursor,
-		data: response.delegates?.nodes,
+		hasNextPage: response.validators?.pageInfo.hasNextPage,
+		endCursor: response.validators?.pageInfo.endCursor,
+		data: response.validators?.nodes,
 	};
 }

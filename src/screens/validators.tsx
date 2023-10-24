@@ -23,6 +23,8 @@ import { css, Theme } from "@emotion/react";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { ButtonLink } from "../components/ButtonLink";
 import { ValidatorPortfolio } from "../components/validators/ValidatorPortfolio";
+import { ValidatorStakeHistoryChart } from "../components/validators/ValidatorStakeHistoryChart";
+import { useValidatorStakeHistory } from "../hooks/useValidatorHistory";
 
 const validatorHeader = (theme: Theme) => css`
   display: flex;
@@ -102,6 +104,7 @@ export const ValidatorPage = () => {
 	const info = (verifiedDelegates as Record<string, DelegateInfo>)[address];
 
 	const balance = useValidatorBalance({ delegate: { equalTo: address } });
+	const validatorStakeHistory = useValidatorStakeHistory(address);
 
 	const nominatorsInitialOrder: DelegateBalancesOrder = "AMOUNT_DESC";
 	const [nominatorSort, setNominatorSort] = useState<DelegateBalancesOrder>(
@@ -119,8 +122,12 @@ export const ValidatorPage = () => {
 	const [delegateSort, setDelegateSort] = useState<DelegatesOrder>(
 		delegatesInitialOrder
 	);
-	const delegatesInitialFilter: DelegateFilter = { amount: { greaterThan: MIN_DELEGATION_AMOUNT } };
-	const [delegatesFilter, setDelegatesFilter] = useState<DelegateFilter>(delegatesInitialFilter);
+	const delegatesInitialFilter: DelegateFilter = {
+		amount: { greaterThan: MIN_DELEGATION_AMOUNT },
+	};
+	const [delegatesFilter, setDelegatesFilter] = useState<DelegateFilter>(
+		delegatesInitialFilter
+	);
 	const delegates = useDelegates(
 		{
 			delegate: { equalTo: address },
@@ -193,7 +200,7 @@ export const ValidatorPage = () => {
 							color="secondary"
 							target="_blank"
 						>
-              DELEGATE STAKE
+							DELEGATE STAKE
 						</ButtonLink>
 					</div>
 				</Card>
@@ -201,6 +208,23 @@ export const ValidatorPage = () => {
 					<ValidatorPortfolio hotkey={address} />
 				</Card>
 			</CardRow>
+			<Card data-test="account-historical-items">
+				<div ref={tabRef}>
+					<TabbedContent>
+						<TabPane
+							label="Staked"
+							loading={validatorStakeHistory.loading}
+							error={!!validatorStakeHistory.error}
+							value="staked"
+						>
+							<ValidatorStakeHistoryChart
+								stakeHistory={validatorStakeHistory}
+								balance={balance}
+							/>
+						</TabPane>
+					</TabbedContent>
+				</div>
+			</Card>
 			<Card>
 				<div ref={tabRef}>
 					<TabbedContent defaultTab={tab.slice(1).toString()}>
@@ -234,7 +258,7 @@ export const ValidatorPage = () => {
 								}
 								initialSort={delegatesInitialOrder}
 								onFilterChange={(newFilter?: DelegateFilter) =>
-									setDelegatesFilter({...delegatesFilter, ...newFilter})
+									setDelegatesFilter({ ...delegatesFilter, ...newFilter })
 								}
 								initialFilter={delegatesInitialFilter}
 							/>

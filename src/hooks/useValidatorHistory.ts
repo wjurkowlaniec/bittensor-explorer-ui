@@ -1,27 +1,34 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAccountDelegateHistory } from "../services/accountDelegateHistoryService";
+import { getValidatorStakeHistory } from "../services/validatorHistoryService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
-import { AccountDelegateHistory, AccountDelegateHistoryPaginatedResponse, AccountDelegateHistoryResponse } from "../model/accountDelegateHistory";
+import {
+	ValidatorStakeHistory,
+	ValidatorStakeHistoryPaginatedResponse,
+	ValidatorStakeHistoryResponse,
+} from "../model/validatorHistory";
 
-export function useAccountDelegateHistory(address: string): AccountDelegateHistoryResponse {
+export function useValidatorStakeHistory(
+	address: string
+): ValidatorStakeHistoryResponse {
 	const rollbar = useRollbar();
 
-	const [data, setData] = useState<AccountDelegateHistory[]>([]);
+	const [data, setData] = useState<ValidatorStakeHistory[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
 
 	const fetchData = useCallback(async () => {
 		try {
 			const limit = 100;
-			
+
 			let finished = false;
 			let after: string | undefined = undefined;
-			
-			const result: AccountDelegateHistory[] = [];
+
+			const result: ValidatorStakeHistory[] = [];
 			while (!finished) {
-				const stats: AccountDelegateHistoryPaginatedResponse = await getAccountDelegateHistory(address, after, limit);
+				const stats: ValidatorStakeHistoryPaginatedResponse =
+          await getValidatorStakeHistory(address, after, limit);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
 				after = stats.endCursor;
