@@ -48,22 +48,11 @@ export const ValidatorStakeHistoryChart = (
 		);
 		return resp;
 	}, [stakeHistory]);
-	const minRank = useMemo(() => {
+	const maxNominators = useMemo(() => {
 		if (!stakeHistory.data) return 0;
 		const resp = stakeHistory.data.reduce(
 			(prev: number, cur: ValidatorStakeHistory) => {
-				const now = parseInt(cur.rank.toString());
-				return now < prev ? now : prev;
-			},
-			1000000000
-		);
-		return resp;
-	}, [stakeHistory]);
-	const maxRank = useMemo(() => {
-		if (!stakeHistory.data) return 0;
-		const resp = stakeHistory.data.reduce(
-			(prev: number, cur: ValidatorStakeHistory) => {
-				const now = parseInt(cur.rank.toString());
+				const now = parseInt(cur.nominators.toString());
 				return now > prev ? now : prev;
 			},
 			0
@@ -133,8 +122,8 @@ export const ValidatorStakeHistoryChart = (
 					},
 				},
 				colors: [
-					theme.palette.neutral.main,
 					theme.palette.error.main,
+					theme.palette.neutral.main,
 					theme.palette.success.main,
 				],
 				dataLabels: {
@@ -196,7 +185,7 @@ export const ValidatorStakeHistoryChart = (
 					},
 				],
 				stroke: {
-					width: [1, 0, 1],
+					width: 1,
 				},
 				tooltip: {
 					theme: "dark",
@@ -229,9 +218,10 @@ export const ValidatorStakeHistoryChart = (
 					type: "datetime",
 				},
 				yaxis: [{
-					opposite: true,
-					reversed: true,
-					tickAmount: 2,
+					show: false,
+					min: 0,
+					max: 0,
+				}, {
 					labels: {
 						style: {
 							colors: theme.palette.neutral.main,
@@ -239,7 +229,7 @@ export const ValidatorStakeHistoryChart = (
 						formatter: (val: number) => parseInt(val.toString()).toString(),
 					},
 					title: {
-						text: "Rank (Pos)",
+						text: "Nominators",
 						style: {
 							color: theme.palette.neutral.main,
 						}
@@ -250,13 +240,10 @@ export const ValidatorStakeHistoryChart = (
 					axisBorder: {
 						show: false,
 					},
-					min: minRank,
-					max: maxRank,
-				}, {
-					show: false,
 					min: 0,
-					max: 0,
+					max: maxNominators,
 				}, {
+					opposite: true,
 					labels: {
 						style: { 
 							colors: theme.palette.success.main,
