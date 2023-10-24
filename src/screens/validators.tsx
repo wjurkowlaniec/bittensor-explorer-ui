@@ -219,6 +219,7 @@ export const ValidatorPage = () => {
 						>
 							<ValidatorStakeHistoryChart
 								stakeHistory={validatorStakeHistory}
+								balance={balance}
 							/>
 						</TabPane>
 					</TabbedContent>

@@ -20,6 +20,7 @@ const spinnerContainer = css`
 
 export type ValidatorStakeHistoryChartProps = {
 	stakeHistory: ValidatorStakeHistoryResponse;
+	balance: any;
 };
 
 export const ValidatorStakeHistoryChart = (
@@ -27,17 +28,21 @@ export const ValidatorStakeHistoryChart = (
 ) => {
 	const theme = useTheme();
 
-	const { stakeHistory } = props;
+	const { stakeHistory, balance } = props;
 
-	const loading = stakeHistory.loading;
+	const loading = stakeHistory.loading || balance.loading;
 	const timestamps = useMemo(() => {
 		if (!stakeHistory.data) return [];
 		const resp = stakeHistory.data.map(
 			(x: ValidatorStakeHistory) => x.timestamp
 		);
-		return resp;
-	}, [stakeHistory]);
+		return [
+			...resp,
+			(new Date()).toUTCString(),
+		];
+	}, [stakeHistory, balance]);
 	const maxAmount = useMemo(() => {
+		if (!balance.data) return 0;
 		if (!stakeHistory.data) return 0;
 		const resp = stakeHistory.data.reduce(
 			(prev: number, cur: ValidatorStakeHistory) => {
@@ -46,8 +51,9 @@ export const ValidatorStakeHistoryChart = (
 			},
 			0
 		);
-		return resp;
-	}, [stakeHistory]);
+		const current = rawAmountToDecimal(balance.data.toString()).toNumber();
+		return resp > current ? resp : current;
+	}, [stakeHistory, balance]);
 	const maxNominators = useMemo(() => {
 		if (!stakeHistory.data) return 0;
 		const resp = stakeHistory.data.reduce(
@@ -61,22 +67,37 @@ export const ValidatorStakeHistoryChart = (
 	}, [stakeHistory]);
 	const rank = useMemo(() => {
 		if (!stakeHistory.data) return [];
-		return stakeHistory.data.map((x: ValidatorStakeHistory) =>
+		const resp = stakeHistory.data.map((x: ValidatorStakeHistory) =>
 			parseInt(x.rank.toString())
 		);
+		const current = resp.length === 0 ? 0 : resp[resp.length - 1];
+		return [
+			...resp,
+			current as number,
+		];
 	}, [stakeHistory]);
 	const nominators = useMemo(() => {
 		if (!stakeHistory.data) return [];
-		return stakeHistory.data.map((x: ValidatorStakeHistory) =>
+		const resp = stakeHistory.data.map((x: ValidatorStakeHistory) =>
 			parseInt(x.nominators.toString())
 		);
+		const current = resp.length === 0 ? 0 : resp[resp.length - 1];
+		return [
+			...resp,
+			current as number,
+		];
 	}, [stakeHistory]);
 	const staked = useMemo(() => {
+		if (!balance.data) return [];
 		if (!stakeHistory.data) return [];
-		return stakeHistory.data.map((x: ValidatorStakeHistory) =>
+		const resp = stakeHistory.data.map((x: ValidatorStakeHistory) =>
 			rawAmountToDecimal(x.amount.toString()).toNumber()
 		);
-	}, [stakeHistory]);
+		return [
+			...resp,
+			rawAmountToDecimal(balance.data).toNumber()
+		];
+	}, [stakeHistory, balance]);
 
 	return loading ? (
 		<div css={spinnerContainer}>
