@@ -9,6 +9,7 @@ import {
 	AccountBalanceHistory,
 	AccountBalanceHistoryResponse,
 } from "../../model/accountHistory";
+import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`
   display: flex;
@@ -183,7 +184,7 @@ export const AccounBalanceHistoryChart = (
 						format: "dd MMM yy",
 					},
 					y: {
-						formatter: (val: number) => nFormatter(val, 2).toString(),
+						formatter: (val: number) => NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString(),
 					},
 				},
 				xaxis: {

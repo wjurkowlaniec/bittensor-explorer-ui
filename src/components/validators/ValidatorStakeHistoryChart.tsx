@@ -9,6 +9,7 @@ import {
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryResponse,
 } from "../../model/validatorHistory";
+import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`
   display: flex;
@@ -47,13 +48,22 @@ export const ValidatorStakeHistoryChart = (
 		);
 		return resp;
 	}, [stakeHistory]);
-	const maxRankOrNominator = useMemo(() => {
+	const minRank = useMemo(() => {
 		if (!stakeHistory.data) return 0;
 		const resp = stakeHistory.data.reduce(
 			(prev: number, cur: ValidatorStakeHistory) => {
-				let now = parseInt(cur.rank.toString());
-				prev = now > prev ? now : prev;
-				now = parseInt(cur.nominators.toString());
+				const now = parseInt(cur.rank.toString());
+				return now < prev ? now : prev;
+			},
+			1000000000
+		);
+		return resp;
+	}, [stakeHistory]);
+	const maxRank = useMemo(() => {
+		if (!stakeHistory.data) return 0;
+		const resp = stakeHistory.data.reduce(
+			(prev: number, cur: ValidatorStakeHistory) => {
+				const now = parseInt(cur.rank.toString());
 				return now > prev ? now : prev;
 			},
 			0
@@ -123,8 +133,8 @@ export const ValidatorStakeHistoryChart = (
 					},
 				},
 				colors: [
-					theme.palette.error.main,
 					theme.palette.neutral.main,
+					theme.palette.error.main,
 					theme.palette.success.main,
 				],
 				dataLabels: {
@@ -186,7 +196,7 @@ export const ValidatorStakeHistoryChart = (
 					},
 				],
 				stroke: {
-					width: 1,
+					width: [1, 0, 1],
 				},
 				tooltip: {
 					theme: "dark",
@@ -196,7 +206,11 @@ export const ValidatorStakeHistoryChart = (
 						format: "dd MMM yy",
 					},
 					y: {
-						formatter: (val: number) => nFormatter(val, 2).toString(),
+						formatter: (val: number, { seriesIndex }) => {
+							if(seriesIndex === 2)
+								return NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString();
+							return val.toString();
+						},
 					},
 				},
 				xaxis: {
@@ -216,11 +230,44 @@ export const ValidatorStakeHistoryChart = (
 				},
 				yaxis: [{
 					opposite: true,
+					reversed: true,
+					tickAmount: 2,
 					labels: {
 						style: {
-							colors: "#a8a8a8",
+							colors: theme.palette.neutral.main,
+						},
+						formatter: (val: number) => parseInt(val.toString()).toString(),
+					},
+					title: {
+						text: "Rank (Pos)",
+						style: {
+							color: theme.palette.neutral.main,
+						}
+					},
+					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
+						show: false,
+					},
+					min: minRank,
+					max: maxRank,
+				}, {
+					show: false,
+					min: 0,
+					max: 0,
+				}, {
+					labels: {
+						style: { 
+							colors: theme.palette.success.main,
 						},
 						formatter: (val: number) => nFormatter(val, 2).toString(),
+					},
+					title: {
+						text: `Stake (${NETWORK_CONFIG.currency})`,
+						style: {
+							color: theme.palette.success.main,
+						}
 					},
 					axisTicks: {
 						show: false,
@@ -230,21 +277,6 @@ export const ValidatorStakeHistoryChart = (
 					},
 					min: 0,
 					max: maxAmount,
-				}, {
-					labels: {
-						style: {
-							colors: "#a8a8a8",
-						},
-						formatter: (val: number) => parseInt(val.toString()).toString(),
-					},
-					axisTicks: {
-						show: false,
-					},
-					axisBorder: {
-						show: false,
-					},
-					min: 0,
-					max: maxRankOrNominator,
 				}],
 			}}
 		/>
