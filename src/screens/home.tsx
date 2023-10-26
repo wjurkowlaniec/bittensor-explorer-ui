@@ -11,7 +11,7 @@ import BlocksTable from "../components/blocks/BlocksTable";
 import { NetworkStats, TokenDistributionChart } from "../components/network";
 import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { BlocksOrder } from "../services/blocksService";
 import { BalancesFilter, BalancesOrder } from "../services/balancesService";
 import { TransfersFilter, TransfersOrder } from "../services/transfersService";
@@ -19,6 +19,7 @@ import { useDelegates } from "../hooks/useDelegates";
 import { DelegateFilter, DelegatesOrder } from "../services/delegateService";
 import { useLocation } from "react-router-dom";
 import { MIN_DELEGATION_AMOUNT } from "../config";
+import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
 
 const contentStyle = css`
   position: relative;
@@ -56,6 +57,8 @@ const infoSection = css`
 `;
 
 export const HomePage = () => {
+	const verifiedDelegates = useVerifiedDelegates();
+
 	const blocksInitialOrder: BlocksOrder = "HEIGHT_DESC";
 	const [blockSort, setBlockSort] = useState<BlocksOrder>(blocksInitialOrder);
 	const blocks = useBlocks(undefined, blockSort);
@@ -105,7 +108,43 @@ export const HomePage = () => {
 	const [delegatesFilter, setDelegatesFilter] = useState<DelegateFilter>(
 		delegatesInitialFilter
 	);
-	const delegates = useDelegates(delegatesFilter, delegateSort);
+	const delegatesInitialSearch = "";
+	const [delegatesSearch, setDelegatesSearch] = useState<string | undefined>(
+		delegatesInitialSearch
+	);
+	const delegateSearchFilter = useMemo(() => {
+		const lowerSearch = delegatesSearch?.trim().toLowerCase() || "";
+		if(verifiedDelegates !== undefined) {
+			const filtered = Object.keys(verifiedDelegates).filter((hotkey: string) => {
+				const delegateInfo = verifiedDelegates[hotkey];
+				const delegateName = delegateInfo?.name.trim().toLowerCase() || "";
+				if(lowerSearch !== "" && delegateName.includes(lowerSearch))
+					return true;
+				return false;
+			});
+			if(filtered.length > 0) {
+				return {
+					delegate: {
+						in: filtered,
+					}
+				};
+			}
+		}
+		if(lowerSearch === "")
+			return {};
+		return {
+			delegate: {
+				includesInsensitive: delegatesSearch,
+			}
+		};
+	}, [delegatesSearch]);
+	const delegates = useDelegates(
+		{
+			...delegateSearchFilter,
+			...delegatesFilter,
+		},
+		delegateSort
+	);
 
 	useEffect(() => {
 		if (blocks.pagination.offset === 0) {
@@ -204,6 +243,10 @@ export const HomePage = () => {
 										setDelegatesFilter({ ...delegatesFilter, ...newFilter })
 									}
 									initialFilter={delegatesInitialFilter}
+									onSearchChange={(newSearch?: string) =>
+										setDelegatesSearch(newSearch)
+									}
+									initialSearch={delegatesInitialSearch}
 								/>
 							</TabPane>
 							<TabPane

@@ -57,6 +57,8 @@ export type DelegatesTableProps = {
 	initialSort?: string;
 	onFilterChange?: (newFilter?: DelegateFilter) => void;
 	initialFilter?: DelegateFilter;
+	onSearchChange?: (newSearch?: string) => void;
+	initialSearch?: string;
 };
 
 const DelegatesTableAttribute = ItemsTableAttribute<Delegate>;
@@ -91,13 +93,14 @@ const filterMappings: DelegateFilter = {
 };
 
 function DelegatesTable(props: DelegatesTableProps) {
-	const { delegates, showTime, initialFilter, onFilterChange } = props;
+	const { delegates, showTime, initialFilter, onFilterChange, initialSearch, onSearchChange } = props;
 
 	const { currency, prefix } = NETWORK_CONFIG;
 
 	const { initialSort, onSortChange } = props;
 	const [sort, setSort] = useState<SortOrder<string>>();
 	const [filter, setFilter] = useState<DelegateFilter | undefined>();
+	const [search, setSearch] = useState(initialSearch);
 
 	useEffect(() => {
 		Object.entries(orderMappings).forEach(([property, value]) => {
@@ -155,10 +158,20 @@ function DelegatesTable(props: DelegatesTableProps) {
 			},
 		});
 	};
+
 	useEffect(() => {
 		if (!onFilterChange) return;
 		onFilterChange(filter);
 	}, [JSON.stringify(filter)]);
+
+	const handleSearchChange = (value?: string) => {
+		setSearch(value);
+	};
+
+	useEffect(() => {
+		if(!onSearchChange) return;
+		onSearchChange(search);
+	}, [search]);
 
 	return (
 		<ItemsTable
@@ -174,6 +187,9 @@ function DelegatesTable(props: DelegatesTableProps) {
 			filterMappings={filterMappings}
 			filter={filter}
 			onFilterChange={handleFilterChange}
+			search={search}
+			onSearchChange={handleSearchChange}
+			searchPlaceholder="Delegate"
 		>
 			<DelegatesTableAttribute
 				label='Extrinsic'
