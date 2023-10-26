@@ -264,7 +264,16 @@ export const ItemsTable = <
 				</div>
 				{search !== undefined && (
 					<TableSearch
-						onChange={onSearchChange}
+						onChange={(newValue?: string) => {
+							if (onSearchChange) onSearchChange(newValue);
+
+							pagination?.set({
+								...pagination,
+								offset: 1,
+								page: 1,
+								prevEndCursor: [],
+							});
+						}}
 						placeholder={searchPlaceholder}
 					/>
 				)}
