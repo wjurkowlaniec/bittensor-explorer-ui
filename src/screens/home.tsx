@@ -147,7 +147,7 @@ export const HomePage = () => {
 	);
 
 	useEffect(() => {
-		if (blocks.pagination.offset === 0) {
+		if (blocks.pagination.page === 1) {
 			const id = setInterval(
 				() => blocks.refetch && blocks.refetch(),
 				12 * 1000
@@ -157,7 +157,7 @@ export const HomePage = () => {
 	}, [blocks]);
 
 	useEffect(() => {
-		if (transfers.pagination.offset === 0) {
+		if (transfers.pagination.page === 1) {
 			const id = setInterval(
 				() => transfers.refetch && transfers.refetch(),
 				12 * 1000
