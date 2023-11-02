@@ -8,7 +8,7 @@ import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryResponse,
-} from "../../model/validatorHistory";
+} from "../../model/validator";
 import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getValidatorStakeHistory } from "../services/validatorHistoryService";
+import { getValidatorStakeHistory } from "../services/validatorService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
@@ -7,7 +7,7 @@ import {
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryPaginatedResponse,
 	ValidatorStakeHistoryResponse,
-} from "../model/validatorHistory";
+} from "../model/validator";
 
 export function useValidatorStakeHistory(
 	address: string
@@ -28,7 +28,7 @@ export function useValidatorStakeHistory(
 			const result: ValidatorStakeHistory[] = [];
 			while (!finished) {
 				const stats: ValidatorStakeHistoryPaginatedResponse =
-          await getValidatorStakeHistory(address, after, limit);
+					await getValidatorStakeHistory(address, after, limit);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
 				after = stats.endCursor;
