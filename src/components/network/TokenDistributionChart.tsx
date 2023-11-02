@@ -8,6 +8,7 @@ import { useDelegatedSupply } from "../../hooks/useDelegatedSupply";
 import { useAppStats } from "../../contexts";
 import { DonutChart } from "../DonutChart";
 import Loading from "../Loading";
+import Decimal from "decimal.js";
 
 const chartContainer = css`
   display: flex;
@@ -36,8 +37,9 @@ export type TokenDistributionChartProps = HTMLAttributes<HTMLDivElement>;
 export const TokenDistributionChart = () => {
 	const { state: { tokenLoading, tokenStats } } = useAppStats();
 	const token = tokenStats;
-	const totalIssuance = useTotalIssuance();
-	const delegated = useDelegatedSupply();
+	const issued: Decimal = useTotalIssuance() ?? new Decimal(0);
+	const delegated: Decimal = useDelegatedSupply() ?? new Decimal(0);
+	const totalIssuance = issued.add(delegated);
 
 	const loading =
     tokenLoading ||
