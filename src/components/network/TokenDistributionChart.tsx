@@ -8,6 +8,7 @@ import { useDelegatedSupply } from "../../hooks/useDelegatedSupply";
 import { useAppStats } from "../../contexts";
 import { DonutChart } from "../DonutChart";
 import Loading from "../Loading";
+import Decimal from "decimal.js";
 
 const chartContainer = css`
   display: flex;
@@ -34,16 +35,15 @@ const spinnerContainer = css`
 export type TokenDistributionChartProps = HTMLAttributes<HTMLDivElement>;
 
 export const TokenDistributionChart = () => {
-	const { state: { tokenLoading, tokenStats } } = useAppStats();
+	const {
+		state: { tokenLoading, tokenStats },
+	} = useAppStats();
 	const token = tokenStats;
-	const totalIssuance = useTotalIssuance();
+	const issued = useTotalIssuance();
 	const delegated = useDelegatedSupply();
+	const loading = tokenLoading || token === undefined || issued === undefined || delegated === undefined;
 
-	const loading =
-    tokenLoading ||
-    token === undefined ||
-    totalIssuance === undefined ||
-    delegated === undefined;
+	const totalIssuance = loading ? new Decimal(0) : issued.add(delegated);
 
 	const delegatedPercent = loading
 		? 0
@@ -65,12 +65,12 @@ export const TokenDistributionChart = () => {
 		<div css={chartContainer}>
 			<div css={supplyInfo}>
 				<StatItem
-					title='Total Supply'
+					title="Total Supply"
 					value={`${formatNumber(token.totalSupply)} 𝞃`}
 				/>
 				<StatItem
-					title='Circulating Supply'
-					value={`${formatNumber(totalIssuance, { decimalPlaces: 2 })} 𝞃`}
+					title="Circulating Supply"
+					value={`${formatNumber(totalIssuance.floor())} 𝞃`}
 				/>
 			</div>
 			<DonutChart
@@ -80,8 +80,8 @@ export const TokenDistributionChart = () => {
 						`Circulating Free (${circulatingPercent}% of ${totalIssuanceFormatted})`,
 						`Unissued (${(
 							100 -
-							(totalIssuance.toNumber() / token.totalSupply) * 100
-						).toFixed(2)}% of ${nFormatter(token.totalSupply, 2)})`,
+              (totalIssuance.toNumber() / token.totalSupply) * 100
+						).toFixed(2)}% of ${nFormatter(token.totalSupply, 0)})`,
 					],
 				}}
 				series={[
