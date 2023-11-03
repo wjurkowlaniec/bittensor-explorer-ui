@@ -64,14 +64,24 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			/>
 			<ValidatorsTableAttribute
 				label={"24h Change"}
-				render={(validator) => (
-					<Currency
-						amount={validator.day_change || BigInt("0")}
-						currency={currency}
-						decimalPlaces="optimal"
-						showFullInTooltip
-					/>
-				)}
+				render={(validator) => {
+					const change24h = validator.day_change || BigInt("0");
+					return (
+						<span
+							className={`${
+								change24h > 0 ? "up" : change24h < 0 ? "down" : ""
+							}`}
+						>
+							{change24h > 0 ? "▴" : change24h < 0 ? "▾" : ""}
+							<Currency
+								amount={change24h}
+								currency={currency}
+								decimalPlaces="optimal"
+								showFullInTooltip
+							/>
+						</span>
+					);
+				}}
 			/>
 			<ValidatorsTableAttribute
 				label="Nominators"
