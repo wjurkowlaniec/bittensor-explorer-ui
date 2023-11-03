@@ -90,9 +90,11 @@ export function useValidators(lastHeight?: number, prevHeight?: number) {
 					(prevVal) => prevVal.address === lastVal.address
 				);
 				if (prevVal) {
-					lastVal.day_change = lastVal.amount - prevVal.amount;
+					lastVal.amount_day_change = lastVal.amount - prevVal.amount;
+					lastVal.nominators_day_change = lastVal.nominators - prevVal.nominators;
 				} else {
-					lastVal.day_change = lastVal.amount;
+					lastVal.amount_day_change = lastVal.amount;
+					lastVal.nominators_day_change = lastVal.nominators;
 				}
 				result.push(lastVal);
 			});

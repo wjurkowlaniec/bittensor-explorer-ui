@@ -65,7 +65,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			<ValidatorsTableAttribute
 				label={"24h Change"}
 				render={(validator) => {
-					const change24h = validator.day_change || BigInt("0");
+					const change24h = validator.amount_day_change || BigInt("0");
 					return (
 						<span
 							className={`${
@@ -86,6 +86,22 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			<ValidatorsTableAttribute
 				label="Nominators"
 				render={(validator) => <>{validator.nominators}</>}
+			/>
+			<ValidatorsTableAttribute
+				label={"24h Change"}
+				render={(validator) => {
+					const change24h = validator.nominators_day_change || BigInt("0");
+					return (
+						<span
+							className={`${
+								change24h >= 0 ? "up" : "down"
+							}`}
+						>
+							{change24h >= 0 ? "▴" : "▾"}
+							<>{change24h.toString()}</>
+						</span>
+					);
+				}}
 			/>
 		</ItemsTable>
 	);
