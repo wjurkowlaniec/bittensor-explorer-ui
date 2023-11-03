@@ -34,7 +34,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 				render={(validator) => <>{validator.rank}</>}
 			/>
 			<ValidatorsTableAttribute
-				label="Hotkey"
+				label="Validator"
 				render={(validator) =>
 					validator.name === undefined ? (
 						<AccountAddress
@@ -63,12 +63,8 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 								decimalPlaces="optimal"
 								showFullInTooltip
 							/>
-							{change24h != BigInt("0") && 
-								<span
-									className={`${
-										change24h > 0 ? "up" : "down"
-									}`}
-								>
+							{change24h != BigInt("0") && (
+								<span className={`${change24h > 0 ? "up" : "down"}`}>
 									{" ("}
 									{change24h > 0 ? "▴" : "▾"}
 									<Currency
@@ -79,7 +75,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 									/>
 									{")"}
 								</span>
-							}
+							)}
 						</>
 					);
 				}}
@@ -91,21 +87,21 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 					return (
 						<>
 							{validator.nominators}
-							{change24h != BigInt("0") && 
-								<span
-									className={`${
-										change24h > 0 ? "up" : "down"
-									}`}
-								>
+							{change24h != BigInt("0") && (
+								<span className={`${change24h > 0 ? "up" : "down"}`}>
 									{" ("}
 									{change24h > 0 ? "▴" : "▾"}
 									<>{change24h.toString()}</>
 									{")"}
 								</span>
-							}
+							)}
 						</>
 					);
 				}}
+			/>
+			<ValidatorsTableAttribute
+				label="Last update"
+				render={(validator) => validator.timestamp}
 			/>
 		</ItemsTable>
 	);
