@@ -20,7 +20,6 @@ import { DelegateFilter, DelegatesOrder } from "../services/delegateService";
 import { useLocation } from "react-router-dom";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
-import { ValidatorsOrder } from "../services/validatorService";
 import {
 	useMaxHeightForValidators,
 	useValidators,
@@ -153,19 +152,10 @@ export const HomePage = () => {
 		delegateSort
 	);
 
-	const { maxHeight: maxHeightForValidators } = useMaxHeightForValidators();
-	const validatorsInitialOrder: ValidatorsOrder = "AMOUNT_DESC";
-	const [validatorsSort, setValidatorsSort] = useState<ValidatorsOrder>(
-		validatorsInitialOrder
-	);
+	const { height: maxHeightsForValidators } = useMaxHeightForValidators();
 	const validators = useValidators(
-		{
-			height: {
-				equalTo: maxHeightForValidators,
-			},
-		},
-		validatorsSort,
-		{ waitUntil: maxHeightForValidators === undefined }
+		maxHeightsForValidators?.last,
+		maxHeightsForValidators?.prev
 	);
 
 	useEffect(() => {
@@ -273,18 +263,11 @@ export const HomePage = () => {
 							</TabPane>
 							<TabPane
 								label="Validators"
-								count={validators.pagination.totalCount}
 								loading={validators.loading}
-								error={validators.error}
+								error={!!validators.error}
 								value="validators"
 							>
-								<ValidatorsTable
-									validators={validators}
-									onSortChange={(sortKey: ValidatorsOrder) =>
-										setValidatorsSort(sortKey)
-									}
-									initialSort={validatorsInitialOrder}
-								/>
+								<ValidatorsTable validators={validators} />
 							</TabPane>
 							<TabPane
 								label="Accounts"

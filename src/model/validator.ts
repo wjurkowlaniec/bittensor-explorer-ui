@@ -9,6 +9,7 @@ export type Validator = {
 	rank: bigint;
 	address: string;
 	name?: string;
+	day_change?: bigint;
 };
 
 export type ValidatorStakeHistory = {
