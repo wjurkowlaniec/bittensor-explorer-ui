@@ -53,53 +53,57 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			/>
 			<ValidatorsTableAttribute
 				label="Stake"
-				render={(validator) => (
-					<Currency
-						amount={validator.amount}
-						currency={currency}
-						decimalPlaces="optimal"
-						showFullInTooltip
-					/>
-				)}
-			/>
-			<ValidatorsTableAttribute
-				label={"24h Change"}
 				render={(validator) => {
 					const change24h = validator.amount_day_change || BigInt("0");
 					return (
-						<span
-							className={`${
-								change24h > 0 ? "up" : change24h < 0 ? "down" : ""
-							}`}
-						>
-							{change24h > 0 ? "▴" : change24h < 0 ? "▾" : ""}
+						<>
 							<Currency
-								amount={change24h}
+								amount={validator.amount}
 								currency={currency}
 								decimalPlaces="optimal"
 								showFullInTooltip
 							/>
-						</span>
+							{change24h != BigInt("0") && 
+								<span
+									className={`${
+										change24h > 0 ? "up" : "down"
+									}`}
+								>
+									{" ("}
+									{change24h > 0 ? "▴" : "▾"}
+									<Currency
+										amount={change24h}
+										currency={currency}
+										decimalPlaces="optimal"
+										showFullInTooltip
+									/>
+									{")"}
+								</span>
+							}
+						</>
 					);
 				}}
 			/>
 			<ValidatorsTableAttribute
 				label="Nominators"
-				render={(validator) => <>{validator.nominators}</>}
-			/>
-			<ValidatorsTableAttribute
-				label={"24h Change"}
 				render={(validator) => {
 					const change24h = validator.nominators_day_change || BigInt("0");
 					return (
-						<span
-							className={`${
-								change24h >= 0 ? "up" : "down"
-							}`}
-						>
-							{change24h >= 0 ? "▴" : "▾"}
-							<>{change24h.toString()}</>
-						</span>
+						<>
+							{validator.nominators}
+							{change24h != BigInt("0") && 
+								<span
+									className={`${
+										change24h > 0 ? "up" : "down"
+									}`}
+								>
+									{" ("}
+									{change24h > 0 ? "▴" : "▾"}
+									<>{change24h.toString()}</>
+									{")"}
+								</span>
+							}
+						</>
 					);
 				}}
 			/>
