@@ -1366,10 +1366,6 @@ table.dataTable thead > tr > th.sorting.sorting_asc span:before {
   color: #ff7a7a;
 }
 
-.smaller {
-  font-size: smaller;
-}
-
 footer.site-footer {
   width: 100%;
   text-align: center;

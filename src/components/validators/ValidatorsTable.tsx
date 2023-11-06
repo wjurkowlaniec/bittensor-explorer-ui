@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { ItemsTable, ItemsTableAttribute } from "../ItemsTable";
 import { Link } from "../Link";
 import { Validator } from "../../model/validator";
@@ -5,6 +6,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { AccountAddress } from "../AccountAddress";
 import { Currency } from "../Currency";
 import { DataError } from "../../utils/error";
+import { css } from "@emotion/react";
 
 export type ValidatorsTableProps = {
 	validators: {
@@ -13,6 +15,12 @@ export type ValidatorsTableProps = {
 		data: Validator[];
 	};
 };
+
+const day_change_css = css`
+  font-size: small;
+  font-weight: bold;
+  margin-left: 10px;
+`;
 
 const ValidatorsTableAttribute = ItemsTableAttribute<Validator>;
 
@@ -64,10 +72,10 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 								showFullInTooltip
 							/>
 							{change24h != BigInt("0") && (
-								<span className={`${change24h > 0 ? "up" : "down"} smaller`}>
+								<span css={day_change_css} className={`${change24h > 0 ? "up" : "down"}`}>
 									{change24h > 0 ? "▴" : "▾"}
 									<Currency
-										amount={change24h}
+										amount={change24h > 0 ? change24h : -change24h}
 										currency={currency}
 										decimalPlaces={0}
 										showFullInTooltip
@@ -86,9 +94,9 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						<>
 							{validator.nominators}
 							{change24h != BigInt("0") && (
-								<span className={`${change24h > 0 ? "up" : "down"} smaller`}>
+								<span css={day_change_css} className={`${change24h > 0 ? "up" : "down"}`}>
 									{change24h > 0 ? "▴" : "▾"}
-									<>{change24h.toString()}</>
+									<>{(change24h > 0 ? change24h : -change24h).toString()}</>
 								</span>
 							)}
 						</>
