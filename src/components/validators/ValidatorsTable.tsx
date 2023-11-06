@@ -60,20 +60,18 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 							<Currency
 								amount={validator.amount}
 								currency={currency}
-								decimalPlaces="optimal"
+								decimalPlaces={0}
 								showFullInTooltip
 							/>
 							{change24h != BigInt("0") && (
-								<span className={`${change24h > 0 ? "up" : "down"}`}>
-									{" ("}
+								<span className={`${change24h > 0 ? "up" : "down"} smaller`}>
 									{change24h > 0 ? "▴" : "▾"}
 									<Currency
 										amount={change24h}
 										currency={currency}
-										decimalPlaces="optimal"
+										decimalPlaces={0}
 										showFullInTooltip
 									/>
-									{")"}
 								</span>
 							)}
 						</>
@@ -88,20 +86,14 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						<>
 							{validator.nominators}
 							{change24h != BigInt("0") && (
-								<span className={`${change24h > 0 ? "up" : "down"}`}>
-									{" ("}
+								<span className={`${change24h > 0 ? "up" : "down"} smaller`}>
 									{change24h > 0 ? "▴" : "▾"}
 									<>{change24h.toString()}</>
-									{")"}
 								</span>
 							)}
 						</>
 					);
 				}}
-			/>
-			<ValidatorsTableAttribute
-				label="Last update"
-				render={(validator) => validator.timestamp}
 			/>
 		</ItemsTable>
 	);
