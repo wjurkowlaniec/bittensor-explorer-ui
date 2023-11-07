@@ -20,6 +20,11 @@ import { DelegateFilter, DelegatesOrder } from "../services/delegateService";
 import { useLocation } from "react-router-dom";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
+import {
+	useMaxHeightForValidators,
+	useValidators,
+} from "../hooks/useValidators";
+import ValidatorsTable from "../components/validators/ValidatorsTable";
 
 const contentStyle = css`
   position: relative;
@@ -114,28 +119,29 @@ export const HomePage = () => {
 	);
 	const delegateSearchFilter = useMemo(() => {
 		const lowerSearch = delegatesSearch?.trim().toLowerCase() || "";
-		if(verifiedDelegates !== undefined) {
-			const filtered = Object.keys(verifiedDelegates).filter((hotkey: string) => {
-				const delegateInfo = verifiedDelegates[hotkey];
-				const delegateName = delegateInfo?.name.trim().toLowerCase() || "";
-				if(lowerSearch !== "" && delegateName.includes(lowerSearch))
-					return true;
-				return false;
-			});
-			if(filtered.length > 0) {
+		if (verifiedDelegates !== undefined) {
+			const filtered = Object.keys(verifiedDelegates).filter(
+				(hotkey: string) => {
+					const delegateInfo = verifiedDelegates[hotkey];
+					const delegateName = delegateInfo?.name.trim().toLowerCase() || "";
+					if (lowerSearch !== "" && delegateName.includes(lowerSearch))
+						return true;
+					return false;
+				}
+			);
+			if (filtered.length > 0) {
 				return {
 					delegate: {
 						in: filtered,
-					}
+					},
 				};
 			}
 		}
-		if(lowerSearch === "")
-			return {};
+		if (lowerSearch === "") return {};
 		return {
 			delegate: {
 				includesInsensitive: delegatesSearch,
-			}
+			},
 		};
 	}, [delegatesSearch]);
 	const delegates = useDelegates(
@@ -144,6 +150,12 @@ export const HomePage = () => {
 			...delegatesFilter,
 		},
 		delegateSort
+	);
+
+	const { height: maxHeightsForValidators } = useMaxHeightForValidators();
+	const validators = useValidators(
+		maxHeightsForValidators?.last,
+		maxHeightsForValidators?.prev
 	);
 
 	useEffect(() => {
@@ -248,6 +260,14 @@ export const HomePage = () => {
 									}
 									initialSearch={delegatesInitialSearch}
 								/>
+							</TabPane>
+							<TabPane
+								label="Validators"
+								loading={validators.loading}
+								error={!!validators.error}
+								value="validators"
+							>
+								<ValidatorsTable validators={validators} />
 							</TabPane>
 							<TabPane
 								label="Accounts"

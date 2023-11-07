@@ -26,7 +26,7 @@ export function formatNumber(value: number | Decimal, options: FormatNumberOptio
 	}
 
 	return Intl.NumberFormat("en-US", {
-		maximumFractionDigits: options.compact ? 3 : (options.decimalPlaces || 20),
+		maximumFractionDigits: options.compact ? 3 : (options.decimalPlaces === undefined ? 20 : options.decimalPlaces),
 		notation: options.compact ? "compact" : undefined
 	}).format(value.toString() as any);
 }
@@ -66,7 +66,7 @@ export function formatCurrency(value: number | Decimal, currency: string, option
 		value = new Decimal(value);
 	}
 
-	let decimalPlaces = options.decimalPlaces || 20;
+	let decimalPlaces = options.decimalPlaces === undefined ? 20 : options.decimalPlaces;
 
 	if (decimalPlaces === "optimal") {
 		decimalPlaces =
