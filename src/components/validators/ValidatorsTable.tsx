@@ -75,6 +75,9 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			/>
 			<ValidatorsTableAttribute
 				label=""
+				colCss={css`
+					padding-left: 0px;
+				`}
 				render={(validator) => {
 					const change24h = validator.amount_day_change || BigInt("0");
 					return (
@@ -106,6 +109,9 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			/>
 			<ValidatorsTableAttribute
 				label=""
+				colCss={css`
+					padding-left: 0px;
+				`}
 				render={(validator) => {
 					const change24h = validator.nominators_day_change || BigInt("0");
 					return (

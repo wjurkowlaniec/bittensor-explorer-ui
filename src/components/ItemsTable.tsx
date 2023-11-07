@@ -171,14 +171,14 @@ export const ItemsTableAttribute = <
 >(
 	props: ItemsTableAttributeProps<T, A, S>
 ) => {
-	const { align, colSpan, render, hide, _data, _additionalData = [] as any } = props;
+	const { align, colCss, colSpan, render, hide, _data, _additionalData = [] as any } = props;
 
 	if (!_data || hide?.(_data, ..._additionalData)) {
 		return null;
 	}
 
 	return (
-		<TableCell align={align} css={cellStyle} colSpan={colSpan?.(_data, ..._additionalData)}>
+		<TableCell align={align} css={[cellStyle, colCss]} colSpan={colSpan?.(_data, ..._additionalData)}>
 			{render(_data, ..._additionalData)}
 		</TableCell>
 	);
