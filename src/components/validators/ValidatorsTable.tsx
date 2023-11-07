@@ -61,19 +61,30 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			/>
 			<ValidatorsTableAttribute
 				label="Stake"
+				align="right"
+				render={(validator) => {
+					return (
+						<Currency
+							amount={validator.amount}
+							currency={currency}
+							decimalPlaces={0}
+							showFullInTooltip
+						/>
+					);
+				}}
+			/>
+			<ValidatorsTableAttribute
+				label=""
 				render={(validator) => {
 					const change24h = validator.amount_day_change || BigInt("0");
 					return (
 						<>
-							<Currency
-								amount={validator.amount}
-								currency={currency}
-								decimalPlaces={0}
-								showFullInTooltip
-							/>
 							{change24h != BigInt("0") && (
-								<span css={day_change_css} className={`${change24h > 0 ? "up" : "down"}`}>
-									{change24h > 0 ? "▴" : "▾"}
+								<span
+									css={day_change_css}
+									className={`${change24h > 0 ? "up" : "down"}`}
+								>
+									{change24h > 0 ? "▲" : "▼"}
 									<Currency
 										amount={change24h > 0 ? change24h : -change24h}
 										currency={currency}
@@ -88,14 +99,23 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			/>
 			<ValidatorsTableAttribute
 				label="Nominators"
+				align="right"
+				render={(validator) => {
+					return <>{validator.nominators}</>;
+				}}
+			/>
+			<ValidatorsTableAttribute
+				label=""
 				render={(validator) => {
 					const change24h = validator.nominators_day_change || BigInt("0");
 					return (
 						<>
-							{validator.nominators}
 							{change24h != BigInt("0") && (
-								<span css={day_change_css} className={`${change24h > 0 ? "up" : "down"}`}>
-									{change24h > 0 ? "▴" : "▾"}
+								<span
+									css={day_change_css}
+									className={`${change24h > 0 ? "up" : "down"}`}
+								>
+									{change24h > 0 ? "▲" : "▼"}
 									<>{(change24h > 0 ? change24h : -change24h).toString()}</>
 								</span>
 							)}
