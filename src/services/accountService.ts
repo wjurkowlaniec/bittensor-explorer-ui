@@ -39,16 +39,17 @@ export async function getAccount(
 }
 
 export async function getAccountStats(
-	offset: number,
+	after?: string,
 	limit = 100
 ): Promise<AccountStatsPaginatedResponse> {
 	const response = await fetchHistorical<{
 		accountStats: ResponseItems<AccountStats>;
 	}>(
-		`query($first: Int!, $offset: Int!) {
-			accountStats(first: $first, offset: $offset, orderBy: HEIGHT_ASC) {
+		`query($after: Cursor, $first: Int!) {
+			accountStats(after: $after, first: $first, orderBy: HEIGHT_ASC) {
 				pageInfo {
 					hasNextPage
+					endCursor
 				}
 				nodes {
 				  height
@@ -63,12 +64,13 @@ export async function getAccountStats(
 		}`,
 		{
 			first: limit,
-			offset,
+			after,
 		}
 	);
 
 	return {
 		hasNextPage: response.accountStats?.pageInfo.hasNextPage,
+		endCursor: response.accountStats?.pageInfo.endCursor,
 		data: response.accountStats?.nodes,
 	};
 }
