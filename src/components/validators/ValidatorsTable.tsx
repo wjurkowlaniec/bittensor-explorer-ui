@@ -84,7 +84,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 									css={day_change_css}
 									className={`${change24h > 0 ? "up" : "down"}`}
 								>
-									{change24h > 0 ? "▲" : "▼"}
+									{change24h > 0 ? "▴" : "▾"}
 									<Currency
 										amount={change24h > 0 ? change24h : -change24h}
 										currency={currency}
@@ -115,7 +115,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 									css={day_change_css}
 									className={`${change24h > 0 ? "up" : "down"}`}
 								>
-									{change24h > 0 ? "▲" : "▼"}
+									{change24h > 0 ? "▴" : "▾"}
 									<>{(change24h > 0 ? change24h : -change24h).toString()}</>
 								</span>
 							)}
