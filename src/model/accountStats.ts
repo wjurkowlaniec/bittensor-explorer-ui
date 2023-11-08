@@ -11,6 +11,7 @@ export type AccountStats = {
 
 export type AccountStatsPaginatedResponse = {
 	hasNextPage: boolean;
+	endCursor: string;
 	data: AccountStats[];
 };
 

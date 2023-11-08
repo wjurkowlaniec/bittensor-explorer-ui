@@ -3,7 +3,7 @@ import { getAccountStats } from "../services/accountService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
-import { AccountStats, AccountStatsResponse } from "../model/accountStats";
+import { AccountStats, AccountStatsPaginatedResponse, AccountStatsResponse } from "../model/accountStats";
 
 export function useAccountStats(): AccountStatsResponse {
 	const rollbar = useRollbar();
@@ -14,15 +14,18 @@ export function useAccountStats(): AccountStatsResponse {
 
 	const fetchData = useCallback(async () => {
 		try {
-			let offset = 0;
-			let finished = false;
 			const limit = 100;
+
+			let finished = false;
+			let after: string | undefined = undefined;
+
 			const result: AccountStats[] = [];
 			while (!finished) {
-				const stats = await getAccountStats(offset, limit);
+				const stats: AccountStatsPaginatedResponse =
+          await getAccountStats(after, limit);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
-				offset += limit;
+				after = stats.endCursor;
 			}
 			setData(result);
 		} catch (e) {
