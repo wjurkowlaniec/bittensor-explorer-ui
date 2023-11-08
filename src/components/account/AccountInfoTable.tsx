@@ -131,9 +131,9 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 							</div>
 						) : (
 							<div css={createdAt}>
-								Pre dates finney chain. See on
+								Pre dates finney chain. View data on
 								<Link href={`https://nx.taostats.io/account/${data.address}`}>
-									Nakamoto explorer
+									Nakamoto chain
 								</Link>
 							</div>
 						)
