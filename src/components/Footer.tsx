@@ -41,20 +41,15 @@ export const Footer = () => {
 						</div>
 						<div className="ft-right">
 							<div className="f-col">
-								<h5>Subnets</h5>
+								<h5>Apps</h5>
 								<ul>
-									<li><a href="https://taostats.io/subnets/netuid-0/">Subnet 0</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-1/">Subnet 1</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-5/">Subnet 5</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-3/">Subnet 3</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-2/">Subnet 2</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-4/">Subnet 4</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-7/">Subnet 7</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-6/">Subnet 6</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-8/">Subnet 8</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-9/">Subnet 9</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-10/">Subnet 10</a></li>
-									<li><a href="https://taostats.io/subnets/netuid-11/">Subnet 11</a></li>                               
+									<li><a href="https://chat.bitapai.io/">Chat UI</a></li>
+									<li><a href="https://studio.bitapai.io/">Image Studio</a></li>
+								</ul>
+								<h5>Developers</h5>
+								<ul>
+									<li><a href="https://bitapi.io/">BitAPAI</a></li>
+									<li><a href="https://taostats.io/api/">Taostats API</a></li>
 								</ul>
 							</div>
 							<div className="f-col">
@@ -64,6 +59,8 @@ export const Footer = () => {
 									<li><a href="/#transfers">Transfers</a></li>
 									<li><a href="/#blocks">Blocks</a></li>
 									<li><a href="https://taostats.io/tokenomics/">Tokenomics</a></li>
+									<li><a href="https://nx.taostats.io/">Nakamoto</a></li>
+									<li><a href="https://kx.taostats.io/">Kusanagi</a></li>
 								</ul>
 							</div>
 							<div className="f-col">
@@ -71,11 +68,6 @@ export const Footer = () => {
 								<ul>
 									<li><a href="https://taostats.io/verified-validators/">Verified Validators</a></li>
 									<li><a href="https://taostats.io/staking/">Delegation/Staking</a></li>
-								</ul>
-								<h5>Developers</h5> 
-								<ul>
-									<li><a href="https://bitapai.io/">BitAPAI</a></li>
-									<li><a href="https://taostats.io/api/">Taostats API</a></li>
 								</ul>
 								<h5>Resources</h5> 
 								<ul>
