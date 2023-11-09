@@ -193,66 +193,138 @@ export const Header = () => {
 													onClick={(e) => openSubMenu(e)}
 												></span>
 											</a>
-											<ul className="subMenu">
+											<ul className="megaMenu subMenu">
 												<li>
-													<a href="https://taostats.io/subnets/netuid-0/">
-														Subnet 0 - Root
-													</a>
+													<ul>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-0/">
+																00 - Root
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-1/">
+																01 - Text Prompting
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-2/">
+																02 : Machine Translation
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-3/">
+																03 : Scraping
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-4/">
+																04 : Multi Modality
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-5/">
+																05 - Image
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-6/">
+																06 : Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-7/">
+																07 : Storage
+															</a>
+														</li>
+													</ul>
 												</li>
 												<li>
-													<a href="https://taostats.io/subnets/netuid-1/">
-														Subnet 1 - Text Prompting
-													</a>
+													<ul>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-8/">
+																08 : Price Prediction
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-9/">
+																09 : Pretraining
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-10/">
+																10 : MapReduce
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-11/">
+																11 - Text Prompting
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-12/">
+																12 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-13/">
+																13 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-14/">
+																14 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-15/">
+																15 - Blockchain Insights
+															</a>
+														</li>
+													</ul>
 												</li>
 												<li>
-													<a href="https://taostats.io/subnets/netuid-5/">
-														Subnet 5 - Image
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-3/">
-														Subnet 3 : Scraping
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-2/">
-														Subnet 2 : Machine Translation
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-4/">
-														Subnet 4 : Multi Modality
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-7/">
-														Subnet 7 : Storage
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-6/">
-														Subnet 6 : Unknown
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-8/">
-														Subnet 8 : Price Prediction
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-9/">
-														Subnet 9 : Pretraining
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-10/">
-														Subnet 10 : MapReduce
-													</a>
-												</li>
-												<li>
-													<a href="https://taostats.io/subnets/netuid-11/">
-														Subnet 11 - Text Prompting
-													</a>
+													<ul>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-16/">
+																16 - Audio
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-17/">
+																17 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-18/">
+																18 - Cortex.t
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-19/">
+																19 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-20/">
+																20 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-21/">
+																21 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-22/">
+																22 - Unknown
+															</a>
+														</li>
+														<li>
+															<a href="https://taostats.io/subnets/netuid-23/">
+																23 - Unknown
+															</a>
+														</li>
+													</ul>
 												</li>
 											</ul>
 											<span className="menuItem-glow"></span>
@@ -280,6 +352,16 @@ export const Header = () => {
 												<li>
 													<a href="https://taostats.io/tokenomics/">
 														Tokenomics
+													</a>
+												</li>
+												<li>
+													<a href="https://nx.taostats.io/">
+														Nakamoto
+													</a>
+												</li>
+												<li>
+													<a href="https://kx.taostats.io/">
+														Kusanagi
 													</a>
 												</li>
 											</ul>
