@@ -2465,10 +2465,10 @@ span.menuItem-glow {
 
 /* Mega Menu */
 .main-menu nav .megaMenu {
-  right: 0;
-  left: auto;
+  right: auto;
+  left: -225px;
   width: 100%;
-  min-width: 1296px;
+  min-width: 960px;
   display: flex;
   flex-wrap: wrap;
   padding: 16px;
@@ -2479,7 +2479,7 @@ span.menuItem-glow {
 }
 
 .main-menu nav .megaMenu > li {
-  width: 25%;
+  width: 33%;
   padding-right: 32px;
 }
 
@@ -2494,7 +2494,7 @@ span.menuItem-glow {
 }
 
 .main-menu nav .megaMenu > li > ul li a {
-  color: #cdcbcb;
+  color: #8a8a8a;
 }
 
 .main-menu nav .megaMenu > li > ul li a:hover {
