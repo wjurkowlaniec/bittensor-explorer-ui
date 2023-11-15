@@ -6,7 +6,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { AccountAddress } from "../AccountAddress";
 import { Currency } from "../Currency";
 import { DataError } from "../../utils/error";
-import { css } from "@emotion/react";
+// import { css } from "@emotion/react";
 
 export type ValidatorsTableProps = {
 	validators: {
@@ -16,11 +16,11 @@ export type ValidatorsTableProps = {
 	};
 };
 
-const day_change_css = css`
-  font-size: small;
-  font-weight: bold;
-  margin-left: 10px;
-`;
+// const day_change_css = css`
+//   font-size: small;
+//   font-weight: bold;
+//   margin-left: 10px;
+// `;
 
 const ValidatorsTableAttribute = ItemsTableAttribute<Validator>;
 
@@ -73,13 +73,14 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 					);
 				}}
 			/>
+			{/*
 			<ValidatorsTableAttribute
 				label=""
 				colCss={css`
 					padding-left: 0px;
 				`}
 				render={(validator) => {
-					const change24h = validator.amount_day_change || BigInt("0");
+					const change24h = validator.amountChange;
 					return (
 						<>
 							{change24h != BigInt("0") && (
@@ -100,6 +101,8 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 					);
 				}}
 			/>
+			*/}
+
 			<ValidatorsTableAttribute
 				label="Nominators"
 				align="right"
@@ -107,13 +110,11 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 					return <>{validator.nominators}</>;
 				}}
 			/>
-			<ValidatorsTableAttribute
+			{/*<ValidatorsTableAttribute
 				label=""
-				colCss={css`
-					padding-left: 0px;
-				`}
+				colCss={css`padding-left: 0px;`}
 				render={(validator) => {
-					const change24h = validator.nominators_day_change || BigInt("0");
+					const change24h = validator.nominatorChange;
 					return (
 						<>
 							{change24h != BigInt("0") && (
@@ -129,6 +130,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 					);
 				}}
 			/>
+				 */}
 		</ItemsTable>
 	);
 }
