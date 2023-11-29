@@ -13,6 +13,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { useVerifiedDelegates } from "../../hooks/useVerifiedDelegates";
 import { DelegateBalance } from "../../model/delegate";
 import { Resource } from "../../model/resource";
+import fileDownload from "js-file-download";
 
 const spinnerContainer = css`
   display: flex;
@@ -119,6 +120,40 @@ export const AccounDelegateHistoryChart = (
 		);
 	}, [delegateHistory]);
 
+	const exportToCSV = () => {
+		let csvResult: any = [];
+		delegates.forEach((delegate) => {
+			delegate.data.forEach((stake: any) => {
+				csvResult.push({
+					name: delegate.name,
+					date: stake.x,
+					amount: stake.y,
+				});
+			});
+		});
+		csvResult = csvResult.sort((left: any, right: any) => {
+			const leftDate = left.date.substring(0, 10);
+			const rightDate = right.date.substring(0, 10);
+
+			if (leftDate === rightDate) {
+				if (left.name < right.name) return -1;
+				if (left.name > right.name) return 1;
+				return 0;
+			}
+
+			if (leftDate < rightDate) return -1;
+			if (leftDate > rightDate) return 1;
+			return 0;
+		});
+		csvResult = csvResult.map(
+			(row: any) =>
+				`${row.name},${row.date},${
+					NETWORK_CONFIG.currency + " " + nFormatter(row.amount, 2).toString()
+				}`
+		);
+		fileDownload("Validator,Date,Amount\n" + csvResult.join("\n"), `delegation-${account}.csv`);
+	};
+
 	return loading ? (
 		<div css={spinnerContainer}>
 			<img src={LoadingSpinner} />
@@ -141,6 +176,15 @@ export const AccounDelegateHistoryChart = (
 							zoomin: true,
 							zoomout: true,
 							pan: true,
+							customIcons: [
+								{
+									icon: "<img src='/download_csv.png' width='24'>",
+									title: "Download CSV",
+									click: () => {
+										exportToCSV();
+									},
+								},
+							],
 						},
 						export: {
 							csv: {
@@ -244,8 +288,8 @@ export const AccounDelegateHistoryChart = (
 							lastDay.setDate(lastDay.getDate() + 1);
 							if (
 								day.getFullYear() === lastDay.getFullYear() &&
-								day.getMonth() === lastDay.getMonth() &&
-								day.getDate() === lastDay.getDate()
+                day.getMonth() === lastDay.getMonth() &&
+                day.getDate() === lastDay.getDate()
 							)
 								return "Now";
 							const options: Intl.DateTimeFormatOptions = {
