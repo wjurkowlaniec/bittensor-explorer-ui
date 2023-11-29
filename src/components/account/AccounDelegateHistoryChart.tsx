@@ -147,11 +147,12 @@ export const AccounDelegateHistoryChart = (
 		});
 		csvResult = csvResult.map(
 			(row: any) =>
-				`${row.name},${row.date},${
-					NETWORK_CONFIG.currency + " " + nFormatter(row.amount, 2).toString()
-				}`
+				`${row.name},${new Date(row.date).toISOString()},${row.amount}`
 		);
-		fileDownload("Validator,Date,Amount\n" + csvResult.join("\n"), `delegation-${account}.csv`);
+		fileDownload(
+			"Validator,Date,Amount\n" + csvResult.join("\n"),
+			`delegation-${account}.csv`
+		);
 	};
 
 	return loading ? (
