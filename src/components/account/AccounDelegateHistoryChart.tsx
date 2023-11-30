@@ -46,7 +46,7 @@ export const AccounDelegateHistoryChart = (
 			suffix = [now.toUTCString()];
 		}
 		if (!delegateHistory.data) return [...suffix];
-		const resp = (delegateHistory.data as any).reduce(
+		const resp: string[] = (delegateHistory.data as any).reduce(
 			(prev: string[], cur: AccountDelegateHistory) => {
 				if (prev.find((x) => x === cur.timestamp) === undefined)
 					prev.push(cur.timestamp);
@@ -121,34 +121,39 @@ export const AccounDelegateHistoryChart = (
 	}, [delegateHistory]);
 
 	const exportToCSV = () => {
-		let csvResult: any = [];
+		const csvResult: any = [];
+		const prevValAmount: {[key: string]: number} = {};
+		const prevTotalAmount: {[key: string]: number} = {};
 		delegates.forEach((delegate) => {
-			delegate.data.forEach((stake: any) => {
-				csvResult.push({
-					name: delegate.name,
-					date: stake.x,
-					amount: stake.y,
-				});
+			const valiName = delegate.name || "";
+			prevValAmount[valiName] = 0;
+			prevTotalAmount[valiName] = 0;
+		});
+		prevValAmount[""] = 0;
+		prevTotalAmount[""] = 0;
+		timestamps.forEach((timestamp: string) => {
+			const now = (new Date(timestamp)).toISOString();
+			const valis: any[] = [];
+			let total = 0;
+			delegates.forEach((validator) => {
+				const delegate = (validator.data as any).find((stake: any) => {
+					const check = (new Date(stake.x)).toISOString();
+					return now.substring(0, 10) === check.substring(0, 10);
+				}) as any;
+				if(delegate) {
+					const valiName = validator.name || "";
+					valis.push(validator.name);
+					valis.push(delegate.y);
+					valis.push(delegate.y - (prevValAmount[valiName] ?? 0));
+					prevValAmount[valiName] = delegate.y;
+					total += delegate.y;
+				}
 			});
-		});
-		csvResult = csvResult.sort((left: any, right: any) => {
-			const leftDate = left.date.substring(0, 10);
-			const rightDate = right.date.substring(0, 10);
+			const totalIncrease = total - (prevTotalAmount[""] ?? 0);
+			prevTotalAmount[""] = total;
 
-			if (leftDate === rightDate) {
-				if (left.name < right.name) return -1;
-				if (left.name > right.name) return 1;
-				return 0;
-			}
-
-			if (leftDate < rightDate) return -1;
-			if (leftDate > rightDate) return 1;
-			return 0;
+			csvResult.push(`${now},${valis.join(",")},${total},${totalIncrease}`);
 		});
-		csvResult = csvResult.map(
-			(row: any) =>
-				`${row.name},${new Date(row.date).toISOString()},${row.amount}`
-		);
 		fileDownload(
 			"Validator,Date,Amount\n" + csvResult.join("\n"),
 			`delegation-${account}.csv`
