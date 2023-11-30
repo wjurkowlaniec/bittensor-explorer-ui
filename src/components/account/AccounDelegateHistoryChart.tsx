@@ -122,8 +122,8 @@ export const AccounDelegateHistoryChart = (
 
 	const exportToCSV = () => {
 		const csvResult: any = [];
-		const prevValAmount: {[key: string]: number} = {};
-		const prevTotalAmount: {[key: string]: number} = {};
+		const prevValAmount: { [key: string]: number } = {};
+		const prevTotalAmount: { [key: string]: number } = {};
 		delegates.forEach((delegate) => {
 			const valiName = delegate.name || "";
 			prevValAmount[valiName] = 0;
@@ -132,15 +132,15 @@ export const AccounDelegateHistoryChart = (
 		prevValAmount[""] = 0;
 		prevTotalAmount[""] = 0;
 		timestamps.forEach((timestamp: string) => {
-			const now = (new Date(timestamp)).toISOString();
+			const now = new Date(timestamp).toISOString();
 			const valis: any[] = [];
 			let total = 0;
 			delegates.forEach((validator) => {
 				const delegate = (validator.data as any).find((stake: any) => {
-					const check = (new Date(stake.x)).toISOString();
+					const check = new Date(stake.x).toISOString();
 					return now.substring(0, 10) === check.substring(0, 10);
 				}) as any;
-				if(delegate) {
+				if (delegate) {
 					const valiName = validator.name || "";
 					valis.push(validator.name);
 					valis.push(delegate.y);
@@ -154,10 +154,7 @@ export const AccounDelegateHistoryChart = (
 
 			csvResult.push(`${now},${valis.join(",")},${total},${totalIncrease}`);
 		});
-		fileDownload(
-			"Validator,Date,Amount\n" + csvResult.join("\n"),
-			`delegation-${account}.csv`
-		);
+		fileDownload(csvResult.join("\n"), `delegation-${account}.csv`);
 	};
 
 	return loading ? (
