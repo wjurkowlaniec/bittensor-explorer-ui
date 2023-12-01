@@ -24,6 +24,7 @@ import { ValidatorPortfolio } from "../components/validators/ValidatorPortfolio"
 import { ValidatorStakeHistoryChart } from "../components/validators/ValidatorStakeHistoryChart";
 import { useValidatorStakeHistory } from "../hooks/useValidatorHistory";
 import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
+import { useValidator } from "../hooks/useValidator";
 
 const validatorHeader = (theme: Theme) => css`
   display: flex;
@@ -99,6 +100,8 @@ export type ValidatorPageParams = {
 
 export const ValidatorPage = () => {
 	const { address } = useParams() as ValidatorPageParams;
+
+	const validator = useValidator({ address: { equalTo: address } });
 
 	const verifiedDelegates = useVerifiedDelegates();
 
@@ -191,7 +194,7 @@ export const ValidatorPage = () => {
 					{info?.description && (
 						<div css={validatorDescription}>{info?.description}</div>
 					)}
-					<ValidatorInfoTable account={address} balance={balance} />
+					<ValidatorInfoTable account={address} balance={balance} info={validator} />
 					<div css={stakeButton}>
 						<ButtonLink
 							to={`https://delegate.taostats.io/staking?hkey=${address}`}
@@ -205,7 +208,7 @@ export const ValidatorPage = () => {
 					</div>
 				</Card>
 				<Card css={portfolioStyle} data-test="account-portfolio">
-					<ValidatorPortfolio hotkey={address} />
+					<ValidatorPortfolio hotkey={address} info={validator} />
 				</Card>
 			</CardRow>
 			<Card data-test="account-historical-items">
