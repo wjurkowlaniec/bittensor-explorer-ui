@@ -138,13 +138,15 @@ export const AccounDelegateHistoryChart = (
 		prevValAmount[""] = 0;
 		prevTotalAmount[""] = 0;
 		timestamps.forEach((timestamp: string) => {
-			const now = new Date(timestamp).toISOString();
+			const now = new Date(timestamp);
+			if(now > new Date())
+				return;
 			const valis: any[] = [];
 			let total = 0;
 			delegates.forEach((validator) => {
 				const delegate = (validator.data as any).find((stake: any) => {
 					const check = new Date(stake.x).toISOString();
-					return now.substring(0, 10) === check.substring(0, 10);
+					return now.toISOString().substring(0, 10) === check.substring(0, 10);
 				}) as any;
 				if (delegate) {
 					const valiName = validator.name || "";
