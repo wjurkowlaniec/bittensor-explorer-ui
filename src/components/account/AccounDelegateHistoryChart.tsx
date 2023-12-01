@@ -22,6 +22,12 @@ const spinnerContainer = css`
   justify-content: center;
 `;
 
+const hideCSVDownload = css`
+  .exportCSV {
+	display: none;
+  }
+`;
+
 export type AccounDelegateHistoryChartProps = {
 	account: string;
 	delegateHistory: AccountDelegateHistoryResponse;
@@ -163,6 +169,7 @@ export const AccounDelegateHistoryChart = (
 		</div>
 	) : (
 		<Chart
+			css={hideCSVDownload}
 			height={400}
 			series={delegates}
 			options={{
@@ -291,8 +298,8 @@ export const AccounDelegateHistoryChart = (
 							lastDay.setDate(lastDay.getDate() + 1);
 							if (
 								day.getFullYear() === lastDay.getFullYear() &&
-                day.getMonth() === lastDay.getMonth() &&
-                day.getDate() === lastDay.getDate()
+								day.getMonth() === lastDay.getMonth() &&
+								day.getDate() === lastDay.getDate()
 							)
 								return "Now";
 							const options: Intl.DateTimeFormatOptions = {
