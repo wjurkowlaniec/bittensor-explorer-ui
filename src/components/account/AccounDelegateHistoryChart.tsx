@@ -153,6 +153,10 @@ export const AccounDelegateHistoryChart = (
 					valis.push(delegate.y - (prevValAmount[valiName] ?? 0));
 					prevValAmount[valiName] = delegate.y;
 					total += delegate.y;
+				} else {
+					valis.push("--");
+					valis.push("--");
+					valis.push("--");
 				}
 			});
 			const totalIncrease = total - (prevTotalAmount[""] ?? 0);
@@ -160,7 +164,15 @@ export const AccounDelegateHistoryChart = (
 
 			csvResult.push(`${now},${valis.join(",")},${total},${totalIncrease}`);
 		});
-		fileDownload(csvResult.join("\n"), `delegation-${account}.csv`);
+		const header = delegates.reduce((header, _, index) => {
+			header.push(`Vali name ${index + 1}`);
+			header.push(`Vali total ${index + 1}`);
+			header.push(`Vali daily increase ${index + 1}`);
+			return header;
+		}, ["Date"]);
+		header.push("Total");
+		header.push("Total daily increase");
+		fileDownload(header.join(",") + "\n" + csvResult.join("\n"), `delegation-${account}.csv`);
 	};
 
 	return loading ? (
