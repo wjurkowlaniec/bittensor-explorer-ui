@@ -14,6 +14,7 @@ import { useVerifiedDelegates } from "../../hooks/useVerifiedDelegates";
 import { DelegateBalance } from "../../model/delegate";
 import { Resource } from "../../model/resource";
 import fileDownload from "js-file-download";
+import Button from "@mui/material/Button";
 
 const spinnerContainer = css`
   display: flex;
@@ -24,8 +25,14 @@ const spinnerContainer = css`
 
 const hideCSVDownload = css`
   .exportCSV {
-	display: none;
+    display: none;
   }
+`;
+
+const csvDownload = css`
+  text-align: right;
+  margin-right: 10px;
+  margin-bottom: 45px;
 `;
 
 export type AccounDelegateHistoryChartProps = {
@@ -139,8 +146,7 @@ export const AccounDelegateHistoryChart = (
 		prevTotalAmount[""] = 0;
 		timestamps.forEach((timestamp: string) => {
 			const now = new Date(timestamp);
-			if(now > new Date())
-				return;
+			if (now > new Date()) return;
 			const valis: any[] = [];
 			let total = 0;
 			delegates.forEach((validator) => {
@@ -166,15 +172,21 @@ export const AccounDelegateHistoryChart = (
 
 			csvResult.push(`${now},${valis.join(",")},${total},${totalIncrease}`);
 		});
-		const header = delegates.reduce((header, _, index) => {
-			header.push(`Vali name ${index + 1}`);
-			header.push(`Vali total ${index + 1}`);
-			header.push(`Vali daily increase ${index + 1}`);
-			return header;
-		}, ["Date"]);
+		const header = delegates.reduce(
+			(header, _, index) => {
+				header.push(`Vali name ${index + 1}`);
+				header.push(`Vali total ${index + 1}`);
+				header.push(`Vali daily increase ${index + 1}`);
+				return header;
+			},
+			["Date"]
+		);
 		header.push("Total");
 		header.push("Total daily increase");
-		fileDownload(header.join(",") + "\n" + csvResult.join("\n"), `delegation-${account}.csv`);
+		fileDownload(
+			header.join(",") + "\n" + csvResult.join("\n"),
+			`delegation-${account}.csv`
+		);
 	};
 
 	return loading ? (
@@ -182,188 +194,193 @@ export const AccounDelegateHistoryChart = (
 			<img src={LoadingSpinner} />
 		</div>
 	) : (
-		<Chart
-			css={hideCSVDownload}
-			height={400}
-			series={delegates}
-			options={{
-				chart: {
-					background: "#1a1a1a",
-					toolbar: {
+		<>
+			<div css={csvDownload}>
+				<Button
+					size="small"
+					variant="outlined"
+					color="secondary"
+					onClick={() => {
+						exportToCSV();
+					}}
+				>
+					Download CSV
+				</Button>
+			</div>
+			<Chart
+				css={hideCSVDownload}
+				height={400}
+				series={delegates}
+				options={{
+					chart: {
+						background: "#1a1a1a",
+						toolbar: {
+							show: true,
+							offsetX: 0,
+							offsetY: 0,
+							autoSelected: "pan",
+							tools: {
+								selection: true,
+								zoom: true,
+								zoomin: true,
+								zoomout: true,
+								pan: true,
+							},
+							export: {
+								csv: {
+									filename: `delegation-${account}`,
+									headerCategory: "Date",
+								},
+								png: {
+									filename: `delegation-${account}`,
+								},
+								svg: {
+									filename: `delegation-${account}`,
+								},
+							},
+						},
+						zoom: {
+							enabled: true,
+						},
+					},
+					colors: [
+						theme.palette.error.main,
+						theme.palette.success.main,
+						theme.palette.neutral.main,
+						"#4C3B4D",
+						"#813405",
+						"#247BA0",
+						"#606C38",
+						"#727D71",
+						"#474747",
+						"#511730",
+					],
+					dataLabels: {
+						enabled: false,
+					},
+					fill: {
+						type: "gradient",
+						gradient: {
+							shade: "dark",
+							shadeIntensity: 1,
+							inverseColors: false,
+							type: "vertical",
+							opacityFrom: 0.6,
+							opacityTo: 0.1,
+							stops: [0, 90, 100],
+						},
+					},
+					grid: {
+						show: false,
+					},
+					labels: timestamps,
+					legend: {
 						show: true,
+						showForSingleSeries: true,
+						position: "top",
+						horizontalAlign: "right",
+						labels: {
+							colors: "#d9d9d9",
+						},
+					},
+					markers: {
+						size: 0,
+					},
+					noData: {
+						text: "No delegation yet",
+						align: "center",
+						verticalAlign: "middle",
 						offsetX: 0,
 						offsetY: 0,
-						autoSelected: "pan",
-						tools: {
-							selection: true,
-							zoom: true,
-							zoomin: true,
-							zoomout: true,
-							pan: true,
-							customIcons: [
-								{
-									icon: "<img src='/download_csv.png' width='24'>",
-									title: "Download CSV",
-									click: () => {
-										exportToCSV();
-									},
+						style: {
+							color: "#FFFFFF",
+						},
+					},
+					responsive: [
+						{
+							breakpoint: 767,
+							options: {
+								chart: {
+									height: 320,
 								},
-							],
-						},
-						export: {
-							csv: {
-								filename: `delegation-${account}`,
-								headerCategory: "Date",
-							},
-							png: {
-								filename: `delegation-${account}`,
-							},
-							svg: {
-								filename: `delegation-${account}`,
 							},
 						},
-					},
-					zoom: {
-						enabled: true,
-					},
-				},
-				colors: [
-					theme.palette.error.main,
-					theme.palette.success.main,
-					theme.palette.neutral.main,
-					"#4C3B4D",
-					"#813405",
-					"#247BA0",
-					"#606C38",
-					"#727D71",
-					"#474747",
-					"#511730",
-				],
-				dataLabels: {
-					enabled: false,
-				},
-				fill: {
-					type: "gradient",
-					gradient: {
-						shade: "dark",
-						shadeIntensity: 1,
-						inverseColors: false,
-						type: "vertical",
-						opacityFrom: 0.6,
-						opacityTo: 0.1,
-						stops: [0, 90, 100],
-					},
-				},
-				grid: {
-					show: false,
-				},
-				labels: timestamps,
-				legend: {
-					show: true,
-					showForSingleSeries: true,
-					position: "top",
-					horizontalAlign: "right",
-					labels: {
-						colors: "#d9d9d9",
-					},
-				},
-				markers: {
-					size: 0,
-				},
-				noData: {
-					text: "No delegation yet",
-					align: "center",
-					verticalAlign: "middle",
-					offsetX: 0,
-					offsetY: 0,
-					style: {
-						color: "#FFFFFF",
-					},
-				},
-				responsive: [
-					{
-						breakpoint: 767,
-						options: {
-							chart: {
-								height: 320,
+						{
+							breakpoint: 599,
+							options: {
+								chart: {
+									height: 270,
+								},
 							},
 						},
+					],
+					stroke: {
+						width: 1,
 					},
-					{
-						breakpoint: 599,
-						options: {
-							chart: {
-								height: 270,
+					tooltip: {
+						theme: "dark",
+						shared: true,
+						intersect: false,
+						x: {
+							formatter: (val: number) => {
+								const day = new Date(val);
+								const lastDay = new Date();
+								lastDay.setDate(lastDay.getDate() + 1);
+								if (
+									day.getFullYear() === lastDay.getFullYear() &&
+                  day.getMonth() === lastDay.getMonth() &&
+                  day.getDate() === lastDay.getDate()
+								)
+									return "Now";
+								const options: Intl.DateTimeFormatOptions = {
+									day: "2-digit",
+									month: "short",
+									year: "2-digit",
+								};
+								const formattedDate = day.toLocaleDateString("en-US", options);
+								return formattedDate;
 							},
 						},
-					},
-				],
-				stroke: {
-					width: 1,
-				},
-				tooltip: {
-					theme: "dark",
-					shared: true,
-					intersect: false,
-					x: {
-						formatter: (val: number) => {
-							const day = new Date(val);
-							const lastDay = new Date();
-							lastDay.setDate(lastDay.getDate() + 1);
-							if (
-								day.getFullYear() === lastDay.getFullYear() &&
-								day.getMonth() === lastDay.getMonth() &&
-								day.getDate() === lastDay.getDate()
-							)
-								return "Now";
-							const options: Intl.DateTimeFormatOptions = {
-								day: "2-digit",
-								month: "short",
-								year: "2-digit",
-							};
-							const formattedDate = day.toLocaleDateString("en-US", options);
-							return formattedDate;
+						y: {
+							formatter: (val: number) =>
+								NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString(),
 						},
 					},
-					y: {
-						formatter: (val: number) =>
-							NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString(),
-					},
-				},
-				xaxis: {
-					axisTicks: {
-						show: false,
-					},
-					axisBorder: {
-						show: false,
-					},
-					labels: {
-						style: {
-							fontSize: "11px",
-							colors: "#7F7F7F",
+					xaxis: {
+						axisTicks: {
+							show: false,
 						},
-					},
-					type: "datetime",
-				},
-				yaxis: {
-					show: timestamps.length > 0,
-					opposite: true,
-					labels: {
-						style: {
-							colors: "#a8a8a8",
+						axisBorder: {
+							show: false,
 						},
-						formatter: (val: number) => nFormatter(val, 2).toString(),
+						labels: {
+							style: {
+								fontSize: "11px",
+								colors: "#7F7F7F",
+							},
+						},
+						type: "datetime",
 					},
-					axisTicks: {
-						show: false,
+					yaxis: {
+						show: timestamps.length > 0,
+						opposite: true,
+						labels: {
+							style: {
+								colors: "#a8a8a8",
+							},
+							formatter: (val: number) => nFormatter(val, 2).toString(),
+						},
+						axisTicks: {
+							show: false,
+						},
+						axisBorder: {
+							show: false,
+						},
+						min: 0,
+						max: maxDelegate,
 					},
-					axisBorder: {
-						show: false,
-					},
-					min: 0,
-					max: maxDelegate,
-				},
-			}}
-		/>
+				}}
+			/>
+		</>
 	);
 };
