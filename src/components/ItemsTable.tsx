@@ -5,6 +5,7 @@ import {
 	HTMLAttributes,
 	ReactElement,
 	ReactNode,
+	useState,
 } from "react";
 import {
 	Button,
@@ -29,6 +30,7 @@ import { TablePaginationHeader } from "./TablePaginationHeader";
 import { TableFilter } from "./TableFilter";
 import { TableSearch } from "./TableSearch";
 import { download, generateCsv, mkConfig } from "export-to-csv";
+import LoadingSpinner from "../assets/loading.svg";
 
 const tableStyle = css`
   table-layout: auto;
@@ -152,6 +154,13 @@ const tableFiltering = css`
 const csvDownload = css`
   text-align: right;
   margin-bottom: 10px;
+`;
+
+const spinnerStyle = css`
+  position: absolute;
+  top: 1px;
+  left: 2px;
+  width: 44px;
 `;
 
 type ItemsTableItem = {
@@ -278,6 +287,8 @@ export const ItemsTable = <
 		...restProps
 	} = props;
 
+	const [isDownloading, setDownloading] = useState(false);
+
 	return (
 		<div {...restProps} data-class="table">
 			{getExportCSV && (
@@ -286,7 +297,11 @@ export const ItemsTable = <
 						size="small"
 						variant="outlined"
 						color="secondary"
+						style={{height: "48px"}}
 						onClick={async () => {
+							if(isDownloading)
+								return;
+							setDownloading(true);
 							const { columns, data, filename } = await getExportCSV();
 							const csvConfig = mkConfig({
 								columnHeaders: columns,
@@ -294,9 +309,11 @@ export const ItemsTable = <
 							});
 							const csv = generateCsv(csvConfig)(data);
 							download(csvConfig)(csv);
+							setDownloading(false);
 						}}
 					>
-            Download CSV
+						{isDownloading && <img src={LoadingSpinner} css={spinnerStyle} />}
+						<span style={{marginLeft: isDownloading ? "24px": 0}}>Download CSV</span>
 					</Button>
 				</div>
 			)}
