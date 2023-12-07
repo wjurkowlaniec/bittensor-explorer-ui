@@ -203,6 +203,10 @@ function DelegatesTable(props: DelegatesTableProps) {
 				displayLabel: "Validator"
 			},
 			{
+				key: "action",
+				displayLabel: "Action"
+			},
+			{
 				key: "amount",
 				displayLabel: "Amount",
 			},
@@ -223,6 +227,7 @@ function DelegatesTable(props: DelegatesTableProps) {
 					height: delegate.blockNumber,
 					createdAt,
 					validator: delegate.delegateName ?? delegate.delegate,
+					action: delegate.action,
 					amount,
 				});
 			}
