@@ -1,6 +1,6 @@
 import { DataError } from "../utils/error";
 
-export type Validator = {
+export type ValidatorResponse = {
 	address: string;
 	amount: bigint;
 	amountChange: bigint;
@@ -12,8 +12,15 @@ export type Validator = {
 	totalDailyReturn: bigint;
 	validatorStake: bigint;
 	validatorReturn: bigint;
-	name?: string;
+	registrations: string;
+	validatorPermits: string;
 };
+
+export type Validator = ValidatorResponse & {
+	registrations: number[];
+	validatorPermits: number[];
+	name?: string;
+}
 
 export type ValidatorStakeHistory = {
 	amount: bigint;

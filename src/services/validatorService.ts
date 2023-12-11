@@ -1,7 +1,8 @@
 import {
-	Validator,
+	ValidatorResponse,
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryPaginatedResponse,
+	Validator,
 } from "../model/validator";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -29,7 +30,17 @@ export async function getValidator(filter: ValidatorsFilter) {
 				nodes {
 					id
 					owner
+					totalDailyReturn
+					nominatorReturnPerK
+					validatorReturn
 					validatorStake
+					validatorPermits
+					registrations
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
 				}
 			}
 		}`,
@@ -38,8 +49,14 @@ export async function getValidator(filter: ValidatorsFilter) {
 		}
 	);
 
-	const data = response.validators?.nodes[0] && transformValidator(response.validators.nodes[0]);
-	return data;
+	const verifiedDelegates = await fetchVerifiedDelegates();
+	const data = extractItems(
+		response.validators,
+		{limit: 1},
+		addValidatorName,
+		verifiedDelegates
+	);
+	return data.data[0];
 }
 
 export async function getValidators(
@@ -47,7 +64,7 @@ export async function getValidators(
 	pagination: PaginationOptions
 ) {
 	const response = await fetchIndexer<{
-		validators: ResponseItems<Validator>;
+		validators: ResponseItems<ValidatorResponse>;
 	}>(
 		`query($first: Int!, $order: [ValidatorsOrderBy!]!) {
 			validators(first: $first, orderBy: $order) {
@@ -87,15 +104,21 @@ export async function getValidators(
 	);
 }
 
-function addValidatorName<T extends { address: string; name?: string }>(
-	validator: T,
+function addValidatorName(
+	resp: ValidatorResponse,
 	verifiedDelegates: Record<string, DelegateInfo>
-): T {
+): Validator {
+	const {registrations, validatorPermits, ...rest} = resp;
 	const info = (verifiedDelegates as Record<string, DelegateInfo>)[
-		validator.address
+		resp.address
 	];
-	if (info === undefined) return validator;
-	return { ...validator, name: info.name } as T;
+	const validator: Validator = {
+		...rest,
+		registrations: JSON.parse(registrations),
+		validatorPermits: JSON.parse(validatorPermits),
+		name: info?.name,
+	};
+	return validator;
 }
 
 export async function getValidatorStakeHistory(
@@ -136,7 +159,3 @@ export async function getValidatorStakeHistory(
 		data: response.validators?.nodes,
 	};
 }
-
-const transformValidator = (validator: Validator): Validator => {
-	return validator;
-};

@@ -164,9 +164,8 @@ function SubnetsTable(props: SubnetsTableProps) {
 									rawAmountToDecimal(emissions[subnet.netUid]).toNumber() * 100,
 									1,
 									true
-								)
-							}
-							%
+								)}
+								%
 						</>
 					)
 				}

@@ -25,6 +25,8 @@ import { ValidatorStakeHistoryChart } from "../components/validators/ValidatorSt
 import { useValidatorStakeHistory } from "../hooks/useValidatorHistory";
 import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
 import { useValidator } from "../hooks/useValidator";
+import { useSubnets } from "../hooks/useSubnets";
+import SubnetsTable from "../components/validators/SubnetsTable";
 
 const validatorHeader = (theme: Theme) => css`
   display: flex;
@@ -167,6 +169,8 @@ export const ValidatorPage = () => {
 		}
 	}, [tab]);
 
+	const subnets = useSubnets(undefined);
+
 	return (
 		<>
 			<CardRow css={infoSection}>
@@ -194,7 +198,11 @@ export const ValidatorPage = () => {
 					{info?.description && (
 						<div css={validatorDescription}>{info?.description}</div>
 					)}
-					<ValidatorInfoTable account={address} balance={balance} info={validator} />
+					<ValidatorInfoTable
+						account={address}
+						balance={balance}
+						info={validator}
+					/>
 					<div css={stakeButton}>
 						<ButtonLink
 							to={`https://delegate.taostats.io/staking?hkey=${address}`}
@@ -203,7 +211,7 @@ export const ValidatorPage = () => {
 							color="secondary"
 							target="_blank"
 						>
-							DELEGATE STAKE
+              DELEGATE STAKE
 						</ButtonLink>
 					</div>
 				</Card>
@@ -262,6 +270,19 @@ export const ValidatorPage = () => {
 								setDelegatesFilter({ ...delegatesFilter, ...newFilter })
 							}
 							initialFilter={delegatesInitialFilter}
+						/>
+					</TabPane>
+					<TabPane
+						label="Subnets"
+						count={subnets.pagination.totalCount}
+						loading={subnets.loading}
+						error={subnets.error}
+						value="subnets"
+					>
+						<SubnetsTable
+							subnets={subnets}
+							registrations={validator.data?.registrations}
+							validatorPermits={validator.data?.validatorPermits}
 						/>
 					</TabPane>
 				</TabbedContent>

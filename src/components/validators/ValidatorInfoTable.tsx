@@ -6,7 +6,7 @@ import { InfoTable, InfoTableAttribute } from "../InfoTable";
 import { rawAmountToDecimal } from "../../utils/number";
 import { useAppStats } from "../../contexts";
 import { Resource } from "../../model/resource";
-import { Validator } from "../../model/validator";
+import { ValidatorResponse } from "../../model/validator";
 import { AccountAddress } from "../AccountAddress";
 
 const addressItem = css`
@@ -18,7 +18,7 @@ const addressItem = css`
 export type ValidatorInfoTableProps = {
 	account: string;
 	balance: any;
-	info: Resource<Validator>;
+	info: Resource<ValidatorResponse>;
 };
 
 const ValidatorInfoTableAttribute = InfoTableAttribute<any>;
@@ -31,14 +31,8 @@ export const ValidatorInfoTable = (props: ValidatorInfoTableProps) => {
 	const {
 		state: { tokenLoading, tokenStats },
 	} = useAppStats();
-	const dominance =
-		tokenLoading || tokenStats === undefined || tokenStats.delegatedSupply === 0
-			? 0
-			: (
-				(rawAmountToDecimal(balance.data).toNumber() /
-				tokenStats.delegatedSupply) *
-			100
-			).toFixed(2);
+	const dominance = tokenLoading || tokenStats === undefined || tokenStats.delegatedSupply === 0 ? 0 : 
+		((rawAmountToDecimal(balance.data).toNumber() / tokenStats.delegatedSupply) * 100).toFixed(2);
 
 	return (
 		<InfoTable
@@ -71,7 +65,44 @@ export const ValidatorInfoTable = (props: ValidatorInfoTableProps) => {
 			<ValidatorInfoTableAttribute
 				label="Owner"
 				render={() => (
-					<AccountAddress address={info.data?.owner || ""} prefix={prefix} link />
+					<AccountAddress
+						address={info.data?.owner || ""}
+						prefix={prefix}
+						link
+					/>
+				)}
+			/>
+			<ValidatorInfoTableAttribute
+				label="Daily return"
+				render={() => (
+					<Currency
+						amount={info?.data?.totalDailyReturn ?? BigInt(0)}
+						currency={currency}
+						decimalPlaces={3}
+						showFullInTooltip
+					/>
+				)}
+			/>
+			<ValidatorInfoTableAttribute
+				label="NOM. / 24h / k𝞃"
+				render={() => (
+					<Currency
+						amount={info?.data?.nominatorReturnPerK ?? BigInt(0)}
+						currency={currency}
+						decimalPlaces={3}
+						showFullInTooltip
+					/>
+				)}
+			/>
+			<ValidatorInfoTableAttribute
+				label="VAL. / 24h"
+				render={() => (
+					<Currency
+						amount={info?.data?.validatorReturn ?? BigInt(0)}
+						currency={currency}
+						decimalPlaces={3}
+						showFullInTooltip
+					/>
 				)}
 			/>
 		</InfoTable>
