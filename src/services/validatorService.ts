@@ -114,8 +114,8 @@ function addValidatorName(
 	];
 	const validator: Validator = {
 		...rest,
-		registrations: JSON.parse(registrations),
-		validatorPermits: JSON.parse(validatorPermits),
+		registrations: JSON.parse(registrations ?? "[]"),
+		validatorPermits: JSON.parse(validatorPermits ?? "[]"),
 		name: info?.name,
 	};
 	return validator;
