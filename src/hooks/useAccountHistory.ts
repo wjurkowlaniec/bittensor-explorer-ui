@@ -84,7 +84,8 @@ export function useAccountDelegateHistory(
 
 			const result: AccountDelegateHistory[] = [];
 			while (!finished) {
-				const stats: AccountDelegateHistoryPaginatedResponse = await getAccountDelegateHistory(address, after, limit);
+				const stats: AccountDelegateHistoryPaginatedResponse =
+          await getAccountDelegateHistory(address, after, limit);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
 				after = stats.endCursor;

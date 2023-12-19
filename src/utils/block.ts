@@ -1,8 +1,6 @@
 import { fetchDictionary } from "../services/fetchService";
 
 export const fetchBlockTimestamp = async (blockHeight: bigint) => {
-	if(blockHeight.toString() === "0")
-		return ;
 	const res = await fetchDictionary<{
 		blocks: { nodes: Array<{ timestamp: Date }> }
 	}>(

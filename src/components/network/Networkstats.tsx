@@ -13,6 +13,8 @@ import { AccountStatChart } from "../account/AccountStatChart";
 import { TabbedContent, TabPane } from "../TabbedContent";
 import { useAccountStats } from "../../hooks/useAccountStats";
 import { useMemo } from "react";
+import { useTokenStats } from "../../hooks/useTokenStats";
+import { HistoricalTokenDistributionChart } from "./HistoricalTokenDistributionChart";
 
 const stakingDataBlock = css`
   width: 100%;
@@ -132,6 +134,7 @@ export const NetworkStats = () => {
 	} = useAppStats();
 
 	const accountStats = useAccountStats();
+	const tokenHistoricalStats = useTokenStats();
 	const totalAccount = useMemo(() => {
 		const { data } = accountStats;
 		if (!data || !data.length) return 0;
@@ -232,6 +235,9 @@ export const NetworkStats = () => {
 			<TabbedContent>
 				<TabPane label="Accounts" value="accountStats">
 					<AccountStatChart accountStats={accountStats} />
+				</TabPane>
+				<TabPane label="TAO issuance" value="token">
+					<HistoricalTokenDistributionChart tokenStats={tokenHistoricalStats} />
 				</TabPane>
 			</TabbedContent>
 		</div>

@@ -1,20 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { getValidatorStakeHistory } from "../services/validatorService";
+import { getTokenStats } from "../services/tokenService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
-import {
-	ValidatorStakeHistory,
-	ValidatorStakeHistoryPaginatedResponse,
-	ValidatorStakeHistoryResponse,
-} from "../model/validator";
+import { TokenStats, TokenStatsPaginatedResponse, TokenStatsResponse } from "../model/tokenStats";
 
-export function useValidatorStakeHistory(
-	address: string
-): ValidatorStakeHistoryResponse {
+export function useTokenStats(): TokenStatsResponse {
 	const rollbar = useRollbar();
 
-	const [data, setData] = useState<ValidatorStakeHistory[]>([]);
+	const [data, setData] = useState<TokenStats[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
 
@@ -25,10 +19,12 @@ export function useValidatorStakeHistory(
 			let finished = false;
 			let after: string | undefined = undefined;
 
-			const result: ValidatorStakeHistory[] = [];
+			const result: TokenStats[] = [];
 			while (!finished) {
-				const stats: ValidatorStakeHistoryPaginatedResponse =
-          await getValidatorStakeHistory(address, after, limit);
+				const stats: TokenStatsPaginatedResponse = await getTokenStats(
+					after,
+					limit
+				);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
 				after = stats.endCursor;
