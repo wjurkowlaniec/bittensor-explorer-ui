@@ -272,6 +272,9 @@ export const ValidatorPage = () => {
 								setDelegatesFilter({ ...delegatesFilter, ...newFilter })
 							}
 							initialFilter={delegatesInitialFilter}
+							address={info?.name ?? address}
+							download
+							fromValidator
 						/>
 					</TabPane>
 					<TabPane
