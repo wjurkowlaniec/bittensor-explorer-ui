@@ -16,7 +16,7 @@ import { AccountInfoTable } from "../components/account/AccountInfoTable";
 import { AccountPortfolio } from "../components/account/AccountPortfolio";
 import { useTaoPrice } from "../hooks/useTaoPrice";
 import { useBalance } from "../hooks/useBalance";
-import { StatItem } from "../components/network/StatItem";
+import { StatItem } from "../components/network";
 import { formatCurrency, rawAmountToDecimal } from "../utils/number";
 import { useDelegateBalances } from "../hooks/useDelegateBalances";
 import { TransfersOrder } from "../services/transfersService";

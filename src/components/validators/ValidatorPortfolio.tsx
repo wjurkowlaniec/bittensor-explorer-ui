@@ -2,7 +2,7 @@
 import { css } from "@emotion/react";
 import { formatNumber, rawAmountToDecimal } from "../../utils/number";
 import { useValidatorBalance } from "../../hooks/useValidatorBalance";
-import { StatItem } from "../network/StatItem";
+import { StatItem } from "../network";
 import { DonutChart } from "../DonutChart";
 import Loading from "../Loading";
 import { Resource } from "../../model/resource";

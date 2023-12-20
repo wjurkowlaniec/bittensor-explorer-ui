@@ -1,2 +1,3 @@
 export * from "./Networkstats";
-export * from "./TokenDistributionChart";
+export * from "./StatItem";
+export * from "./HistoricalTokenDistributionChart";

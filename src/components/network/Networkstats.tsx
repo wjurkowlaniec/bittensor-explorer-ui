@@ -7,7 +7,7 @@ import { Theme } from "@mui/material";
 import TaoIcon from "../../assets/tao_icon.png";
 import { formatNumber, nFormatter } from "../../utils/number";
 import Decimal from "decimal.js";
-import { StatItem } from "./StatItem";
+import { StatItem } from "./";
 import { useAppStats } from "../../contexts";
 import { AccountStatChart } from "../account/AccountStatChart";
 import { TabbedContent, TabPane } from "../TabbedContent";
