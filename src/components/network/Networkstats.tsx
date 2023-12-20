@@ -5,7 +5,7 @@ import Loading from "../Loading";
 import NotFound from "../NotFound";
 import { Theme } from "@mui/material";
 import TaoIcon from "../../assets/tao_icon.png";
-import { formatNumber, nFormatter } from "../../utils/number";
+import { formatNumber, nFormatter, rawAmountToDecimal } from "../../utils/number";
 import Decimal from "decimal.js";
 import { StatItem } from "./";
 import { useAppStats } from "../../contexts";
@@ -114,7 +114,7 @@ const statItems = css`
 
 const statItemsRow = css`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   width: 100%;
   @media only screen and (max-width: 1199px) {
     grid-template-columns: repeat(2, 1fr);
@@ -196,16 +196,30 @@ export const NetworkStats = () => {
 							title="24h Volume"
 							value={`$${nFormatter(token.volume24h, 2)}`}
 						/>
-
-						{/* <StatItem title='Next Halvening' value={`${stats.data.totalSupply} 𝞃`} /> */}
 						<StatItem
 							title="Validating APY"
 							value={`${token.validationAPY}%`}
 						/>
 						<StatItem title="Staking APY" value={`${token.stakingAPY}%`} />
+						<StatItem
+							title="Staked Supply"
+							value={`${formatNumber(
+								new Decimal(chain.staked.toString())
+									.mul(100)
+									.div(new Decimal(chain.issued.toString())),
+								{ decimalPlaces: 2 }
+							)}%`}
+						/>
 					</div>
 
 					<div css={statItemsRow}>
+						<StatItem
+							title="Circulating supply"
+							value={`$${nFormatter(
+								rawAmountToDecimal(chain.issued.toString()).toNumber(),
+								2
+							)}`}
+						/>
 						<StatItem
 							title="Finalized blocks"
 							value={formatNumber(
