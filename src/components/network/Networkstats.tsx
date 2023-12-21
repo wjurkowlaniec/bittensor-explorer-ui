@@ -216,23 +216,15 @@ export const NetworkStats = () => {
 					<div css={statItemsRow}>
 						<StatItem
 							title="Circulating supply"
-							value={`${formatNumber(
-								rawAmountToDecimal(chain.issued.toString()),
-								{ decimalPlaces: 0 }
-							)}${NETWORK_CONFIG.currency}`}
+							animating={rawAmountToDecimal(chain.issued.toString()).toString()}
+							suffix={NETWORK_CONFIG.currency}
 						/>
 						<StatItem
 							title="Finalized blocks"
-							value={formatNumber(
-								new Decimal(chain.blocksFinalized.toString())
-							)}
 							animating={chain.blocksFinalized.toString()}
 						/>
 						<StatItem
 							title="Signed extrinsics"
-							value={formatNumber(
-								new Decimal(chain.extrinsicsSigned.toString())
-							)}
 							animating={chain.extrinsicsSigned.toString()}
 						/>
 						<StatItem
@@ -241,7 +233,6 @@ export const NetworkStats = () => {
 						/>
 						<StatItem
 							title="Transfers"
-							value={formatNumber(new Decimal(chain.transfers.toString()))}
 							animating={chain.transfers.toString()}
 						/>
 					</div>
