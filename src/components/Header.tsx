@@ -179,9 +179,9 @@ export const Header = () => {
 								toggleFade();
 							}}
 						>
-							<span></span>
-							<span></span>
-							<span></span>
+							<span/>
+							<span/>
+							<span/>
 						</div>
 
 						<div className={`main-menu fade-in-out ${isFaded ? "active" : ""}`}>
@@ -201,7 +201,7 @@ export const Header = () => {
 									<ul>
 										<li className="menu-item">
 											<a href="https://taostats.io">Home</a>
-											<span className="menuItem-glow"></span>
+											<span className="menuItem-glow"/>
 										</li>
 										<li className="menu-item-has-children">
 											<a href="https://taostats.io/subnets/">
@@ -209,34 +209,33 @@ export const Header = () => {
 												<span
 													className="has-btn"
 													onClick={(e) => openSubMenu(e)}
-												></span>
+												/>
 											</a>
 											<ul className="megaMenu subMenu">
-												{
-													Array.from(Array(3)).map((_, menuIndex) => (
-														<li key={`subnet-menu-column-${menuIndex}`}>
-															<ul>
-																{
-																	Array.from(Array(Math.floor((totalSubnets + 2 - menuIndex) / subnetMenuColumn))).map((_, itemIndex) => {
-																		let passed = 0;
-																		for(let i = 0; i < menuIndex; i ++) {
-																			passed += Math.floor((totalSubnets + 2 - i) / subnetMenuColumn);
-																		}
-																		const netUid = parseInt(subnetIDs[passed + itemIndex] ?? "0");
-																		const name = (subnetNames as any)[netUid];
-																		return (
-																			<li key={`subnet-menu-item-${itemIndex}`}>
-																				<a href={"https://taostats.io/subnets/netuid-" + netUid}>
-																					{netUid < 10 ? "0" : ""}{netUid} - {name}
-																				</a>
-																			</li>
-																		);
-																	})
+												{Array.from(Array(3)).map((_, menuIndex) => (
+													<li key={`subnet-menu-column-${menuIndex}`}>
+														<ul>
+															{Array.from(Array(Math.floor((totalSubnets + 2 - menuIndex) / subnetMenuColumn))).map((_, itemIndex) => {
+																let passed = 0;
+																for (let i = 0; i < menuIndex; i++) {
+																	passed += Math.floor((totalSubnets + 2 - i) / subnetMenuColumn);
 																}
-															</ul>
-														</li>
-													))
-												}
+																const netUid = parseInt(subnetIDs[passed + itemIndex] ?? "0");
+																const name = (subnetNames as any)[netUid];
+																return (
+																	<li key={`subnet-menu-item-${itemIndex}`}>
+																		<a
+																			href={`https://taostats.io/subnets/netuid-${netUid}`}
+																		>
+																			{netUid < 10 ? "0" : ""}
+																			{netUid} - {name}
+																		</a>
+																	</li>
+																);
+															})}
+														</ul>
+													</li>
+												))}
 											</ul>
 											<span className="menuItem-glow"></span>
 										</li>
@@ -246,34 +245,35 @@ export const Header = () => {
 												<span
 													className="has-btn"
 													onClick={(e) => openSubMenu(e)}
-												></span>
+												/>
 											</a>
 											<ul className="subMenu">
-												<li>
-													<a href="/#accounts">Accounts</a>
-												</li>
-												<li>
-													<a href="/#transfers">
-														Transfers
-													</a>
-												</li>
 												<li>
 													<a href="/#blocks">Blocks</a>
 												</li>
 												<li>
-													<a href="https://taostats.io/tokenomics/">
-														Tokenomics
-													</a>
+													<a href="/#transfers">Transfers</a>
 												</li>
 												<li>
-													<a href="https://nx.taostats.io/">
-														Nakamoto
-													</a>
+													<a href="/#delegation">Delegation</a>
 												</li>
 												<li>
-													<a href="https://kx.taostats.io/">
-														Kusanagi
-													</a>
+													<a href="/#validators">Validators</a>
+												</li>
+												<li>
+													<a href="/#accounts">Accounts</a>
+												</li>
+												<li>
+													<a href="/#subnets">Subnets</a>
+												</li>
+												<li>
+													<a href="https://taostats.io/tokenomics/">Tokenomics</a>
+												</li>
+												<li>
+													<a href="https://nx.taostats.io/">Nakamoto</a>
+												</li>
+												<li>
+													<a href="https://kx.taostats.io/">Kusanagi</a>
 												</li>
 											</ul>
 											<span className="menuItem-glow"></span>
@@ -284,7 +284,7 @@ export const Header = () => {
 												<span
 													className="has-btn"
 													onClick={(e) => openSubMenu(e)}
-												></span>
+												/>
 											</a>
 											<ul className="subMenu">
 												<li>
@@ -306,7 +306,7 @@ export const Header = () => {
 												<span
 													className="has-btn"
 													onClick={(e) => openSubMenu(e)}
-												></span>
+												/>
 											</a>
 											<ul className="subMenu">
 												<li>
@@ -316,7 +316,7 @@ export const Header = () => {
 													<a href="https://taostats.io/api/">Taostats API</a>
 												</li>
 											</ul>
-											<span className="menuItem-glow"></span>
+											<span className="menuItem-glow"/>
 										</li>
 										<li className="menu-item-has-children">
 											<a href="#">
@@ -324,7 +324,7 @@ export const Header = () => {
 												<span
 													className="has-btn"
 													onClick={(e) => openSubMenu(e)}
-												></span>
+												/>
 											</a>
 											<ul className="subMenu">
 												<li className="">
@@ -334,7 +334,7 @@ export const Header = () => {
 													<a href="https://taostats.io/media/">Media</a>
 												</li>
 											</ul>
-											<span className="menuItem-glow"></span>
+											<span className="menuItem-glow"/>
 										</li>
 									</ul>
 								</nav>
