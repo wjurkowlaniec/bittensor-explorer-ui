@@ -43,7 +43,7 @@ const statItemValue = (theme: Theme) => css`
 
 type StatItemProps = {
 	title: string;
-	value: string | number;
+	value?: string | number;
 	animating?: string;
 	suffix?: string;
 };

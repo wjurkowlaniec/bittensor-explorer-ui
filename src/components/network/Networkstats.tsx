@@ -5,9 +5,9 @@ import Loading from "../Loading";
 import NotFound from "../NotFound";
 import { Theme } from "@mui/material";
 import TaoIcon from "../../assets/tao_icon.png";
-import { formatNumber, nFormatter } from "../../utils/number";
+import { formatNumber, nFormatter, rawAmountToDecimal } from "../../utils/number";
 import Decimal from "decimal.js";
-import { StatItem } from "./StatItem";
+import { StatItem } from "./";
 import { useAppStats } from "../../contexts";
 import { AccountStatChart } from "../account/AccountStatChart";
 import { TabbedContent, TabPane } from "../TabbedContent";
@@ -15,6 +15,7 @@ import { useAccountStats } from "../../hooks/useAccountStats";
 import { useMemo } from "react";
 import { useTokenStats } from "../../hooks/useTokenStats";
 import { HistoricalTokenDistributionChart } from "./HistoricalTokenDistributionChart";
+import { NETWORK_CONFIG } from "../../config";
 
 const stakingDataBlock = css`
   width: 100%;
@@ -114,7 +115,7 @@ const statItems = css`
 
 const statItemsRow = css`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   width: 100%;
   @media only screen and (max-width: 1199px) {
     grid-template-columns: repeat(2, 1fr);
@@ -196,28 +197,34 @@ export const NetworkStats = () => {
 							title="24h Volume"
 							value={`$${nFormatter(token.volume24h, 2)}`}
 						/>
-
-						{/* <StatItem title='Next Halvening' value={`${stats.data.totalSupply} 𝞃`} /> */}
 						<StatItem
 							title="Validating APY"
 							value={`${token.validationAPY}%`}
 						/>
 						<StatItem title="Staking APY" value={`${token.stakingAPY}%`} />
+						<StatItem
+							title="Staked Supply"
+							value={`${formatNumber(
+								new Decimal(chain.staked.toString())
+									.mul(100)
+									.div(new Decimal(chain.issued.toString())),
+								{ decimalPlaces: 2 }
+							)}%`}
+						/>
 					</div>
 
 					<div css={statItemsRow}>
 						<StatItem
+							title="Circulating supply"
+							animating={rawAmountToDecimal(chain.issued.toString()).toString()}
+							suffix={NETWORK_CONFIG.currency}
+						/>
+						<StatItem
 							title="Finalized blocks"
-							value={formatNumber(
-								new Decimal(chain.blocksFinalized.toString())
-							)}
 							animating={chain.blocksFinalized.toString()}
 						/>
 						<StatItem
 							title="Signed extrinsics"
-							value={formatNumber(
-								new Decimal(chain.extrinsicsSigned.toString())
-							)}
 							animating={chain.extrinsicsSigned.toString()}
 						/>
 						<StatItem
@@ -226,7 +233,6 @@ export const NetworkStats = () => {
 						/>
 						<StatItem
 							title="Transfers"
-							value={formatNumber(new Decimal(chain.transfers.toString()))}
 							animating={chain.transfers.toString()}
 						/>
 					</div>
@@ -236,7 +242,7 @@ export const NetworkStats = () => {
 				<TabPane label="Accounts" value="accountStats">
 					<AccountStatChart accountStats={accountStats} />
 				</TabPane>
-				<TabPane label="TAO issuance" value="token">
+				<TabPane label="Issuance" value="issuance">
 					<HistoricalTokenDistributionChart tokenStats={tokenHistoricalStats} />
 				</TabPane>
 			</TabbedContent>

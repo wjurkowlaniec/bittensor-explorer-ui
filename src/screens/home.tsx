@@ -8,7 +8,7 @@ import TransfersTable from "../components/transfers/TransfersTable";
 import DelegatesTable from "../components/delegates/DelegatesTable";
 import { useBlocks } from "../hooks/useBlocks";
 import BlocksTable from "../components/blocks/BlocksTable";
-import { NetworkStats, TokenDistributionChart } from "../components/network";
+import { NetworkStats } from "../components/network";
 import { useBalances } from "../hooks/useBalances";
 import BalancesTable from "../components/balances/BalancesTable";
 import { useEffect, useMemo, useState } from "react";
@@ -44,15 +44,6 @@ const contentInner = css`
 const statsContainer = css`
   flex-grow: 1;
   min-height: 400px;
-`;
-
-const chartContainer = css`
-  width: 400px;
-  flex-grow: 0;
-  @media only screen and (max-width: 767px) {
-    flex-grow: 1;
-    width: auto;
-  }
 `;
 
 const infoSection = css`

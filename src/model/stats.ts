@@ -14,6 +14,8 @@ export type ChainStats = {
 	blocksFinalized: bigint;
 	extrinsicsSigned: bigint;
 	transfers: bigint;
+	issued: bigint;
+	staked: bigint;
 };
 
 export type Stats = {

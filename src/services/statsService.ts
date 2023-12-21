@@ -10,6 +10,8 @@ type DictionaryStats = {
 
 type IndexerStats = {
 	transfers: bigint;
+	issued: bigint;
+	staked: bigint;
 };
 
 async function getDictionaryStats(): Promise<DictionaryStats> {
@@ -32,6 +34,7 @@ async function getDictionaryStats(): Promise<DictionaryStats> {
 async function getIndexerStats(): Promise<IndexerStats> {
 	const response = await fetchIndexer<{
 		stats: ResponseItems<IndexerStats>;
+		tokenStats: ResponseItems<IndexerStats>;
 	}>(
 		`{
 			stats {
@@ -39,10 +42,21 @@ async function getIndexerStats(): Promise<IndexerStats> {
 					transfers
 				}
 			}
+			tokenStats {
+				nodes {
+					issued
+					staked
+				}
+			}
 		}`
 	);
-	const data = response.stats.nodes[0];
-	return data ?? { transfers: BigInt(0) };
+	const statsData = response.stats.nodes[0];
+	const tokenStatsData = response.tokenStats.nodes[0];
+	return {
+		transfers: statsData?.transfers ?? BigInt(0),
+		issued: tokenStatsData?.issued ?? BigInt(0),
+		staked: tokenStatsData?.staked ?? BigInt(0),
+	};
 }
 
 export const getTokenomics = async (): Promise<Tokenomics> => {
