@@ -102,10 +102,10 @@
         "signature": "d6803522f6e61a9dec5261a6a500b733d233b373457382fc3713af21c560604f6e50c4999f286cfa6012bcea66e51223722b355dd69ba54a472f2c6ca52da08f"
     },
     "5Fq5v71D4LX8Db1xsmRSy6udQThcZ8sFDqxQFwnUZ1BuqY5A": {
-        "name": "mnrv.ai",
-        "url": "https://www.mnrv.ai",
-        "description": "mnrv.ai, the godess of wisdom, providing resources, information, and education to the Bittensor community ",
-        "signature": "748e8645a55a25851e3dac030d4afd46678655c1dd17881fa5885cebfb6fbf3734453b5214472714260cacd85d6c04f25ffc9e425c9200f4d49e5d7a5fc87280"
+        "name": "NorthTensor",
+        "url": "https://northtensor.ai",
+        "description": "Developer, Advocate, and Incubator for Decentralized AI.",
+        "signature": "28e221d7128e48a3cb85dbcb223bd56cb09cb55540263573783bf1cef63be32ee81246bd1d75c865580da732094053a6dad14929b17e659b6e0237412b66a487"
     },
     "5CsvRJXuR955WojnGMdok1hbhffZyB4N5ocrv82f3p5A2zVp": {
         "name": "Owl Ventures",
@@ -184,13 +184,7 @@
         "url": "https://polychain.capital/",
         "description": "Polychain is an investment firm committed to exceptional returns for investors through actively managed portfolios of blockchain assets.",
         "signature": "f41e815033e595aa70fbe42e8dfd91eaa3ccdbc948b63811baf9eac765699b30cac9aad7abe330eeaf3969cc504a4c1255f1e69bee807c2d989518b8f5413c8d"
-    },
-    "5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8": {
-        "name": "τaosτaτs and BitAPAI",
-        "url": "taostats.io",
-        "description": "Supporting bittensor through API access, data provision, statistics and analytics.",
-        "signature": "823d94772361ef1c2e1e20a0d8406feb29db5b8f767e86437f6155265f91f86d5f25f5436265a50cd5e46eb6503b630d3c19bd52425d23b4f0000420303c228c"
-    },
+    },    
     "5Dkv87qjGGF42SNhDAep6WZp65E29c2vUPUfDBGDNevENCMs": {
         "name": "MycoNet",
         "url": "",
@@ -251,10 +245,58 @@
         "description": "Embracing the whimsical chaos of decentralized AI, unleashing the power of creativity and collaboration, one algorithmic dance party at a time!",
         "signature": "e400e3c0ad6165d8946d5ddcb274412815cb8b5783580fcb8f0faa0153d22b6e10470f861ff4a96a9aa692b3b01cda86ec77add4688c2f5df51ea6f129b19e8c"
     },
+    "5CaCUPsSSdKWcMJbmdmJdnWVa15fJQuz5HsSGgVdZffpHAUa": {
+        "name": "Athena Nodes",
+        "url": "https://athenanodes.com",
+        "description": "Premier Bittensor Multi-Subnet Validator from a company operating validating and mining infrastructure on various blockchain networks. We have been active on Bittensor since November 2022, with near zero down-time. More information at https://athenanodes.com/.",
+        "signature": "2ef54045de1d9b89988518c92e165edf704192f88f18022565f497b389c39206f621bb9bc6d2d33ac8a9cca05d6b2d8fc9f899b390451140968b15b8d9c13280"
+    },
     "5FFM6Nvvm78GqyMratgXXvjbqZPi7SHgSQ81nyS96jBuUWgt": {
         "name": "PRvalidator",
         "url": "www.prvalidator.com",
         "description": "A professional media validator dedicated to securing top-tier coverage in the world’s most recognized publications building Bittensor’s brand equity and creating global awareness of $TAO.",
         "signature": "fe65e76a9f42049715585180500213c6f0535b8b25911b957921bdfb5a20156d6de68dc2633dbc5ce1d0ab9ef386d566687ac3d86f6988141b34cd24c0f13488"
+    },
+    "5H8TruSGmhD6m6YfqXNUnU7Z61K7j8hSs2Krtu3eTLMoz3HU": {
+        "name": "τaoshi validator",
+        "url": "https://www.taoshi.io/",
+        "description": "Build maintain and advance a decentralized request layer built for every subnet",
+        "signature": "32d25227af78fa5d39ee71a5f3e8fc8066e3d826d101f2587e9a12974fbf26758c1e40c497ad7732da2a2cb1490227cc58e8bfcd8b2f6306b7af630bd32aa68f"
+    },
+    "5G3f8VDTT1ydirT3QffnV2TMrNMR2MkQfGUubQNqZcGSj82T": {
+        "name": "TAO Community Marketing",
+        "url": "www.taocommunitymarketing.com",
+        "description": "The marketing validator run by the community",
+        "signature": "10b16b8223b2508d6f3e5b09ab4db53e1e338b6271d1689b58ca6f9b257e8c18511cc851bfcc3a05fb4e6de7c389b89886cc0623fb6d199fa003ae6f8313cb89"
+    },
+    "5CXC2quDN5nUTqHMkpP5YRp2atYYicvtUghAYLj15gaUFwe5": {
+        "name": "Kooltek68",
+        "url": "https://linktr.ee/datalac",
+        "description": "Imagine the World with mass adoption of Artificial Intelligence applications, through the connection of Bittensor Network, together fight for a Better World.",
+        "signature": "bca043d9d918d503864379a7fd8c9daa2cca83a8290121f94b55d6a352e332704642622b7ad40a30b945b952b224c5e92ea872f9d30200e6c2bf566303d24d83"
+    },
+    "5FBrHX18bNXX874ZTMicPG4vYbq5X6piz4BYoVn9LnCgdsEd": {
+        "name": "P-OPS Team",
+        "url": "https://pops.one",
+        "description": "P-OPS TEAM is a decentralized organization providing you with validation and staking services, blockchain consultation, growth acceleration and investment capital for innovative Web 3.0 projects.",
+        "signature": "5608316f3081bfe5d0e3a7db6c3bfd459f6b87e02d657de941e6a760f8688f23ef30784691a1893d1fd8079dd4f6082d0d655ca507aa4797fee9844547d13a88"
+    },
+    "5HK5tp6t2S59DywmHRWPBVJeJ86T61KjurYqeooqj8sREpeN": {
+        "name": "Bittensor Guru",
+        "url": "https://bittensor.guru",
+        "description": "Official validator of the Bittensor Guru Podcast",
+        "signature": "caf2c6b7b0d2a341bcd00e632cf22c33d53e2523dffcd3a151db9eeadd88300545cbb2187ba0b20e5bfe09c2b17bbf34630c46defd8f8d27ab508736fd18a284"    
+    },
+    "5DCQw11aUW7bozAKkB8tB5bHqAjiu4F6mVLZBdgJnk8dzUoV": {
+        "name": "τaosτaτs and Corcel",
+        "url": "taostats.io",
+        "description": "Supporting bittensor through API access, data provision, statistics and analytics.",
+        "signature": "0a89e19acb4c8cabfbd9bc5c939124376408ba31b6a71fe424601f152164d14a76acd2675c1f3e1b2b574d114ae0c18f0d32b676a14e39f446092d6529767e80"
+    },
+    "5Hh3ShaNW9irCe5joBLCeFD5Fxb2fJ6gFAgrsPmoz3JkzqvJ": {
+        "name": "BlockShark",
+        "url": "https://www.blockshark.net/",
+        "description": "Your reliable partner for staking on Bittensor. We are expert in running high-end machine for validators and AI",
+        "signature": "d2c0aed073a026a5dbd8c458b9dd412fe3d6647fecd3b8f007cf184f7906245106aee4b210b5b582771dca149e5aa464630100de7f9862daacfa1f67ddde1388"
     }
 }
