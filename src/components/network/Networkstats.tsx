@@ -15,6 +15,7 @@ import { useAccountStats } from "../../hooks/useAccountStats";
 import { useMemo } from "react";
 import { useTokenStats } from "../../hooks/useTokenStats";
 import { HistoricalTokenDistributionChart } from "./HistoricalTokenDistributionChart";
+import { NETWORK_CONFIG } from "../../config";
 
 const stakingDataBlock = css`
   width: 100%;
@@ -215,10 +216,10 @@ export const NetworkStats = () => {
 					<div css={statItemsRow}>
 						<StatItem
 							title="Circulating supply"
-							value={`$${nFormatter(
-								rawAmountToDecimal(chain.issued.toString()).toNumber(),
-								2
-							)}`}
+							value={`${formatNumber(
+								rawAmountToDecimal(chain.issued.toString()),
+								{ decimalPlaces: 0 }
+							)}${NETWORK_CONFIG.currency}`}
 						/>
 						<StatItem
 							title="Finalized blocks"
