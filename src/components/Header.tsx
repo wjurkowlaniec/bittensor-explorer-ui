@@ -102,7 +102,7 @@ export const Header = () => {
 										</li>
 										<li>
 											<a
-												href="https://www.kucoin.com/trade/TAO-USDT"
+												href="https://www.kucoin.com/r/af/H7QQtt"
 												target="_blank"
 												rel="noreferrer"
 											>
@@ -310,7 +310,7 @@ export const Header = () => {
 											</a>
 											<ul className="subMenu">
 												<li>
-													<a href="https://bitapai.io/">BitAPAI</a>
+													<a href="https://corcel.io/">Corcel</a>
 												</li>
 												<li>
 													<a href="https://taostats.io/api/">Taostats API</a>
@@ -361,7 +361,7 @@ export const Header = () => {
 											</li>
 											<li>
 												<a
-													href="https://www.kucoin.com/trade/TAO-USDT"
+													href="https://www.kucoin.com/r/af/H7QQtt"
 													target="_blank"
 													rel="noreferrer"
 												>
