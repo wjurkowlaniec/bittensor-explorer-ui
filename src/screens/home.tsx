@@ -20,37 +20,34 @@ import { DelegateFilter, DelegatesOrder } from "../services/delegateService";
 import { useLocation } from "react-router-dom";
 import { MIN_DELEGATION_AMOUNT } from "../config";
 import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
-import { useValidators } from "../hooks/useValidators";
-import ValidatorsTable from "../components/validators/ValidatorsTable";
-import { ValidatorsOrder } from "../services/validatorService";
 import SubnetsTable from "../components/subnets/SubnetsTable";
 import { useSubnets } from "../hooks/useSubnets";
 import { SubnetsOrder } from "../services/subnetsService";
 
 const contentStyle = css`
-  position: relative;
-  flex: 1 1 auto;
-  min-height: var(--content-min-height);
+	position: relative;
+	flex: 1 1 auto;
+	min-height: var(--content-min-height);
 `;
 
 const contentInner = css`
-  box-sizing: border-box;
-  max-width: 1800px;
-  margin: 0 auto;
-  margin-top: 64px;
-  margin-bottom: 48px;
+	box-sizing: border-box;
+	max-width: 1800px;
+	margin: 0 auto;
+	margin-top: 64px;
+	margin-bottom: 48px;
 `;
 
 const statsContainer = css`
-  flex-grow: 1;
-  min-height: 400px;
+	flex-grow: 1;
+	min-height: 400px;
 `;
 
 const infoSection = css`
-  display: flex;
-  @media only screen and (max-width: 767px) {
-    flex-direction: column;
-  }
+	display: flex;
+	@media only screen and (max-width: 767px) {
+		flex-direction: column;
+	}
 `;
 
 export const HomePage = () => {
@@ -62,7 +59,7 @@ export const HomePage = () => {
 
 	const balancesInitialOrder: BalancesOrder = "BALANCE_TOTAL_DESC";
 	const [balanceSort, setBalanceSort] =
-    useState<BalancesOrder>(balancesInitialOrder);
+		useState<BalancesOrder>(balancesInitialOrder);
 	const balancesInitialFilter: BalancesFilter = {
 		balanceTotal: { greaterThan: 0 },
 	};
@@ -144,14 +141,9 @@ export const HomePage = () => {
 		delegateSort
 	);
 
-	const validatorsInitialOrder: ValidatorsOrder = "AMOUNT_DESC";
-	const [validatorsSort, setValidatorsSort] = useState<ValidatorsOrder>(
-		validatorsInitialOrder
-	);
-	const validators = useValidators(validatorsSort);
-
 	const subnetsInitialOrder: SubnetsOrder = "NET_UID_ASC";
-	const [subnetSort, setSubnetSort] = useState<SubnetsOrder>(subnetsInitialOrder);
+	const [subnetSort, setSubnetSort] =
+		useState<SubnetsOrder>(subnetsInitialOrder);
 	const subnets = useSubnets(undefined, subnetSort);
 
 	useEffect(() => {
@@ -250,20 +242,6 @@ export const HomePage = () => {
 									setDelegatesSearch(newSearch)
 								}
 								initialSearch={delegatesInitialSearch}
-							/>
-						</TabPane>
-						<TabPane
-							label="Validators"
-							loading={validators.loading}
-							error={!!validators.error}
-							value="validators"
-						>
-							<ValidatorsTable
-								validators={validators}
-								onSortChange={(sortKey: ValidatorsOrder) =>
-									setValidatorsSort(sortKey)
-								}
-								initialSort={validatorsInitialOrder}
 							/>
 						</TabPane>
 						<TabPane

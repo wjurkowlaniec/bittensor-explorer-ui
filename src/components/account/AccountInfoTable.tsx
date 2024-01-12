@@ -33,40 +33,40 @@ export type AccountInfoTableProps = HTMLAttributes<HTMLDivElement> & {
 const AccountInfoTableAttribute = InfoTableAttribute<Account & Balance>;
 
 const balanceContainer = css`
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  flex-wrap: wrap;
+	display: flex;
+	gap: 4px;
+	align-items: center;
+	flex-wrap: wrap;
 `;
 
 const taoBalance = css`
-  font-weight: bold;
+	font-weight: bold;
 `;
 
 const addressItem = css`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: keep-all;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: keep-all;
 `;
 
 const createdAt = css`
-  display: flex;
-  align-items: center;
-  gap: 8px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 `;
 
 const blockLink = css`
-  ::before {
-    content: '(';
-  }
-  ::after {
-    content: ')';
-  }
+	::before {
+		content: "(";
+	}
+	::after {
+		content: ")";
+	}
 `;
 
 const delegateContainer = css`
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 `;
 
 export const AccountInfoTable = (props: AccountInfoTableProps) => {
@@ -101,7 +101,7 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 			{...tableProps}
 		>
 			<AccountInfoTableAttribute
-				label='Substrate address'
+				label="Substrate address"
 				render={(data) => (
 					<div css={addressItem}>
 						{encodeAddress(data.address, NETWORK_CONFIG.prefix)}
@@ -112,7 +112,7 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 				}
 			/>
 			<AccountInfoTableAttribute
-				label='Public key'
+				label="Public key"
 				render={(data) => (
 					<div css={addressItem}>{u8aToHex(decodeAddress(data.address))}</div>
 				)}
@@ -120,7 +120,7 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 			/>
 			{balance.data?.createdAt ? (
 				<AccountInfoTableAttribute
-					label='Created at'
+					label="Created at"
 					render={(data) =>
 						data.createdAt > BigInt(0) ? (
 							<div css={createdAt}>
@@ -143,7 +143,7 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 				<></>
 			)}
 			<AccountInfoTableAttribute
-				label='Total balance'
+				label="Total balance"
 				render={() => (
 					<div css={balanceContainer}>
 						<span css={taoBalance}>
@@ -164,27 +164,34 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 			/>
 			{rank !== undefined && (
 				<AccountInfoTableAttribute
-					label='Rank'
+					label="Rank"
 					render={() => formatNumber(rank)}
 				/>
 			)}
-			{balance.data !== undefined && balance.data.staked > 0 && delegates.data !== undefined && delegates.data.length ? (
+			{balance.data !== undefined &&
+			balance.data.staked > 0 &&
+			delegates.data !== undefined &&
+			delegates.data.length ? (
 				<AccountInfoTableAttribute
-					label='Delegated balance'
+					label="Delegated balance"
 					render={() => (
 						<div>
-							{delegates.data?.map(({ delegate, amount, delegateName }, index) => (
-								<div css={delegateContainer} key={index}>
-									<Link to={`/validators/${delegate}`}>{`${delegateName ?? delegate}`}</Link>
-									<span>
-										{`${formatCurrency(
-											rawAmountToDecimal(amount.toString()),
-											"𝞃",
-											{ decimalPlaces: 2 }
-										)}`}
-									</span>
-								</div>
-							))}
+							{delegates.data?.map(
+								({ delegate, amount, delegateName }, index) => (
+									<div css={delegateContainer} key={index}>
+										<Link to={`/validator/${delegate}`}>{`${
+											delegateName ?? delegate
+										}`}</Link>
+										<span>
+											{`${formatCurrency(
+												rawAmountToDecimal(amount.toString()),
+												"𝞃",
+												{ decimalPlaces: 2 }
+											)}`}
+										</span>
+									</div>
+								)
+							)}
 						</div>
 					)}
 				/>

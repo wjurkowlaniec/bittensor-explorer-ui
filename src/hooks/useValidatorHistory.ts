@@ -1,13 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
-import { getValidatorStakeHistory } from "../services/validatorService";
+import {
+	getValidatorStakeHistory,
+	getValidators,
+} from "../services/validatorService";
 
 import { useRollbar } from "@rollbar/react";
+import { weightCopiers } from "../consts";
 import { DataError } from "../utils/error";
 import {
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryPaginatedResponse,
 	ValidatorStakeHistoryResponse,
+	ValidatorsStakeHistoryResponse,
 } from "../model/validator";
+import { fetchVerifiedDelegates } from "../services/delegateService";
+import { shortenHash } from "../utils/shortenHash";
 
 export function useValidatorStakeHistory(
 	address: string
@@ -28,7 +35,7 @@ export function useValidatorStakeHistory(
 			const result: ValidatorStakeHistory[] = [];
 			while (!finished) {
 				const stats: ValidatorStakeHistoryPaginatedResponse =
-          await getValidatorStakeHistory(address, after, limit);
+					await getValidatorStakeHistory([address], undefined, after, limit);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
 				after = stats.endCursor;
@@ -45,6 +52,76 @@ export function useValidatorStakeHistory(
 
 		setLoading(false);
 	}, []);
+
+	useEffect(() => {
+		setData([]);
+		setError(undefined);
+		setLoading(true);
+		fetchData();
+	}, [fetchData]);
+
+	return {
+		loading,
+		error,
+		data,
+	};
+}
+
+export function useValidatorsStakeHistory(
+	hasWeightCopiers: boolean
+): ValidatorsStakeHistoryResponse {
+	const rollbar = useRollbar();
+
+	const [data, setData] = useState<{
+		address: string;
+		data: ValidatorStakeHistory[];
+	}[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<DataError>();
+
+	const fetchData = useCallback(async () => {
+		const validators = await getValidators("NOMINATOR_RETURN_PER_K_DESC", {
+			limit: 20,
+		});
+		const valis = [];
+		for (const validator of validators.data) {
+			if (hasWeightCopiers || !weightCopiers.includes(validator.address)) {
+				valis.push(validator.address);
+			}
+			if (valis.length >= 12) break;
+		}
+
+		try {
+			const from = Date.now() - 8 * 24 * 60 * 60 * 1000;
+
+			const stats: ValidatorStakeHistoryPaginatedResponse =
+				await getValidatorStakeHistory(valis, new Date(from).toISOString());
+
+			const verifiedDelegates = await fetchVerifiedDelegates();
+
+			const result: {
+				address: string;
+				data: ValidatorStakeHistory[];
+			}[] = [];
+			for (const vali of valis) {
+				const data = stats.data.filter((stat) => stat.address === vali);
+				result.push({
+					address: verifiedDelegates[vali]?.name ?? shortenHash(vali) ?? "",
+					data,
+				});
+			}
+			setData(result);
+		} catch (e) {
+			if (e instanceof DataError) {
+				rollbar.error(e);
+				setError(e);
+			} else {
+				throw e;
+			}
+		}
+
+		setLoading(false);
+	}, [hasWeightCopiers]);
 
 	useEffect(() => {
 		setData([]);

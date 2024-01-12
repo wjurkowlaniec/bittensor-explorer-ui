@@ -13,41 +13,45 @@ import { useEffect, useState } from "react";
 import { SortOrder } from "../../model/sortOrder";
 import { DelegateFilter, DelegatesOrder } from "../../services/delegateService";
 import { Delegate } from "../../model/delegate";
-import { formatCurrency, rawAmountToDecimal, rawAmountToDecimaledString } from "../../utils/number";
+import {
+	formatCurrency,
+	rawAmountToDecimal,
+	rawAmountToDecimaledString,
+} from "../../utils/number";
 import { fetchBlockTimestamps } from "../../utils/block";
 
 const dirContainer = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 `;
 
 const dirIn = (theme: Theme) => css`
-  background-color: rgba(255, 153, 0, 0.8);
-  text-transform: uppercase;
-  display: inline-block;
-  color: #141414;
-  padding: 0px 4px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 500;
-  border: 2px solid ${theme.palette.neutral.main};
-  text-align: center;
-  width: 90px;
+	background-color: rgba(255, 153, 0, 0.8);
+	text-transform: uppercase;
+	display: inline-block;
+	color: #141414;
+	padding: 0px 4px;
+	border-radius: 4px;
+	font-size: 10px;
+	font-weight: 500;
+	border: 2px solid ${theme.palette.neutral.main};
+	text-align: center;
+	width: 90px;
 `;
 
 const dirOut = (theme: Theme) => css`
-  background-color: rgb(20, 222, 194, 0.8);
-  text-transform: uppercase;
-  display: inline-block;
-  color: #141414;
-  font-size: 10px;
-  padding: 0 4px;
-  border: 2px solid ${theme.palette.success.main};
-  font-weight: 400;
-  border-radius: 4px;
-  text-align: center;
-  width: 90px;
+	background-color: rgb(20, 222, 194, 0.8);
+	text-transform: uppercase;
+	display: inline-block;
+	color: #141414;
+	font-size: 10px;
+	padding: 0 4px;
+	border: 2px solid ${theme.palette.success.main};
+	font-weight: 400;
+	border-radius: 4px;
+	text-align: center;
+	width: 90px;
 `;
 
 export type DelegatesTableProps = {
@@ -98,7 +102,7 @@ const filterMappings: DelegateFilter = {
 
 function DelegatesTable(props: DelegatesTableProps) {
 	const {
-		delegates: {loading, data, notFound, error, pagination},
+		delegates: { loading, data, notFound, error, pagination },
 		showTime,
 		initialFilter,
 		onFilterChange,
@@ -194,23 +198,23 @@ function DelegatesTable(props: DelegatesTableProps) {
 		let columns = [
 			{
 				key: "height",
-				displayLabel: "Block height"
+				displayLabel: "Block height",
 			},
 			{
 				key: "createdAt",
-				displayLabel: "Time(UTC)"
+				displayLabel: "Time(UTC)",
 			},
 			{
 				key: "account",
-				displayLabel: "Account"
+				displayLabel: "Account",
 			},
 			{
 				key: "validator",
-				displayLabel: "Validator"
+				displayLabel: "Validator",
 			},
 			{
 				key: "action",
-				displayLabel: "Action"
+				displayLabel: "Action",
 			},
 			{
 				key: "amount",
@@ -218,20 +222,22 @@ function DelegatesTable(props: DelegatesTableProps) {
 			},
 		];
 		let omitColumnKey = "account";
-		if(fromValidator) {
+		if (fromValidator) {
 			omitColumnKey = "validator";
 		}
-		columns = columns.reduce((reduced: {key: string; displayLabel: string}[], cur: {key: string; displayLabel: string}) => {
-			if(cur.key === omitColumnKey)
-				return reduced;
-			return [
-				...reduced,
-				cur,
-			];
-		}, []);
+		columns = columns.reduce(
+			(
+				reduced: { key: string; displayLabel: string }[],
+				cur: { key: string; displayLabel: string }
+			) => {
+				if (cur.key === omitColumnKey) return reduced;
+				return [...reduced, cur];
+			},
+			[]
+		);
 		const result: any[] = [];
-		if(!loading && !notFound && data !== undefined) {
-			const blockNumbers = data.map(({blockNumber}) => blockNumber, []);
+		if (!loading && !notFound && data !== undefined) {
+			const blockNumbers = data.map(({ blockNumber }) => blockNumber, []);
 			const blockTimestamps = await fetchBlockTimestamps(blockNumbers);
 
 			data.forEach((delegate: Delegate) => {
@@ -313,7 +319,7 @@ function DelegatesTable(props: DelegatesTableProps) {
 				label="Delegate"
 				render={({ delegate, delegateName }) =>
 					delegateName !== undefined ? (
-						<Link to={`/validators/${delegate}`}>{delegateName}</Link>
+						<Link to={`/validator/${delegate}`}>{delegateName}</Link>
 					) : (
 						<AccountAddress
 							address={delegate}

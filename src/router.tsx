@@ -11,7 +11,8 @@ import { HomePage } from "./screens/home";
 import { NotFoundPage } from "./screens/notFound";
 import { SearchPage } from "./screens/search";
 import { NETWORK_CONFIG } from "./config";
-import { ValidatorPage } from "./screens/validators";
+import { ValidatorPage } from "./screens/validator";
+import { ValidatorsPage } from "./screens/validators";
 
 export const router = createBrowserRouter(
 	[
@@ -60,8 +61,12 @@ export const router = createBrowserRouter(
 					element: <EventPage />,
 				},
 				{
-					path: "validators/:address",
+					path: "validator/:address",
 					element: <ValidatorPage />,
+				},
+				{
+					path: "validators",
+					element: <ValidatorsPage />,
 				},
 				{
 					path: "*",
@@ -72,6 +77,8 @@ export const router = createBrowserRouter(
 	],
 	{
 		basename:
-      window.location.hostname === "localhost" ? undefined : process.env.PUBLIC_URL,
+			window.location.hostname === "localhost"
+				? undefined
+				: process.env.PUBLIC_URL,
 	}
 );

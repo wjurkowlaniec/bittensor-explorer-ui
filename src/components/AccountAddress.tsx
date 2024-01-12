@@ -8,7 +8,9 @@ import { shortenHash } from "../utils/shortenHash";
 
 import { Link } from "./Link";
 import { AccountAvatar } from "./AccountAvatar";
-import CopyToClipboardButton, { CopyToClipboardButtonProps } from "./CopyToClipboardButton";
+import CopyToClipboardButton, {
+	CopyToClipboardButtonProps,
+} from "./CopyToClipboardButton";
 
 const accountAddressStyle = css`
 	display: inline-flex;
@@ -16,7 +18,7 @@ const accountAddressStyle = css`
 `;
 
 const linkStyle = (theme: Theme) => css`
-color: ${theme.palette.neutral.main} !important;
+	color: ${theme.palette.neutral.main} !important;
 `;
 
 const iconStyle = css`
@@ -35,7 +37,7 @@ export type AccountLinkProps = {
 	delegate?: boolean;
 	shorten?: boolean;
 	copyToClipboard?: CopyToClipboardButtonProps["size"];
-}
+};
 
 export const AccountAddress = (props: AccountLinkProps) => {
 	const {
@@ -45,22 +47,26 @@ export const AccountAddress = (props: AccountLinkProps) => {
 		link = true,
 		delegate = false,
 		shorten,
-		copyToClipboard
+		copyToClipboard,
 	} = props;
 
-	const encodedAddress = useMemo(() => encodeAddress(address, prefix), [address]);
+	const encodedAddress = useMemo(
+		() => encodeAddress(address, prefix),
+		[address]
+	);
 
 	const content = useMemo(() => {
-		let content = <span>{shorten ? shortenHash(encodedAddress) : encodedAddress}</span>;
+		let content = (
+			<span>{shorten ? shortenHash(encodedAddress) : encodedAddress}</span>
+		);
 
 		if (delegate) {
 			content = (
-				<Link to={`/validators/${address}`} css={linkStyle}>
+				<Link to={`/validator/${address}`} css={linkStyle}>
 					{content}
 				</Link>
 			);
-		}
-		else if (link) {
+		} else if (link) {
 			content = (
 				<Link to={`/account/${address}`} css={linkStyle}>
 					{content}
