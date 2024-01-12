@@ -172,32 +172,32 @@ export const AccountInfoTable = (props: AccountInfoTableProps) => {
 			balance.data.staked > 0 &&
 			delegates.data !== undefined &&
 			delegates.data.length ? (
-				<AccountInfoTableAttribute
-					label="Delegated balance"
-					render={() => (
-						<div>
-							{delegates.data?.map(
-								({ delegate, amount, delegateName }, index) => (
-									<div css={delegateContainer} key={index}>
-										<Link to={`/validator/${delegate}`}>{`${
-											delegateName ?? delegate
-										}`}</Link>
-										<span>
-											{`${formatCurrency(
-												rawAmountToDecimal(amount.toString()),
-												"𝞃",
-												{ decimalPlaces: 2 }
-											)}`}
-										</span>
-									</div>
-								)
-							)}
-						</div>
-					)}
-				/>
-			) : (
-				<></>
-			)}
+					<AccountInfoTableAttribute
+						label="Delegated balance"
+						render={() => (
+							<div>
+								{delegates.data?.map(
+									({ delegate, amount, delegateName }, index) => (
+										<div css={delegateContainer} key={index}>
+											<Link to={`/validator/${delegate}`}>{`${
+												delegateName ?? delegate
+											}`}</Link>
+											<span>
+												{`${formatCurrency(
+													rawAmountToDecimal(amount.toString()),
+													"𝞃",
+													{ decimalPlaces: 2 }
+												)}`}
+											</span>
+										</div>
+									)
+								)}
+							</div>
+						)}
+					/>
+				) : (
+					<></>
+				)}
 		</InfoTable>
 	);
 };
