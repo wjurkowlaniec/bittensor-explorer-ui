@@ -10,7 +10,7 @@
   "8": "Time Series Prediction",
   "9": "Pretraining",
   "10": "Map Reduce",
-  "11": "Text Training",
+  "11": "Unknown",
   "12": "Unknown",
   "13": "Dataverse",
   "14": "LLM Defender",
@@ -30,6 +30,7 @@
   "27": "Compute",
   "28": "ZK Tensor",
   "29": "3D Gen",
-  "30": "Healthcare",
+  "30": "Unknown",
+  "31": "Healthcare",
   "32": "Roleplay"
 }
