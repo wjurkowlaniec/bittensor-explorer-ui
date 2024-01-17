@@ -99,6 +99,9 @@ export const ValidatorsStakeHistoryChart = (
 			series={series}
 			options={{
 				chart: {
+					animations: {
+						enabled: false,
+					},
 					background: "#1a1a1a",
 					toolbar: {
 						show: true,
@@ -130,18 +133,18 @@ export const ValidatorsStakeHistoryChart = (
 					},
 				},
 				colors: [
-					theme.palette.error.main,
-					theme.palette.neutral.main,
-					theme.palette.success.main,
-					"#4169E1",
-					"#9370DB",
-					"#228B22",
-					"#DC143C",
-					"#FF8C00",
-					"#1E90FF",
-					"#C71585",
-					"#3CB371",
-					"#FF6347",
+					"#14DEC2",
+					"#29D8B0",
+					"#3FD19F",
+					"#54CB8D",
+					"#69C57B",
+					"#7FBF6A",
+					"#94B858",
+					"#AAB247",
+					"#BFAC35",
+					"#D4A623",
+					"#EA9F12",
+					"#FF9900",
 				],
 				dataLabels: {
 					enabled: false,
@@ -153,6 +156,25 @@ export const ValidatorsStakeHistoryChart = (
 				legend: {
 					show: true,
 					position: "top",
+					labels: {
+						colors: "white",
+					},
+					markers: {
+						fillColors: [
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+							"white",
+						],
+					},
 				},
 				markers: {
 					size: 0,

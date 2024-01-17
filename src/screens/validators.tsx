@@ -12,10 +12,11 @@ import { css } from "@emotion/react";
 
 const toggleStyle = css`
 	margin-bottom: 20px;
+	display: none;
 `;
 
 export const ValidatorsPage = () => {
-	const validatorsInitialOrder: ValidatorsOrder = "AMOUNT_DESC";
+	const validatorsInitialOrder: ValidatorsOrder = "NOMINATOR_RETURN_PER_K_DESC";
 	const [validatorsSort, setValidatorsSort] = useState<ValidatorsOrder>(
 		validatorsInitialOrder
 	);

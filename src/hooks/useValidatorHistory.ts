@@ -92,7 +92,8 @@ export function useValidatorsStakeHistory(
 		}
 
 		try {
-			const from = Date.now() - 8 * 24 * 60 * 60 * 1000;
+			const now = Date.now();
+			const from = now - 8 * 24 * 60 * 60 * 1000;
 
 			const stats: ValidatorStakeHistoryPaginatedResponse =
 				await getValidatorStakeHistory(valis, new Date(from).toISOString());
@@ -105,6 +106,11 @@ export function useValidatorsStakeHistory(
 			}[] = [];
 			for (const vali of valis) {
 				const data = stats.data.filter((stat) => stat.address === vali);
+				const current = validators.data.find((it) => it.address === vali);
+				data.push({
+					timestamp: new Date(now).toISOString(),
+					...current,
+				} as ValidatorStakeHistory);
 				result.push({
 					address: verifiedDelegates[vali]?.name ?? shortenHash(vali) ?? "",
 					data,
