@@ -157,7 +157,7 @@ export const ValidatorsStakeHistoryChart = (
 					show: true,
 					position: "top",
 					labels: {
-						colors: "white",
+						colors: "#d9d9d9",
 					},
 				},
 				markers: {
