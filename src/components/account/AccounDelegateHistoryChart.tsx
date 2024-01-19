@@ -15,24 +15,25 @@ import { DelegateBalance } from "../../model/delegate";
 import { Resource } from "../../model/resource";
 import fileDownload from "js-file-download";
 import Button from "@mui/material/Button";
+import { shortenHash } from "../../utils/shortenHash";
 
 const spinnerContainer = css`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
 `;
 
 const hideCSVDownload = css`
-  .exportCSV {
-    display: none;
-  }
+	.exportCSV {
+		display: none;
+	}
 `;
 
 const csvDownload = css`
-  text-align: right;
-  margin-right: 10px;
-  margin-bottom: 45px;
+	text-align: right;
+	margin-right: 10px;
+	margin-bottom: 45px;
 `;
 
 export type AccounDelegateHistoryChartProps = {
@@ -91,7 +92,7 @@ export const AccounDelegateHistoryChart = (
 		const resp = (delegateHistory.data as any).reduce(
 			(prev: ApexAxisChartSeries, cur: AccountDelegateHistory) => {
 				const info = verifiedDelegates[cur.delegate];
-				const delegate = info?.name || cur.delegate;
+				const delegate = info?.name || shortenHash(cur.delegate) || "";
 				let serie = prev.find((x) => x.name === delegate);
 				if (serie === undefined)
 					prev.push({
@@ -112,7 +113,7 @@ export const AccounDelegateHistoryChart = (
 		return delegate.data?.reduce(
 			(prev: ApexAxisChartSeries, cur: DelegateBalance) => {
 				const info = verifiedDelegates[cur.delegate];
-				const delegate = info?.name || cur.delegate;
+				const delegate = info?.name || shortenHash(cur.delegate) || "";
 				let serie = prev.find((x) => x.name === delegate);
 				if (serie === undefined)
 					prev.push({
@@ -328,8 +329,8 @@ export const AccounDelegateHistoryChart = (
 								lastDay.setDate(lastDay.getDate() + 1);
 								if (
 									day.getFullYear() === lastDay.getFullYear() &&
-                  day.getMonth() === lastDay.getMonth() &&
-                  day.getDate() === lastDay.getDate()
+									day.getMonth() === lastDay.getMonth() &&
+									day.getDate() === lastDay.getDate()
 								)
 									return "Now";
 								const options: Intl.DateTimeFormatOptions = {
