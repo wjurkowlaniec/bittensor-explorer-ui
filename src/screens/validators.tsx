@@ -16,7 +16,7 @@ const toggleStyle = css`
 `;
 
 export const ValidatorsPage = () => {
-	const validatorsInitialOrder: ValidatorsOrder = "NOMINATOR_RETURN_PER_K_DESC";
+	const validatorsInitialOrder: ValidatorsOrder = "AMOUNT_DESC";
 	const [validatorsSort, setValidatorsSort] = useState<ValidatorsOrder>(
 		validatorsInitialOrder
 	);
