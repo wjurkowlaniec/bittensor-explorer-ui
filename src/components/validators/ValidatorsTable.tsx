@@ -22,9 +22,9 @@ export type ValidatorsTableProps = {
 };
 
 const day_change_css = css`
-  font-size: small;
-  font-weight: bold;
-  margin-left: 10px;
+	font-size: small;
+	font-weight: bold;
+	margin-left: 10px;
 `;
 
 const ValidatorsTableAttribute = ItemsTableAttribute<Validator>;
@@ -89,7 +89,10 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 		if (property === sort?.property) {
 			setSort({
 				...sort,
-				direction: sort.direction === SortDirection.ASC ? SortDirection.DESC: SortDirection.ASC,
+				direction:
+					sort.direction === SortDirection.ASC
+						? SortDirection.DESC
+						: SortDirection.ASC,
 			});
 		} else {
 			setSort({
@@ -128,9 +131,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 							copyToClipboard="small"
 						/>
 					) : (
-						<Link to={`/validators/${validator.address}`}>
-							{validator.name}
-						</Link>
+						<Link to={`/validator/${validator.address}`}>{validator.name}</Link>
 					)
 				}
 			/>
@@ -214,14 +215,18 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 			<ValidatorsTableAttribute
 				label="NOM. / 24h / k𝞃"
 				align="right"
-				render={({nominatorReturnPerK, address}) => {
+				render={({ nominatorReturnPerK, address }) => {
 					return weightCopiers.includes(address) ? (
 						<>
 							<Tooltip arrow placement="top" title="Copying Weights">
-								<span className='warning'>
-									{formatCurrency(rawAmountToDecimal(nominatorReturnPerK.toString()), currency, {
-										decimalPlaces: 3,
-									})}
+								<span className="warning">
+									{formatCurrency(
+										rawAmountToDecimal(nominatorReturnPerK.toString()),
+										currency,
+										{
+											decimalPlaces: 3,
+										}
+									)}
 								</span>
 							</Tooltip>
 						</>

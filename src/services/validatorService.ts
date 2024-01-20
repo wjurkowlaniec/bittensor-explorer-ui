@@ -19,10 +19,12 @@ import { rawAmountToDecimaledString } from "../utils/number";
 export type ValidatorsFilter = object;
 
 export type ValidatorsOrder =
-  | "AMOUNT_ASC"
-  | "AMOUNT_DESC"
-  | "NOMINATORS_ASC"
-  | "NOMINATORS_DESC";
+	| "AMOUNT_ASC"
+	| "AMOUNT_DESC"
+	| "NOMINATORS_ASC"
+	| "NOMINATORS_DESC"
+	| "NOMINATOR_RETURN_PER_K_ASC"
+	| "NOMINATOR_RETURN_PER_K_DESC";
 
 export async function getValidator(filter: ValidatorsFilter) {
 	const response = await fetchIndexer<{ validators: ResponseItems<Validator> }>(
@@ -129,23 +131,35 @@ function addValidatorName(
 }
 
 export async function getValidatorStakeHistory(
-	address: string,
+	address: string[],
+	from?: string,
 	after?: string,
 	limit = 100
 ): Promise<ValidatorStakeHistoryPaginatedResponse> {
-	if (!isAddress(address)) {
-		throw new DataError("Invalid account address");
+	address.forEach((addr) => {
+		if (!isAddress(addr)) {
+			throw new DataError("Invalid account address");
+		}
+	});
+
+	let filter = `address: { in: ${JSON.stringify(address)} }`;
+	if (from) {
+		filter += `, timestamp: { greaterThan: "${from}" }`;
 	}
 
 	const response = await fetchHistorical<{
 		validators: ResponseItems<ValidatorStakeHistory>;
 	}>(
 		`query($after: Cursor, $first: Int!) {
-			validators(after: $after, first: $first, filter: {address: {equalTo: "${address}"}}, orderBy: HEIGHT_ASC) {
+			validators(after: $after, first: $first, filter: { ${filter} }, orderBy: HEIGHT_ASC) {
 				nodes {
+					address
 					amount
 					nominators
 					rank
+					totalDailyReturn
+					validatorReturn
+					nominatorReturnPerK
 					timestamp
 				}
 				pageInfo {
