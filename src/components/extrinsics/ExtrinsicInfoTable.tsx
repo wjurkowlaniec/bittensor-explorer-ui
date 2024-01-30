@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css, Theme, Tooltip } from "@mui/material";
+import { css, Theme } from "@mui/material";
 
 import { Extrinsic } from "../../model/extrinsic";
 import { Resource } from "../../model/resource";
@@ -17,6 +17,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { useBlock } from "../../hooks/useBlock";
 import { useRuntimeSpec } from "../../hooks/useRuntimeSpec";
 import { Currency } from "../Currency";
+import InfoTooltip from "../InfoTooltip";
 
 export type ExtrinsicInfoTableProps = {
 	extrinsic: Resource<Extrinsic>;
@@ -32,6 +33,12 @@ const successStyle = (theme: Theme) => css`
 const failedStyle = (theme: Theme) => css`
 	font-size: 16px;
 	color: ${theme.palette.error.main};
+`;
+
+const tipStyle = css`
+	display: flex;
+	align-items: center;
+	gap: 4px;
 `;
 
 export const ExtrinsicInfoTable = (props: ExtrinsicInfoTableProps) => {
@@ -117,9 +124,10 @@ export const ExtrinsicInfoTable = (props: ExtrinsicInfoTableProps) => {
 			/>
 			<ExtrinsicInfoTableAttribute
 				label={() => (
-					<Tooltip arrow placement="top" title="...">
+					<div css={tipStyle}>
 						<div>Tip</div>
-					</Tooltip>
+						<InfoTooltip value="..." />
+					</div>
 				)}
 				render={(data) => (
 					<Currency
