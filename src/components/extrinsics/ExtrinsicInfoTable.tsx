@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css, Theme } from "@mui/material";
+import { css, Theme, Tooltip } from "@mui/material";
 
 import { Extrinsic } from "../../model/extrinsic";
 import { Resource } from "../../model/resource";
@@ -116,7 +116,11 @@ export const ExtrinsicInfoTable = (props: ExtrinsicInfoTableProps) => {
 				)}
 			/>
 			<ExtrinsicInfoTableAttribute
-				label="Tip"
+				label={() => (
+					<Tooltip arrow placement="top" title="...">
+						<div>Tip</div>
+					</Tooltip>
+				)}
 				render={(data) => (
 					<Currency
 						amount={data.tip}
