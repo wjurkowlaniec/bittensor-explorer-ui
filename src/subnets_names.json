@@ -4,7 +4,7 @@
   "2": "Machine Translation",
   "3": "Data Scraping",
   "4": "Multi Modality",
-  "5": "Image Generation",
+  "5": "Unknown",
   "6": "Nous Finetuning",
   "7": "Storage",
   "8": "Time Series Prediction",
@@ -32,5 +32,5 @@
   "29": "Unknown",
   "30": "Unknown",
   "31": "Healthcare",
-  "32": "Lovelace"
+  "32": "DAASI"
 }
