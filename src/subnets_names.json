@@ -4,7 +4,7 @@
   "2": "Machine Translation",
   "3": "Data Scraping",
   "4": "Multi Modality",
-  "5": "Unknown",
+  "5": "Einstein-AIT",
   "6": "Nous Finetuning",
   "7": "Storage",
   "8": "Time Series Prediction",
@@ -29,8 +29,8 @@
   "26": "Image Alchemy",
   "27": "Compute",
   "28": "Unknown",
-  "29": "Unknown",
-  "30": "Unknown",
+  "29": "Fractal",
+  "30": "WomboAI",
   "31": "Healthcare",
   "32": "BitAudit"
 }
