@@ -35,3 +35,23 @@ export type SubnetHistoryResponse = {
 	data: SubnetHistory[];
 	ids: number[];
 };
+
+export type SubnetOwner = {
+	id: string;
+	netid: bigint;
+	height: bigint;
+	owner: string;
+};
+
+export type SubnetOwnerPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: SubnetOwner[];
+};
+
+export type SubnetOwnerResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: SubnetOwner[];
+	ids: number[];
+};

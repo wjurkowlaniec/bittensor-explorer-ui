@@ -15,6 +15,7 @@ import {
 	formatNumberWithPrecision,
 	nFormatter,
 	rawAmountToDecimal,
+	zeroPad,
 } from "../../utils/number";
 import { Currency } from "../Currency";
 
@@ -140,7 +141,7 @@ function SubnetsTable(props: SubnetsTableProps) {
 			<SubnetsTableAttribute
 				label="ID"
 				sortable
-				render={(subnet) => <>{subnet.netUid}</>}
+				render={(subnet) => <>{subnet.netUid && zeroPad(subnet.netUid, 2)}</>}
 				sortProperty="netUid"
 			/>
 			<SubnetsTableAttribute
@@ -184,8 +185,15 @@ function SubnetsTable(props: SubnetsTableProps) {
 				render={({ emission }) =>
 					emission !== undefined && (
 						<>
-							{emission >= 100000 ? formatNumber(rawAmountToDecimal(emission).toNumber() * 100, {decimalPlaces: 2})
-								: formatNumberWithPrecision(rawAmountToDecimal(emission).toNumber() * 100, 1, true)}
+							{emission >= 100000
+								? formatNumber(rawAmountToDecimal(emission).toNumber() * 100, {
+									decimalPlaces: 2,
+								})
+								: formatNumberWithPrecision(
+									rawAmountToDecimal(emission).toNumber() * 100,
+									1,
+									true
+								)}
 							%
 						</>
 					)

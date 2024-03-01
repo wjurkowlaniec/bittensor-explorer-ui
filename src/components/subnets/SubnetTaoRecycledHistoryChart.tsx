@@ -10,9 +10,9 @@ import {
 	zeroPad,
 } from "../../utils/number";
 import { SubnetHistory, SubnetHistoryResponse } from "../../model/subnet";
-import subnetNames from "../../subnets_names.json";
+import subnetsJson from "../../subnets.json";
 import { NETWORK_CONFIG } from "../../config";
-const names = subnetNames as Record<string, string>;
+const subnetsObj = subnetsJson as Record<string, Record<string, string>>;
 
 const spinnerContainer = css`
 	display: flex;
@@ -21,16 +21,17 @@ const spinnerContainer = css`
 	justify-content: center;
 `;
 
-export type SubnetRaoRecycledHistoryChartProps = {
+export type SubnetTaoRecycledHistoryChartProps = {
 	subnetHistory: SubnetHistoryResponse;
+	subnetId: string;
 };
 
-export const SubnetRaoRecycledHistoryChart = (
-	props: SubnetRaoRecycledHistoryChartProps
+export const SubnetTaoRecycledHistoryChart = (
+	props: SubnetTaoRecycledHistoryChartProps
 ) => {
 	const theme = useTheme();
 
-	const { subnetHistory } = props;
+	const { subnetHistory, subnetId } = props;
 	const { currency } = NETWORK_CONFIG;
 
 	const loading = subnetHistory.loading;
@@ -65,7 +66,7 @@ export const SubnetRaoRecycledHistoryChart = (
 			subnets[x].name =
 				zeroPad(subnets[x].name, 2) +
 				": " +
-				(names[subnets[x].name] || "Unknown");
+				(subnetsObj[subnets[x].name]?.name || "Unknown");
 			result.push(subnets[x]);
 		}
 
@@ -113,14 +114,14 @@ export const SubnetRaoRecycledHistoryChart = (
 						},
 						export: {
 							csv: {
-								filename: "top-validators",
+								filename: `subnet-${subnetId}`,
 								headerCategory: "Date",
 							},
 							png: {
-								filename: "top-validators",
+								filename: `subnet-${subnetId}`,
 							},
 							svg: {
-								filename: "top-validators",
+								filename: `subnet-${subnetId}`,
 							},
 						},
 					},
@@ -150,7 +151,7 @@ export const SubnetRaoRecycledHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: true,
+					show: false,
 					showForSingleSeries: true,
 					position: "top",
 					horizontalAlign: "right",

@@ -3,7 +3,7 @@ import Logo from "../assets/logo.png";
 import PolygonGray from "../assets/polygon-gray.svg";
 import { useAppStats } from "../contexts";
 import { nFormatter } from "../utils/number";
-import subnetNames from "../subnets_names.json";
+import subnets from "../subnets.json";
 
 export const Header = () => {
 	const {
@@ -28,7 +28,7 @@ export const Header = () => {
 		event.preventDefault();
 	};
 
-	const subnetIDs = Object.keys(subnetNames);
+	const subnetIDs = Object.keys(subnets);
 	const totalSubnets = subnetIDs.length;
 	const subnetMenuColumn = 3;
 
@@ -232,7 +232,8 @@ export const Header = () => {
 																const netUid = parseInt(
 																	subnetIDs[passed + itemIndex] ?? "0"
 																);
-																const name = (subnetNames as any)[netUid];
+																const name =
+																	(subnets as any)[netUid]?.name || "Unknown";
 																return (
 																	<li key={`subnet-menu-item-${itemIndex}`}>
 																		<a

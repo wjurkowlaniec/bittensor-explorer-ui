@@ -11,8 +11,8 @@ import {
 	zeroPad,
 } from "../../utils/number";
 import { SubnetHistory, SubnetHistoryResponse } from "../../model/subnet";
-import subnetNames from "../../subnets_names.json";
-const names = subnetNames as Record<string, string>;
+import subnetsJson from "../../subnets.json";
+const subnetsObj = subnetsJson as Record<string, Record<string, string>>;
 
 const spinnerContainer = css`
 	display: flex;
@@ -57,7 +57,9 @@ export const SubnetEmissionsHistoryChart = (
 			if (subnetIdx === -1) {
 				subnets.push({
 					name:
-						zeroPad(subnetIdStr, 2) + ": " + (names[subnetIdStr] || "Unknown"),
+						zeroPad(subnetIdStr, 2) +
+						": " +
+						(subnetsObj[subnetIdStr]?.name || "Unknown"),
 					id: subnetIdStr,
 					type: "line",
 					data: [],
@@ -71,8 +73,8 @@ export const SubnetEmissionsHistoryChart = (
 		}
 
 		const result: any[] = [];
-		subnetHistory.ids.forEach(id => {
-			const subnet = subnets.find(x => x.id == id);
+		subnetHistory.ids.forEach((id) => {
+			const subnet = subnets.find((x) => x.id == id);
 			result.push(subnet);
 		});
 		return result;
@@ -119,14 +121,14 @@ export const SubnetEmissionsHistoryChart = (
 						},
 						export: {
 							csv: {
-								filename: "top-validators",
+								filename: "top-subnets",
 								headerCategory: "Date",
 							},
 							png: {
-								filename: "top-validators",
+								filename: "top-subnets",
 							},
 							svg: {
-								filename: "top-validators",
+								filename: "top-subnets",
 							},
 						},
 					},
