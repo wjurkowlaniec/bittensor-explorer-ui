@@ -2,6 +2,7 @@ import { ItemsTable, ItemsTableAttribute } from "../ItemsTable";
 import { NETWORK_CONFIG } from "../../config";
 import { AccountAddress } from "../AccountAddress";
 import { SubnetOwner, SubnetOwnerResponse } from "../../model/subnet";
+import { BlockTimestamp } from "../BlockTimestamp";
 
 export type SubnetOwnersTableProps = {
 	subnetOwners: SubnetOwnerResponse;
@@ -24,6 +25,10 @@ function SubnetOwnersTable(props: SubnetOwnersTableProps) {
 			<SubnetOwnersTableAttribute
 				label="Height"
 				render={(subnet) => <>{subnet.height}</>}
+			/>
+			<SubnetOwnersTableAttribute
+				label="Created At"
+				render={(subnet) => <BlockTimestamp blockHeight={subnet.height} />}
 			/>
 			<SubnetOwnersTableAttribute
 				label="Owner"
