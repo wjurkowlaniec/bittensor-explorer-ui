@@ -23,7 +23,7 @@ function SubnetOwnersTable(props: SubnetOwnersTableProps) {
 			data-test="subnet-owners-table"
 		>
 			<SubnetOwnersTableAttribute
-				label="Height"
+				label="Block"
 				render={(subnet) => <>{subnet.height}</>}
 			/>
 			<SubnetOwnersTableAttribute
