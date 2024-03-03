@@ -148,7 +148,9 @@ function SubnetsTable(props: SubnetsTableProps) {
 				label="Name"
 				render={(subnet) =>
 					subnet.name ? (
-						<Link to={`/subnet/${subnet.netUid}`}>{subnet.name}</Link>
+						<Link to={`https://taostats.io/subnets/netuid-${subnet.netUid}`}>
+							{subnet.name}
+						</Link>
 					) : (
 						<>TOTAL</>
 					)
