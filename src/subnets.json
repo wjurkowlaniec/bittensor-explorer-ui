@@ -25,7 +25,7 @@
         "description": ""
     },
     "5": {
-        "name": "einstein - ait",
+        "name": "Open Kaito",
         "github": "https://github.com/ait-protocol/einstein-ait-prod",
         "description": ""
     },
@@ -120,12 +120,12 @@
         "description": ""
     },
     "24": {
-        "name": "",
+        "name": "3D Gen",
         "github": "",
         "description": ""
     },
     "25": {
-        "name": "hivemind",
+        "name": "Hivetrain",
         "github": "https://github.com/KMFODA/DistributedTraining",
         "description": ""
     },
@@ -160,7 +160,7 @@
         "description": ""
     },
     "32": {
-        "name": "",
+        "name": "It's AI",
         "github": "",
         "description": ""
     }
