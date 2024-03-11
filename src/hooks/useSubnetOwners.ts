@@ -32,7 +32,6 @@ export function useSubnetOwners(subnetId: string): SubnetOwnerResponse {
 						},
 					},
 					"HEIGHT_ASC",
-					undefined,
 					after,
 					limit
 				);

@@ -4,7 +4,6 @@ export type Subnet = {
 	id: string;
 	netUid: number;
 	name?: string;
-	createdAt: bigint;
 	owner: string;
 	extrinsicId: number;
 	emission: number;
@@ -12,15 +11,17 @@ export type Subnet = {
 	recycledAtCreation: bigint;
 	recycledByOwner: bigint;
 	recycledLifetime: bigint;
+	regCost: bigint;
 	timestamp: string;
 };
 
 export type SubnetHistory = {
-	subnetId: bigint;
+	netUid: bigint;
 	height: bigint;
 	timestamp: string;
 	emission: bigint;
-	raoRecycled: bigint;
+	recycled: bigint;
+	recycled24H: bigint;
 };
 
 export type SubnetHistoryPaginatedResponse = {
@@ -33,6 +34,25 @@ export type SubnetHistoryResponse = {
 	loading: boolean;
 	error?: DataError;
 	data: SubnetHistory[];
+	ids: number[];
+};
+
+export type SubnetRegCostHistory = {
+	height: bigint;
+	timestamp: string;
+	regCost: bigint;
+};
+
+export type SubnetRegCostHistoryPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: SubnetRegCostHistory[];
+};
+
+export type SubnetRegCostHistoryResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: SubnetRegCostHistory[];
 	ids: number[];
 };
 
@@ -54,4 +74,10 @@ export type SubnetOwnerResponse = {
 	error?: DataError;
 	data: SubnetOwner[];
 	ids: number[];
+};
+
+export type SubnetStat = {
+	height: bigint;
+	regCost: bigint;
+	timestamp: string;
 };

@@ -33,10 +33,6 @@ const orderMappings = {
 		[SortDirection.ASC]: "NET_UID_ASC",
 		[SortDirection.DESC]: "NET_UID_DESC",
 	},
-	createdAt: {
-		[SortDirection.ASC]: "CREATED_AT_ASC",
-		[SortDirection.DESC]: "CREATED_AT_DESC",
-	},
 	emission: {
 		[SortDirection.ASC]: "EMISSION_ASC",
 		[SortDirection.DESC]: "EMISSION_DESC",
@@ -158,13 +154,11 @@ function SubnetsTable(props: SubnetsTableProps) {
 			/>
 			<SubnetsTableAttribute
 				label="Created At (UTC)"
-				sortable
 				render={(subnet) =>
 					subnet.timestamp !== undefined && (
 						<Time time={subnet.timestamp} utc timezone={false} />
 					)
 				}
-				sortProperty="createdAt"
 			/>
 			<SubnetsTableAttribute
 				label="Owner"

@@ -12,6 +12,7 @@ import { useSubnetOwners } from "../hooks/useSubnetOwners";
 import SubnetOwnersTable from "../components/subnets/SubnetOwnersTable";
 import { useEffect } from "react";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
+import { SubnetTaoRecycled24HHistoryChart } from "../components/subnets/SubnetTaoRecycled24HHistoryChart";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -92,6 +93,17 @@ export const SubnetPage = () => {
 						value="recycled"
 					>
 						<SubnetTaoRecycledHistoryChart
+							subnetHistory={subnetsHistory}
+							subnetId={id}
+						/>
+					</TabPane>
+					<TabPane
+						label="Recycled (24H)"
+						loading={subnetsHistory.loading}
+						error={!!subnetsHistory.error}
+						value="recycled_24h"
+					>
+						<SubnetTaoRecycled24HHistoryChart
 							subnetHistory={subnetsHistory}
 							subnetId={id}
 						/>

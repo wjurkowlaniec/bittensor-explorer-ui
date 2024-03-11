@@ -4,12 +4,15 @@ import {
 	SubnetOwner,
 	SubnetHistoryPaginatedResponse,
 	SubnetOwnerPaginatedResponse,
+	SubnetRegCostHistory,
+	SubnetRegCostHistoryPaginatedResponse,
+	SubnetStat,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
 import subnetsJson from "../subnets.json";
 import { extractItems } from "../utils/extractItems";
-import { fetchHistorical, fetchIndexer } from "./fetchService";
+import { fetchIndexer, fetchSubnets } from "./fetchService";
 
 export type SubnetsFilter = object;
 
@@ -23,9 +26,7 @@ export type SubnetsOrder =
 	| "RAO_RECYCLED_ASC"
 	| "RAO_RECYCLED_DESC"
 	| "RAO_RECYCLED24H_ASC"
-	| "RAO_RECYCLED24H_DESC"
-	| "CREATED_AT_ASC"
-	| "CREATED_AT_DESC";
+	| "RAO_RECYCLED24H_DESC";
 
 export type SubnetHistoryOrder =
 	| "ID_ASC"
@@ -38,15 +39,13 @@ export type SubnetOwnerOrder =
 	| "ID_DESC"
 	| "HEIGHT_ASC"
 	| "HEIGHT_DESC";
-
 export async function getSubnet(filter: SubnetsFilter | undefined) {
-	const response = await fetchIndexer<{ subnets: ResponseItems<Subnet> }>(
+	const response = await fetchSubnets<{ subnets: ResponseItems<Subnet> }>(
 		`query ($filter: SubnetFilter) {
 			subnets(first: 1, offset: 0, filter: $filter, orderBy: ID_DESC) {
 				nodes {
 					id
 					netUid
-					createdAt
 					owner
 					extrinsicId
 					emission
@@ -54,6 +53,7 @@ export async function getSubnet(filter: SubnetsFilter | undefined) {
 					recycledAtCreation
 					recycledByOwner
 					recycledLifetime
+					regCost
 					timestamp
 				}
 				pageInfo {
@@ -90,7 +90,6 @@ export async function getSubnets(
 				nodes {
 					id
 					netUid
-					createdAt
 					owner
 					extrinsicId
 					emission
@@ -120,21 +119,21 @@ export async function getSubnets(
 export async function getSubnetHistory(
 	filter?: object,
 	order: SubnetHistoryOrder = "ID_ASC",
-	distinct?: string,
 	after?: string,
 	limit = 100
 ): Promise<SubnetHistoryPaginatedResponse> {
-	const response = await fetchHistorical<{
-		subnets: ResponseItems<SubnetHistory>;
+	const response = await fetchSubnets<{
+		subnetHistoricals: ResponseItems<SubnetHistory>;
 	}>(
-		`query($filter: SubnetFilter, $order: [SubnetsOrderBy!]!, $distinct: [subnets_distinct_enum], $after: Cursor, $first: Int!) {
-			subnets(filter: $filter, orderBy: $order, distinct: $distinct, after: $after, first: $first) {
+		`query($filter: SubnetHistoricalFilter, $order: [SubnetHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
+			subnetHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
 				nodes {
 					id
-					subnetId
+					netUid
 					height
 					emission
-					raoRecycled
+					recycled
+					recycled24H
 					timestamp
 				}
 				pageInfo {
@@ -148,29 +147,65 @@ export async function getSubnetHistory(
 			after,
 			filter,
 			order,
-			distinct,
 		}
 	);
 
 	return {
-		hasNextPage: response.subnets?.pageInfo.hasNextPage,
-		endCursor: response.subnets?.pageInfo.endCursor,
-		data: response.subnets?.nodes,
+		hasNextPage: response.subnetHistoricals?.pageInfo.hasNextPage,
+		endCursor: response.subnetHistoricals?.pageInfo.endCursor,
+		data: response.subnetHistoricals?.nodes,
+	};
+}
+
+export async function getSubnetRegCostHistory(
+	filter?: object,
+	order: SubnetHistoryOrder = "ID_ASC",
+	after?: string,
+	limit = 100
+): Promise<SubnetRegCostHistoryPaginatedResponse> {
+	const response = await fetchSubnets<{
+		registrationHistoricals: ResponseItems<SubnetRegCostHistory>;
+	}>(
+		`query($filter: RegistrationHistoricalFilter, $order: [RegistrationHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
+			registrationHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					height
+					regCost
+					timestamp
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			  }
+		}`,
+		{
+			first: limit,
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.registrationHistoricals?.pageInfo.hasNextPage,
+		endCursor: response.registrationHistoricals?.pageInfo.endCursor,
+		data: response.registrationHistoricals?.nodes,
 	};
 }
 
 export async function getSubnetOwners(
 	filter?: object,
 	order: SubnetOwnerOrder = "ID_ASC",
-	distinct?: string,
 	after?: string,
 	limit = 100
 ): Promise<SubnetOwnerPaginatedResponse> {
 	const response = await fetchIndexer<{
 		subnetOwners: ResponseItems<SubnetOwner>;
 	}>(
-		`query($filter: SubnetOwnerFilter, $order: [SubnetOwnersOrderBy!]!, $distinct: [subnet_owners_distinct_enum], $after: Cursor, $first: Int!) {
-			subnetOwners(filter: $filter, orderBy: $order, distinct: $distinct, after: $after, first: $first) {
+		`query($filter: SubnetOwnerFilter, $order: [SubnetOwnersOrderBy!]!, $after: Cursor, $first: Int!) {
+			subnetOwners(filter: $filter, orderBy: $order, after: $after, first: $first) {
 				nodes {
 					id
 					netid
@@ -188,7 +223,6 @@ export async function getSubnetOwners(
 			after,
 			filter,
 			order,
-			distinct,
 		}
 	);
 
@@ -197,6 +231,24 @@ export async function getSubnetOwners(
 		endCursor: response.subnetOwners?.pageInfo.endCursor,
 		data: response.subnetOwners?.nodes,
 	};
+}
+
+export async function getSubnetStat(id: string) {
+	const response = await fetchSubnets<{ subnetStat: SubnetStat }>(
+		`query ($id: String!) {
+			subnetStat(id: $id) {
+				height
+				id
+				regCost
+				timestamp
+			}
+		}`,
+		{
+			id,
+		}
+	);
+
+	return response.subnetStat;
 }
 
 function addSubnetName<T extends { netUid: number; name?: string }>(

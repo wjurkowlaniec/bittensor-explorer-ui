@@ -1,18 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
-import { getSubnetHistory, getSubnets } from "../services/subnetsService";
+import {
+	getSubnetRegCostHistory,
+	getSubnets,
+} from "../services/subnetsService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
 import {
-	SubnetHistory,
-	SubnetHistoryPaginatedResponse,
-	SubnetHistoryResponse,
+	SubnetRegCostHistory,
+	SubnetRegCostHistoryPaginatedResponse,
+	SubnetRegCostHistoryResponse,
 } from "../model/subnet";
 
-export function useSubnetsHistory(): SubnetHistoryResponse {
+export function useSubnetRegCostHistory(): SubnetRegCostHistoryResponse {
 	const rollbar = useRollbar();
 
-	const [data, setData] = useState<SubnetHistory[]>([]);
+	const [data, setData] = useState<SubnetRegCostHistory[]>([]);
 	const [ids, setIds] = useState<number[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
@@ -30,27 +33,13 @@ export function useSubnetsHistory(): SubnetHistoryResponse {
 			let finished = false;
 			let after: string | undefined = undefined;
 
-			const now = Date.now();
-			const from = new Date(now - 8 * 24 * 60 * 60 * 1000).toISOString();
-
-			const result: SubnetHistory[] = [];
+			const result: SubnetRegCostHistory[] = [];
 			while (!finished) {
-				const stats: SubnetHistoryPaginatedResponse = await getSubnetHistory(
-					{
-						netUid: {
-							in: subnetIds,
-						},
-						timestamp: {
-							greaterThan: from,
-						},
-					},
-					"HEIGHT_ASC",
-					after,
-					limit
-				);
-				result.push(...stats.data);
-				finished = !stats.hasNextPage;
-				after = stats.endCursor;
+				const regCost: SubnetRegCostHistoryPaginatedResponse =
+					await getSubnetRegCostHistory(undefined, "HEIGHT_ASC", after, limit);
+				result.push(...regCost.data);
+				finished = !regCost.hasNextPage;
+				after = regCost.endCursor;
 			}
 			setData(result);
 		} catch (e) {

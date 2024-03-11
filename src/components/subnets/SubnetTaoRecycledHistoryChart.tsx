@@ -37,9 +37,9 @@ export const SubnetTaoRecycledHistoryChart = (
 	const loading = subnetHistory.loading;
 	const timestamps = useMemo(() => {
 		if (!subnetHistory.data) return [];
-		const defaultSubnetId = subnetHistory.data[0]?.subnetId.toString();
+		const defaultSubnetId = subnetHistory.data[0]?.netUid.toString();
 		return subnetHistory.data
-			.filter((x) => x.subnetId.toString() == defaultSubnetId)
+			.filter((x) => x.netUid.toString() == defaultSubnetId)
 			.map((x: SubnetHistory) => x.timestamp);
 	}, [subnetHistory]);
 	const series = useMemo(() => {
@@ -47,16 +47,16 @@ export const SubnetTaoRecycledHistoryChart = (
 
 		const subnets: any = {};
 		for (const subnet of subnetHistory.data) {
-			const { subnetId, raoRecycled } = subnet;
-			const subnetIdStr = subnetId.toString();
+			const { netUid, recycled } = subnet;
+			const subnetIdStr = netUid.toString();
 
 			if (subnets[subnetIdStr]) {
-				subnets[subnetIdStr].data.push(raoRecycled);
+				subnets[subnetIdStr].data.push(recycled);
 			} else {
 				subnets[subnetIdStr] = {
 					name: subnetIdStr,
 					type: "line",
-					data: [raoRecycled],
+					data: [recycled],
 				};
 			}
 		}
@@ -74,14 +74,14 @@ export const SubnetTaoRecycledHistoryChart = (
 	}, [subnetHistory]);
 	const minValue = useMemo(() => {
 		return subnetHistory.data.reduce((min: number, cur: SubnetHistory) => {
-			const newMin = parseInt(cur.raoRecycled.toString());
+			const newMin = parseInt(cur.recycled.toString());
 			if (min === -1) return newMin;
 			return min < newMin ? min : newMin;
 		}, -1);
 	}, [subnetHistory]);
 	const maxValue = useMemo(() => {
 		return subnetHistory.data.reduce((max: number, cur: SubnetHistory) => {
-			const newMax = parseInt(cur.raoRecycled.toString());
+			const newMax = parseInt(cur.recycled.toString());
 			return max > newMax ? max : newMax;
 		}, 0);
 	}, [subnetHistory]);

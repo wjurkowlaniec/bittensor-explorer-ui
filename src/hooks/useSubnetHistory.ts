@@ -27,12 +27,11 @@ export function useSubnetHistory(subnetId: string): SubnetHistoryResponse {
 			while (!finished) {
 				const stats: SubnetHistoryPaginatedResponse = await getSubnetHistory(
 					{
-						subnetId: {
+						netUid: {
 							equalTo: parseInt(subnetId),
 						},
 					},
 					"HEIGHT_ASC",
-					undefined,
 					after,
 					limit
 				);

@@ -5,6 +5,7 @@ import { Subnet } from "../../model/subnet";
 import { formatNumber, rawAmountToDecimal } from "../../utils/number";
 import { Time } from "../Time";
 import { Link } from "../Link";
+import { NETWORK_CONFIG } from "../../config";
 
 export type SubnetInfoTableProps = {
 	info: Resource<Subnet>;
@@ -24,6 +25,10 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 			notFoundMessage="No subnet found"
 			error={info.error}
 		>
+			<SubnetInfoTableAttribute
+				label="Github"
+				render={() => <Link to={additional.github}>{additional.github}</Link>}
+			/>
 			<SubnetInfoTableAttribute
 				label="Reg date"
 				render={() => (
@@ -45,8 +50,18 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 				)}
 			/>
 			<SubnetInfoTableAttribute
-				label="Github"
-				render={() => <Link to={additional.github}>{additional.github}</Link>}
+				label="Registration Cost"
+				render={() => (
+					<div>
+						{formatNumber(
+							rawAmountToDecimal(info?.data?.regCost?.toString()).toNumber(),
+							{
+								decimalPlaces: 2,
+							}
+						)}{" "}
+						{NETWORK_CONFIG.currency}
+					</div>
+				)}
 			/>
 		</InfoTable>
 	);

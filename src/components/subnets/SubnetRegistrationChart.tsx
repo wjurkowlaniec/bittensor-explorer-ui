@@ -1,0 +1,223 @@
+/** @jsxImportSource @emotion/react */
+import { css, useTheme } from "@emotion/react";
+import Chart from "react-apexcharts";
+
+import LoadingSpinner from "../../assets/loading.svg";
+import { useMemo } from "react";
+import { rawAmountToDecimal } from "../../utils/number";
+import {
+	SubnetRegCostHistory,
+	SubnetRegCostHistoryResponse,
+} from "../../model/subnet";
+import { NETWORK_CONFIG } from "../../config";
+
+const spinnerContainer = css`
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+`;
+
+export type SubnetRegistrationChartProps = {
+	subnetRegCostHistory: SubnetRegCostHistoryResponse;
+};
+
+export const SubnetRegistrationChart = (
+	props: SubnetRegistrationChartProps
+) => {
+	const theme = useTheme();
+
+	const { subnetRegCostHistory } = props;
+
+	const loading = subnetRegCostHistory.loading;
+	const timestamps = useMemo(() => {
+		if (!subnetRegCostHistory.data) return [];
+		const resp: string[] = (subnetRegCostHistory.data as any).reduce(
+			(prev: string[], cur: SubnetRegCostHistory) => [...prev, cur.timestamp],
+			[]
+		);
+		return resp;
+	}, [subnetRegCostHistory]);
+	const series = useMemo(() => {
+		if (!subnetRegCostHistory.data) return [];
+		const resp: number[] = (subnetRegCostHistory.data as any).reduce(
+			(prev: number[], cur: SubnetRegCostHistory) => [
+				...prev,
+				rawAmountToDecimal(cur.regCost.toString()).toNumber(),
+			],
+			[]
+		);
+		return resp;
+	}, [subnetRegCostHistory]);
+	const minValue = useMemo(() => {
+		return subnetRegCostHistory.data.reduce(
+			(min: number, cur: SubnetRegCostHistory) => {
+				const newMin = rawAmountToDecimal(cur.regCost.toString()).toNumber();
+				if (min === -1) return newMin;
+				return min < newMin ? min : newMin;
+			},
+			-1
+		);
+	}, [subnetRegCostHistory]);
+	const maxValue = useMemo(() => {
+		return subnetRegCostHistory.data.reduce(
+			(max: number, cur: SubnetRegCostHistory) => {
+				const newMax = rawAmountToDecimal(cur.regCost.toString()).toNumber();
+				return max > newMax ? max : newMax;
+			},
+			0
+		);
+	}, [subnetRegCostHistory]);
+
+	return loading ? (
+		<div css={spinnerContainer}>
+			<img src={LoadingSpinner} />
+		</div>
+	) : (
+		<Chart
+			height={400}
+			series={[
+				{
+					name: `Cost (${NETWORK_CONFIG.currency})`,
+					type: "line",
+					data: series,
+				},
+			]}
+			options={{
+				chart: {
+					animations: {
+						enabled: false,
+					},
+					background: "#1a1a1a",
+					toolbar: {
+						show: true,
+						offsetX: 0,
+						offsetY: 0,
+						autoSelected: "pan",
+						tools: {
+							selection: true,
+							zoom: true,
+							zoomin: true,
+							zoomout: true,
+							pan: true,
+						},
+						export: {
+							csv: {
+								filename: "subnet-registration-data",
+								headerCategory: "Date",
+							},
+							png: {
+								filename: "subnet-registration-data",
+							},
+							svg: {
+								filename: "subnet-registration-data",
+							},
+						},
+					},
+					zoom: {
+						enabled: true,
+					},
+				},
+				colors: ["#14DEC2"],
+				dataLabels: {
+					enabled: false,
+				},
+				grid: {
+					show: false,
+				},
+				labels: timestamps,
+				markers: {
+					size: 0,
+				},
+				noData: {
+					text: "No subnet registration data yet",
+					align: "center",
+					verticalAlign: "middle",
+					offsetX: 0,
+					offsetY: 0,
+					style: {
+						color: "#FFFFFF",
+					},
+				},
+				responsive: [
+					{
+						breakpoint: 767,
+						options: {
+							chart: {
+								height: 320,
+							},
+						},
+					},
+					{
+						breakpoint: 599,
+						options: {
+							chart: {
+								height: 270,
+							},
+						},
+					},
+				],
+				stroke: {
+					curve: "smooth",
+					width: 2,
+				},
+				tooltip: {
+					theme: "dark",
+					shared: true,
+					intersect: false,
+					x: {
+						formatter: (val: number) => {
+							const day = new Date(val);
+							const options: Intl.DateTimeFormatOptions = {
+								day: "2-digit",
+								month: "short",
+								year: "2-digit",
+								hour: "numeric",
+								minute: "numeric",
+							};
+							const formattedDate = day.toLocaleDateString("en-US", options);
+							return formattedDate;
+						},
+					},
+				},
+				xaxis: {
+					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
+						show: false,
+					},
+					labels: {
+						style: {
+							fontSize: "11px",
+							colors: "#7F7F7F",
+						},
+					},
+					type: "datetime",
+				},
+				yaxis: {
+					decimalsInFloat: 2,
+					labels: {
+						style: {
+							colors: theme.palette.success.main,
+						},
+					},
+					title: {
+						text: `Cost (${NETWORK_CONFIG.currency})`,
+						style: {
+							color: theme.palette.success.main,
+						},
+					},
+					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
+						show: false,
+					},
+					min: minValue,
+					max: maxValue,
+				},
+			}}
+		/>
+	);
+};

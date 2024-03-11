@@ -5,13 +5,13 @@ import Chart from "react-apexcharts";
 import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
 import {
-	formatNumber,
-	formatNumberWithPrecision,
+	formatCurrency,
 	rawAmountToDecimal,
 	zeroPad,
 } from "../../utils/number";
 import { SubnetHistory, SubnetHistoryResponse } from "../../model/subnet";
 import subnetsJson from "../../subnets.json";
+import { NETWORK_CONFIG } from "../../config";
 const subnetsObj = subnetsJson as Record<string, Record<string, string>>;
 
 const spinnerContainer = css`
@@ -21,74 +21,67 @@ const spinnerContainer = css`
 	justify-content: center;
 `;
 
-export type SubnetEmissionsHistoryChartProps = {
+export type SubnetTaoRecycled24HHistoryChartProps = {
 	subnetHistory: SubnetHistoryResponse;
+	subnetId: string;
 };
 
-export const SubnetEmissionsHistoryChart = (
-	props: SubnetEmissionsHistoryChartProps
+export const SubnetTaoRecycled24HHistoryChart = (
+	props: SubnetTaoRecycled24HHistoryChartProps
 ) => {
 	const theme = useTheme();
 
-	const { subnetHistory } = props;
+	const { subnetHistory, subnetId } = props;
+	const { currency } = NETWORK_CONFIG;
 
 	const loading = subnetHistory.loading;
 	const timestamps = useMemo(() => {
 		if (!subnetHistory.data) return [];
-		const resp: string[] = (subnetHistory.data as any).reduce(
-			(prev: string[], cur: SubnetHistory) => {
-				if (prev.find((x) => x === cur.timestamp) === undefined)
-					prev.push(cur.timestamp);
-				return prev;
-			},
-			[]
-		);
-		return resp;
+		const defaultSubnetId = subnetHistory.data[0]?.netUid.toString();
+		return subnetHistory.data
+			.filter((x) => x.netUid.toString() == defaultSubnetId)
+			.map((x: SubnetHistory) => x.timestamp);
 	}, [subnetHistory]);
 	const series = useMemo(() => {
 		if (!subnetHistory.data) return [];
 
-		const subnets: any[] = [];
+		const subnets: any = {};
 		for (const subnet of subnetHistory.data) {
-			const { netUid, timestamp, emission } = subnet;
+			const { netUid, recycled24H } = subnet;
 			const subnetIdStr = netUid.toString();
 
-			let subnetIdx = subnets.findIndex((x) => x.id == subnetIdStr);
-			if (subnetIdx === -1) {
-				subnets.push({
-					name:
-						zeroPad(subnetIdStr, 2) +
-						": " +
-						(subnetsObj[subnetIdStr]?.name || "Unknown"),
-					id: subnetIdStr,
+			if (subnets[subnetIdStr]) {
+				subnets[subnetIdStr].data.push(recycled24H);
+			} else {
+				subnets[subnetIdStr] = {
+					name: subnetIdStr,
 					type: "line",
-					data: [],
-				});
-				subnetIdx = subnets.length - 1;
+					data: [recycled24H],
+				};
 			}
-			subnets[subnetIdx].data.push({
-				x: timestamp,
-				y: emission,
-			});
 		}
 
-		const result: any[] = [];
-		subnetHistory.ids.forEach((id) => {
-			const subnet = subnets.find((x) => x.id == id);
-			result.push(subnet);
-		});
+		const result: any = [];
+		for (const x in subnets) {
+			subnets[x].name =
+				zeroPad(subnets[x].name, 2) +
+				": " +
+				(subnetsObj[subnets[x].name]?.name || "Unknown");
+			result.push(subnets[x]);
+		}
+
 		return result;
 	}, [subnetHistory]);
 	const minValue = useMemo(() => {
 		return subnetHistory.data.reduce((min: number, cur: SubnetHistory) => {
-			const newMin = parseInt(cur.emission.toString());
+			const newMin = parseInt(cur.recycled24H.toString());
 			if (min === -1) return newMin;
 			return min < newMin ? min : newMin;
 		}, -1);
 	}, [subnetHistory]);
 	const maxValue = useMemo(() => {
 		return subnetHistory.data.reduce((max: number, cur: SubnetHistory) => {
-			const newMax = parseInt(cur.emission.toString());
+			const newMax = parseInt(cur.recycled24H.toString());
 			return max > newMax ? max : newMax;
 		}, 0);
 	}, [subnetHistory]);
@@ -121,14 +114,14 @@ export const SubnetEmissionsHistoryChart = (
 						},
 						export: {
 							csv: {
-								filename: "top-subnets",
+								filename: `subnet-${subnetId}`,
 								headerCategory: "Date",
 							},
 							png: {
-								filename: "top-subnets",
+								filename: `subnet-${subnetId}`,
 							},
 							svg: {
-								filename: "top-subnets",
+								filename: `subnet-${subnetId}`,
 							},
 						},
 					},
@@ -158,7 +151,7 @@ export const SubnetEmissionsHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: true,
+					show: false,
 					showForSingleSeries: true,
 					position: "top",
 					horizontalAlign: "right",
@@ -227,15 +220,9 @@ export const SubnetEmissionsHistoryChart = (
 					},
 					y: {
 						formatter: (val: number) =>
-							(val >= 100000
-								? formatNumber(rawAmountToDecimal(val).toNumber() * 100, {
-									decimalPlaces: 2,
-								})
-								: formatNumberWithPrecision(
-									rawAmountToDecimal(val).toNumber() * 100,
-									1,
-									true
-								)) + "%",
+							formatCurrency(rawAmountToDecimal(val), "USD", {
+								decimalPlaces: 2,
+							}) + ` ${currency}`,
 					},
 				},
 				xaxis: {
@@ -261,18 +248,12 @@ export const SubnetEmissionsHistoryChart = (
 							colors: theme.palette.neutral.main,
 						},
 						formatter: (val: number) =>
-							(val >= 100000
-								? formatNumber(rawAmountToDecimal(val).toNumber() * 100, {
-									decimalPlaces: 2,
-								})
-								: formatNumberWithPrecision(
-									rawAmountToDecimal(val).toNumber() * 100,
-									1,
-									true
-								)) + "%",
+							formatCurrency(rawAmountToDecimal(val), "USD", {
+								decimalPlaces: 2,
+							}) + ` ${currency}`,
 					},
 					title: {
-						text: "EMISSION",
+						text: "TAO RECYCLED (24H)",
 						style: {
 							color: theme.palette.neutral.main,
 						},
