@@ -20,7 +20,7 @@ const regCostContainerStyle = () => css`
 	display: flex;
 	flex-direction: row;
 
-	& > div:first-child {
+	& > div:first-of-type {
 		flex: 1;
 	}
 `;
@@ -34,7 +34,7 @@ const regCostValueStyle = (theme: Theme) => css`
 	padding-left: 24px;
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
 
-	& > span:first-child {
+	& > span:first-of-type {
 		font-size: 13px;
 		color: ${theme.palette.secondary.dark};
 	}

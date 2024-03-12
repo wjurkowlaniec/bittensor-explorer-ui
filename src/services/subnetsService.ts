@@ -166,10 +166,10 @@ export async function getSubnetRegCostHistory(
 	limit = 100
 ): Promise<SubnetRegCostHistoryPaginatedResponse> {
 	const response = await fetchSubnets<{
-		registrationHistoricals: ResponseItems<SubnetRegCostHistory>;
+		subnetRegHistoricals: ResponseItems<SubnetRegCostHistory>;
 	}>(
-		`query($filter: RegistrationHistoricalFilter, $order: [RegistrationHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
-			registrationHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: SubnetRegHistoricalFilter, $order: [SubnetRegHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
+			subnetRegHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
 				nodes {
 					id
 					height
@@ -191,9 +191,9 @@ export async function getSubnetRegCostHistory(
 	);
 
 	return {
-		hasNextPage: response.registrationHistoricals?.pageInfo.hasNextPage,
-		endCursor: response.registrationHistoricals?.pageInfo.endCursor,
-		data: response.registrationHistoricals?.nodes,
+		hasNextPage: response.subnetRegHistoricals?.pageInfo.hasNextPage,
+		endCursor: response.subnetRegHistoricals?.pageInfo.endCursor,
+		data: response.subnetRegHistoricals?.nodes,
 	};
 }
 
