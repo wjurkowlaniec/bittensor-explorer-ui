@@ -4,15 +4,9 @@ import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
-import {
-	formatCurrency,
-	rawAmountToDecimal,
-	zeroPad,
-} from "../../utils/number";
+import { formatCurrency, rawAmountToDecimal } from "../../utils/number";
 import { SubnetHistory, SubnetHistoryResponse } from "../../model/subnet";
-import subnetsJson from "../../subnets.json";
 import { NETWORK_CONFIG } from "../../config";
-const subnetsObj = subnetsJson as Record<string, Record<string, string>>;
 
 const spinnerContainer = css`
 	display: flex;
@@ -50,23 +44,19 @@ export const SubnetTaoRecycledHistoryChart = (
 			const { netUid, recycled } = subnet;
 			const subnetIdStr = netUid.toString();
 
-			if (subnets[subnetIdStr]) {
-				subnets[subnetIdStr].data.push(recycled);
-			} else {
+			const data = rawAmountToDecimal(recycled.toString()).toNumber();
+			if (!subnets[subnetIdStr]) {
 				subnets[subnetIdStr] = {
-					name: subnetIdStr,
+					name: "",
 					type: "line",
-					data: [recycled],
+					data: [],
 				};
 			}
+			subnets[subnetIdStr].data.push(data);
 		}
 
 		const result: any = [];
 		for (const x in subnets) {
-			subnets[x].name =
-				zeroPad(subnets[x].name, 2) +
-				": " +
-				(subnetsObj[subnets[x].name]?.name || "Unknown");
 			result.push(subnets[x]);
 		}
 
@@ -74,14 +64,14 @@ export const SubnetTaoRecycledHistoryChart = (
 	}, [subnetHistory]);
 	const minValue = useMemo(() => {
 		return subnetHistory.data.reduce((min: number, cur: SubnetHistory) => {
-			const newMin = parseInt(cur.recycled.toString());
+			const newMin = rawAmountToDecimal(cur.recycled.toString()).toNumber();
 			if (min === -1) return newMin;
 			return min < newMin ? min : newMin;
 		}, -1);
 	}, [subnetHistory]);
 	const maxValue = useMemo(() => {
 		return subnetHistory.data.reduce((max: number, cur: SubnetHistory) => {
-			const newMax = parseInt(cur.recycled.toString());
+			const newMax = rawAmountToDecimal(cur.recycled.toString()).toNumber();
 			return max > newMax ? max : newMax;
 		}, 0);
 	}, [subnetHistory]);
@@ -198,17 +188,12 @@ export const SubnetTaoRecycledHistoryChart = (
 					theme: "dark",
 					shared: true,
 					intersect: false,
+					marker: {
+						show: false,
+					},
 					x: {
 						formatter: (val: number) => {
 							const day = new Date(val);
-							const lastDay = new Date();
-							lastDay.setDate(lastDay.getDate() + 1);
-							if (
-								day.getFullYear() === lastDay.getFullYear() &&
-								day.getMonth() === lastDay.getMonth() &&
-								day.getDate() === lastDay.getDate()
-							)
-								return "Now";
 							const options: Intl.DateTimeFormatOptions = {
 								day: "2-digit",
 								month: "short",
@@ -220,9 +205,7 @@ export const SubnetTaoRecycledHistoryChart = (
 					},
 					y: {
 						formatter: (val: number) =>
-							formatCurrency(rawAmountToDecimal(val), "USD", {
-								decimalPlaces: 2,
-							}) + ` ${currency}`,
+							formatCurrency(val, "USD", { decimalPlaces: 2 }) + ` ${currency}`,
 					},
 				},
 				xaxis: {
@@ -242,15 +225,11 @@ export const SubnetTaoRecycledHistoryChart = (
 				},
 				yaxis: {
 					opposite: true,
-					decimalsInFloat: 3,
+					decimalsInFloat: 0,
 					labels: {
 						style: {
 							colors: theme.palette.neutral.main,
 						},
-						formatter: (val: number) =>
-							formatCurrency(rawAmountToDecimal(val), "USD", {
-								decimalPlaces: 2,
-							}) + ` ${currency}`,
 					},
 					title: {
 						text: "TAO RECYCLED",
