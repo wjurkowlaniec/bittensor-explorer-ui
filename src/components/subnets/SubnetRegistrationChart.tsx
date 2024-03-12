@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
-import { rawAmountToDecimal } from "../../utils/number";
+import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
 	SubnetRegCostHistory,
 	SubnetRegCostHistoryResponse,
@@ -78,7 +78,7 @@ export const SubnetRegistrationChart = (
 			height={400}
 			series={[
 				{
-					name: `Cost (${NETWORK_CONFIG.currency})`,
+					name: "Cost",
 					type: "line",
 					data: series,
 				},
@@ -179,6 +179,13 @@ export const SubnetRegistrationChart = (
 							return formattedDate;
 						},
 					},
+					y: {
+						formatter: (val: number) => {
+							return (
+								NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString()
+							);
+						},
+					},
 				},
 				xaxis: {
 					axisTicks: {
@@ -196,7 +203,7 @@ export const SubnetRegistrationChart = (
 					type: "datetime",
 				},
 				yaxis: {
-					decimalsInFloat: 2,
+					decimalsInFloat: 0,
 					labels: {
 						style: {
 							colors: theme.palette.success.main,
