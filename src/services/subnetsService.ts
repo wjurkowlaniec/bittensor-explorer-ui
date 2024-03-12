@@ -26,7 +26,9 @@ export type SubnetsOrder =
 	| "RAO_RECYCLED_ASC"
 	| "RAO_RECYCLED_DESC"
 	| "RAO_RECYCLED24H_ASC"
-	| "RAO_RECYCLED24H_DESC";
+	| "RAO_RECYCLED24H_DESC"
+	| "TIMESTAMP_ASC"
+	| "TIMESTAMP_DESC";
 
 export type SubnetHistoryOrder =
 	| "ID_ASC"

@@ -49,6 +49,10 @@ const orderMappings = {
 		[SortDirection.ASC]: "RECYCLED_BY_OWNER_ASC",
 		[SortDirection.DESC]: "RECYCLED_BY_OWNER_DESC",
 	},
+	timestamp: {
+		[SortDirection.ASC]: "TIMESTAMP_ASC",
+		[SortDirection.DESC]: "TIMESTAMP_DESC",
+	},
 };
 
 function SubnetsTable(props: SubnetsTableProps) {
@@ -154,11 +158,13 @@ function SubnetsTable(props: SubnetsTableProps) {
 			/>
 			<SubnetsTableAttribute
 				label="Created At (UTC)"
+				sortable
 				render={(subnet) =>
 					subnet.timestamp !== undefined && (
 						<Time time={subnet.timestamp} utc timezone={false} />
 					)
 				}
+				sortProperty="timestamp"
 			/>
 			<SubnetsTableAttribute
 				label="Owner"
