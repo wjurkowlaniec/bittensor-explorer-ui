@@ -63,26 +63,34 @@ function SubnetsTable(props: SubnetsTableProps) {
 
 	const rows = useMemo(() => {
 		if (!subnets || subnets.loading || !subnets.data) return [];
-		const { totalSum, daySum, ownerSum } = subnets.data.reduce(
+		const { id, totalSum, daySum, ownerSum } = subnets.data.reduce(
 			(
 				{
+					id,
 					totalSum,
 					daySum,
 					ownerSum,
-				}: { totalSum: bigint; daySum: bigint; ownerSum: bigint },
+				}: { id: string; totalSum: bigint; daySum: bigint; ownerSum: bigint },
 				subnet
 			) => {
 				return {
+					id,
 					totalSum: totalSum + BigInt(subnet.recycledLifetime),
 					daySum: daySum + BigInt(subnet.recycled24H),
 					ownerSum: ownerSum + BigInt(subnet.recycledByOwner),
 				};
 			},
-			{ totalSum: BigInt(0), daySum: BigInt(0), ownerSum: BigInt(0) }
+			{
+				id: "total",
+				totalSum: BigInt(0),
+				daySum: BigInt(0),
+				ownerSum: BigInt(0),
+			}
 		);
 		return [
 			...subnets.data,
 			{
+				id,
 				recycledLifetime: totalSum,
 				recycled24H: daySum,
 				recycledByOwner: ownerSum,
