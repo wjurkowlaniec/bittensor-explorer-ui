@@ -87,10 +87,10 @@ export const SubnetPage = () => {
 						<SubnetOwnersTable subnetOwners={subnetOwners} />
 					</TabPane>
 					<TabPane
-						label="Recycled"
+						label="Recycled (Lifetime)"
 						loading={subnetsHistory.loading}
 						error={!!subnetsHistory.error}
-						value="recycled"
+						value="recycled_lifetime"
 					>
 						<SubnetTaoRecycledHistoryChart
 							subnetHistory={subnetsHistory}
@@ -98,10 +98,10 @@ export const SubnetPage = () => {
 						/>
 					</TabPane>
 					<TabPane
-						label="Recycled (24H)"
+						label="Recycled (Daily)"
 						loading={subnetsHistory.loading}
 						error={!!subnetsHistory.error}
-						value="recycled_24h"
+						value="recycled_daily"
 					>
 						<SubnetTaoRecycled24HHistoryChart
 							subnetHistory={subnetsHistory}
