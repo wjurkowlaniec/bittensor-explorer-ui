@@ -226,6 +226,7 @@ export const SubnetTaoRecycledHistoryChart = (
 				yaxis: {
 					opposite: true,
 					decimalsInFloat: 0,
+					tickAmount: 5,
 					labels: {
 						style: {
 							colors: theme.palette.neutral.main,
