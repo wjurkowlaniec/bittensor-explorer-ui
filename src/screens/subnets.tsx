@@ -67,6 +67,7 @@ export const SubnetsPage = () => {
 				<div css={regCostContainerStyle}>
 					<SubnetRegistrationChart
 						subnetRegCostHistory={subnetRegCostHistory}
+						subnetStat={subnetStat}
 					/>
 					{subnetStat.loading ? (
 						<Spinner small />

@@ -8,8 +8,10 @@ import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
 	SubnetRegCostHistory,
 	SubnetRegCostHistoryResponse,
+	SubnetStat,
 } from "../../model/subnet";
 import { NETWORK_CONFIG } from "../../config";
+import { Resource } from "../../model/resource";
 
 const spinnerContainer = css`
 	display: flex;
@@ -20,6 +22,7 @@ const spinnerContainer = css`
 
 export type SubnetRegistrationChartProps = {
 	subnetRegCostHistory: SubnetRegCostHistoryResponse;
+	subnetStat: Resource<SubnetStat>;
 };
 
 export const SubnetRegistrationChart = (
@@ -27,19 +30,19 @@ export const SubnetRegistrationChart = (
 ) => {
 	const theme = useTheme();
 
-	const { subnetRegCostHistory } = props;
+	const { subnetRegCostHistory, subnetStat } = props;
 
-	const loading = subnetRegCostHistory.loading;
+	const loading = subnetRegCostHistory.loading || subnetStat.loading;
 	const timestamps = useMemo(() => {
-		if (!subnetRegCostHistory.data) return [];
+		if (loading) return [];
 		const resp: string[] = (subnetRegCostHistory.data as any).reduce(
 			(prev: string[], cur: SubnetRegCostHistory) => [...prev, cur.timestamp],
 			[]
 		);
-		return resp;
+		return [...resp, new Date().toISOString().substring(0, 19)];
 	}, [subnetRegCostHistory]);
 	const series = useMemo(() => {
-		if (!subnetRegCostHistory.data) return [];
+		if (loading) return [];
 		const resp: number[] = (subnetRegCostHistory.data as any).reduce(
 			(prev: number[], cur: SubnetRegCostHistory) => [
 				...prev,
@@ -47,25 +50,30 @@ export const SubnetRegistrationChart = (
 			],
 			[]
 		);
-		return resp;
+		return [
+			...resp,
+			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber(),
+		];
 	}, [subnetRegCostHistory]);
 	const minValue = useMemo(() => {
+		if (loading) return 0;
 		return subnetRegCostHistory.data.reduce(
 			(min: number, cur: SubnetRegCostHistory) => {
 				const newMin = rawAmountToDecimal(cur.regCost.toString()).toNumber();
 				if (min === -1) return newMin;
 				return min < newMin ? min : newMin;
 			},
-			-1
+			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber()
 		);
 	}, [subnetRegCostHistory]);
 	const maxValue = useMemo(() => {
+		if (loading) return 0;
 		return subnetRegCostHistory.data.reduce(
 			(max: number, cur: SubnetRegCostHistory) => {
 				const newMax = rawAmountToDecimal(cur.regCost.toString()).toNumber();
 				return max > newMax ? max : newMax;
 			},
-			0
+			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber()
 		);
 	}, [subnetRegCostHistory]);
 
