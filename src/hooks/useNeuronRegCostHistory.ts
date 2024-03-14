@@ -25,6 +25,9 @@ export function useNeuronRegCostHistory(
 			let finished = false;
 			let after: string | undefined = undefined;
 
+			const now = Date.now();
+			const from = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
+
 			const result: NeuronRegCostHistory[] = [];
 			while (!finished) {
 				const regCost: NeuronRegCostHistoryPaginatedResponse =
@@ -32,6 +35,9 @@ export function useNeuronRegCostHistory(
 						{
 							netUid: {
 								equalTo: parseInt(id),
+							},
+							timestamp: {
+								greaterThan: new Date(from).toISOString().substring(0, 19),
 							},
 						},
 						"HEIGHT_ASC",

@@ -110,11 +110,11 @@ export const SubnetPage = () => {
 				<TabbedContent defaultTab={tab.slice(1).toString()}>
 					<TabPane
 						label="Registration"
-						loading={subnetOwners.loading}
-						error={!!subnetOwners.error}
+						loading={neuronRegCostHistory.loading}
+						error={!!neuronRegCostHistory.error}
 						value="registration"
 					>
-						<CardHeader>SUBNET REGISTRATION DATA</CardHeader>
+						<CardHeader>NEURON REGISTRATION DATA</CardHeader>
 						<div css={regCostContainerStyle}>
 							<NeuronRegistrationChart
 								neuronRegCostHistory={neuronRegCostHistory}

@@ -211,7 +211,7 @@ export const NeuronRegistrationChart = (
 					type: "datetime",
 				},
 				yaxis: {
-					decimalsInFloat: 0,
+					decimalsInFloat: 2,
 					labels: {
 						style: {
 							colors: theme.palette.success.main,
