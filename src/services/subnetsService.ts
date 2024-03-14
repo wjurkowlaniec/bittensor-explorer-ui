@@ -7,6 +7,8 @@ import {
 	SubnetRegCostHistory,
 	SubnetRegCostHistoryPaginatedResponse,
 	SubnetStat,
+	NeuronRegCostHistory,
+	NeuronRegCostHistoryPaginatedResponse,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -31,6 +33,12 @@ export type SubnetsOrder =
 	| "TIMESTAMP_DESC";
 
 export type SubnetHistoryOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "HEIGHT_ASC"
+	| "HEIGHT_DESC";
+
+export type NeuronHistoryOrder =
 	| "ID_ASC"
 	| "ID_DESC"
 	| "HEIGHT_ASC"
@@ -194,6 +202,45 @@ export async function getSubnetRegCostHistory(
 		hasNextPage: response.subnetRegHistoricals?.pageInfo.hasNextPage,
 		endCursor: response.subnetRegHistoricals?.pageInfo.endCursor,
 		data: response.subnetRegHistoricals?.nodes,
+	};
+}
+
+export async function getNeuronRegCostHistory(
+	filter?: object,
+	order: NeuronHistoryOrder = "ID_ASC",
+	after?: string,
+	limit = 100
+): Promise<NeuronRegCostHistoryPaginatedResponse> {
+	const response = await fetchSubnets<{
+		neuronRegHistoricals: ResponseItems<NeuronRegCostHistory>;
+	}>(
+		`query($filter: NeuronRegHistoricalFilter, $order: [NeuronRegHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
+			neuronRegHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					height
+					regCost
+					timestamp
+					netUid
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			first: limit,
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.neuronRegHistoricals?.pageInfo.hasNextPage,
+		endCursor: response.neuronRegHistoricals?.pageInfo.endCursor,
+		data: response.neuronRegHistoricals?.nodes,
 	};
 }
 

@@ -13,6 +13,11 @@ import SubnetOwnersTable from "../components/subnets/SubnetOwnersTable";
 import { useEffect } from "react";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
 import { SubnetTaoRecycled24HHistoryChart } from "../components/subnets/SubnetTaoRecycled24HHistoryChart";
+import Spinner from "../components/Spinner";
+import { formatNumber, rawAmountToDecimal } from "../utils/number";
+import { NETWORK_CONFIG } from "../config";
+import { useNeuronRegCostHistory } from "../hooks/useNeuronRegCostHistory";
+import { NeuronRegistrationChart } from "../components/subnets/NeuronRegistrationChart";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -43,6 +48,30 @@ const subnetDescription = css`
 	font-size: 12px;
 `;
 
+const regCostContainerStyle = () => css`
+	display: flex;
+	flex-direction: row;
+
+	& > div:first-of-type {
+		flex: 1;
+	}
+`;
+
+const regCostValueStyle = (theme: Theme) => css`
+	display: flex;
+	flex-direction: column;
+	width: 200px;
+	gap: 10px;
+	margin-left: 24px;
+	padding-left: 24px;
+	border-left: 1px solid rgba(255, 255, 255, 0.1);
+
+	& > span:first-of-type {
+		font-size: 13px;
+		color: ${theme.palette.secondary.dark};
+	}
+`;
+
 export type SubnetPageParams = {
 	id: string;
 };
@@ -53,6 +82,7 @@ export const SubnetPage = () => {
 	const subnet = useSubnet({ id: { equalTo: id } });
 	const subnetsHistory = useSubnetHistory(id);
 	const subnetOwners = useSubnetOwners(id);
+	const neuronRegCostHistory = useNeuronRegCostHistory(id);
 
 	useDOMEventTrigger("data-loaded", !subnet.loading);
 
@@ -68,7 +98,7 @@ export const SubnetPage = () => {
 
 	return (
 		<>
-			<Card data-test="subnets-info">
+			<Card data-test="subnet-info">
 				<CardHeader css={subnetHeader}>
 					<div css={subnetTitle}>Subnet</div>
 					<div css={subnetName}>{subnetObj.name || "Unknown"}</div>
@@ -76,7 +106,43 @@ export const SubnetPage = () => {
 				<div css={subnetDescription}>{subnetObj.description}</div>
 				<SubnetInfoTable info={subnet} additional={subnetObj} />
 			</Card>
-			<Card data-test="subnets-table">
+			<Card data-test="subnet-metagraph">
+				<TabbedContent defaultTab={tab.slice(1).toString()}>
+					<TabPane
+						label="Registration"
+						loading={subnetOwners.loading}
+						error={!!subnetOwners.error}
+						value="registration"
+					>
+						<CardHeader>SUBNET REGISTRATION DATA</CardHeader>
+						<div css={regCostContainerStyle}>
+							<NeuronRegistrationChart
+								neuronRegCostHistory={neuronRegCostHistory}
+								subnet={subnet}
+							/>
+							{subnet.loading ? (
+								<Spinner small />
+							) : (
+								<div css={regCostValueStyle}>
+									<span>Current Registration Cost</span>
+									<span>
+										{formatNumber(
+											rawAmountToDecimal(
+												subnet.data?.regCost?.toString()
+											).toNumber(),
+											{
+												decimalPlaces: 2,
+											}
+										)}
+										{NETWORK_CONFIG.currency}
+									</span>
+								</div>
+							)}
+						</div>
+					</TabPane>
+				</TabbedContent>
+			</Card>
+			<Card data-test="subnet-tables">
 				<TabbedContent defaultTab={tab.slice(1).toString()}>
 					<TabPane
 						label="Owners"

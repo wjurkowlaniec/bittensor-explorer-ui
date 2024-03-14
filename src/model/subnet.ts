@@ -53,7 +53,6 @@ export type SubnetRegCostHistoryResponse = {
 	loading: boolean;
 	error?: DataError;
 	data: SubnetRegCostHistory[];
-	ids: number[];
 };
 
 export type SubnetOwner = {
@@ -80,4 +79,23 @@ export type SubnetStat = {
 	height: bigint;
 	regCost: bigint;
 	timestamp: string;
+};
+
+export type NeuronRegCostHistory = {
+	height: bigint;
+	timestamp: string;
+	regCost: bigint;
+	netUid: number;
+};
+
+export type NeuronRegCostHistoryPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: NeuronRegCostHistory[];
+};
+
+export type NeuronRegCostHistoryResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: NeuronRegCostHistory[];
 };

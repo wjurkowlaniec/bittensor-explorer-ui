@@ -1,18 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
-import { getSubnetRegCostHistory } from "../services/subnetsService";
+import { getNeuronRegCostHistory } from "../services/subnetsService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
 import {
-	SubnetRegCostHistory,
-	SubnetRegCostHistoryPaginatedResponse,
-	SubnetRegCostHistoryResponse,
+	NeuronRegCostHistory,
+	NeuronRegCostHistoryPaginatedResponse,
+	NeuronRegCostHistoryResponse,
 } from "../model/subnet";
 
-export function useSubnetRegCostHistory(): SubnetRegCostHistoryResponse {
+export function useNeuronRegCostHistory(
+	id: string
+): NeuronRegCostHistoryResponse {
 	const rollbar = useRollbar();
 
-	const [data, setData] = useState<SubnetRegCostHistory[]>([]);
+	const [data, setData] = useState<NeuronRegCostHistory[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
 
@@ -23,10 +25,19 @@ export function useSubnetRegCostHistory(): SubnetRegCostHistoryResponse {
 			let finished = false;
 			let after: string | undefined = undefined;
 
-			const result: SubnetRegCostHistory[] = [];
+			const result: NeuronRegCostHistory[] = [];
 			while (!finished) {
-				const regCost: SubnetRegCostHistoryPaginatedResponse =
-					await getSubnetRegCostHistory(undefined, "HEIGHT_ASC", after, limit);
+				const regCost: NeuronRegCostHistoryPaginatedResponse =
+					await getNeuronRegCostHistory(
+						{
+							netUid: {
+								equalTo: parseInt(id),
+							},
+						},
+						"HEIGHT_ASC",
+						after,
+						limit
+					);
 				result.push(...regCost.data);
 				finished = !regCost.hasNextPage;
 				after = regCost.endCursor;
