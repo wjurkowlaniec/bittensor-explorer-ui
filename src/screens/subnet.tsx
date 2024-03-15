@@ -114,7 +114,7 @@ export const SubnetPage = () => {
 						error={!!neuronRegCostHistory.error}
 						value="registration"
 					>
-						<CardHeader>NEURON REGISTRATION DATA</CardHeader>
+						<CardHeader>REGISTRATION DATA</CardHeader>
 						<div css={regCostContainerStyle}>
 							<NeuronRegistrationChart
 								neuronRegCostHistory={neuronRegCostHistory}
