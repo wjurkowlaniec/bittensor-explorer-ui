@@ -99,3 +99,26 @@ export type NeuronRegCostHistoryResponse = {
 	error?: DataError;
 	data: NeuronRegCostHistory[];
 };
+
+export type NeuronMetagraph = {
+	id: string;
+	active: boolean;
+	axonIp: bigint;
+	axonPort: number;
+	coldkey: string;
+	consensus: number;
+	dailyReward: bigint;
+	dividends: number;
+	emission: bigint;
+	hotkey: string;
+	incentive: number;
+	lastUpdate: number;
+	netUid: number;
+	rank: number;
+	stake: bigint;
+	totalReward: bigint;
+	uid: number;
+	trust: number;
+	validatorPermit: any;
+	validatorTrust: number;
+};

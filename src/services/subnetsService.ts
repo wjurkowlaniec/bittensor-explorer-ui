@@ -9,6 +9,7 @@ import {
 	SubnetStat,
 	NeuronRegCostHistory,
 	NeuronRegCostHistoryPaginatedResponse,
+	NeuronMetagraph,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -17,6 +18,7 @@ import { extractItems } from "../utils/extractItems";
 import { fetchIndexer, fetchSubnets } from "./fetchService";
 
 export type SubnetsFilter = object;
+export type NeuronMetagraphFilter = object;
 
 export type SubnetsOrder =
 	| "ID_ASC"
@@ -49,6 +51,51 @@ export type SubnetOwnerOrder =
 	| "ID_DESC"
 	| "HEIGHT_ASC"
 	| "HEIGHT_DESC";
+
+export type NeuronMetagraphOrder =
+	| "ACTIVE_ASC"
+	| "ACTIVE_DESC"
+	| "AXON_IP_ASC"
+	| "AXON_IP_DESC"
+	| "AXON_PORT_ASC"
+	| "AXON_PORT_DESC"
+	| "COLDKEY_ASC"
+	| "COLDKEY_DESC"
+	| "CONSENSUS_ASC"
+	| "CONSENSUS_DESC"
+	| "DAILY_REWARD_ASC"
+	| "DAILY_REWARD_DESC"
+	| "DIVIDENDS_ASC"
+	| "DIVIDENDS_DESC"
+	| "EMISSION_ASC"
+	| "EMISSION_DESC"
+	| "HOTKEY_ASC"
+	| "HOTKEY_DESC"
+	| "ID_ASC"
+	| "ID_DESC"
+	| "INCENTIVE_ASC"
+	| "INCENTIVE_DESC"
+	| "LAST_UPDATE_ASC"
+	| "LAST_UPDATE_DESC"
+	| "NET_UID_ASC"
+	| "NET_UID_DESC"
+	| "PRIMARY_KEY_ASC"
+	| "PRIMARY_KEY_DESC"
+	| "RANK_ASC"
+	| "RANK_DESC"
+	| "STAKE_ASC"
+	| "STAKE_DESC"
+	| "TOTAL_REWARD_ASC"
+	| "TOTAL_REWARD_DESC"
+	| "TRUST_ASC"
+	| "TRUST_DESC"
+	| "UID_ASC"
+	| "UID_DESC"
+	| "VALIDATOR_PERMIT_ASC"
+	| "VALIDATOR_PERMIT_DESC"
+	| "VALIDATOR_TRUST_ASC"
+	| "VALIDATOR_TRUST_DESC";
+
 export async function getSubnet(filter: SubnetsFilter | undefined) {
 	const response = await fetchSubnets<{ subnets: ResponseItems<Subnet> }>(
 		`query ($filter: SubnetFilter) {
@@ -300,6 +347,57 @@ export async function getSubnetStat(id: string) {
 	return response.subnetStat;
 }
 
+export async function getNeuronMetagraph(
+	filter: NeuronMetagraphFilter | undefined,
+	order: NeuronMetagraphOrder = "ID_DESC",
+	pagination: PaginationOptions
+) {
+	const response = await fetchSubnets<{
+		neuronInfos: ResponseItems<NeuronMetagraph>;
+	}>(
+		`query ($first: Int!, $after: Cursor, $filter: NeuronInfoFilter, $order: [NeuronInfosOrderBy!]!) {
+			neuronInfos(first: $first, after: $after, filter: $filter, orderBy: $order) {
+				nodes {
+					id
+					active
+					axonIp
+					axonPort
+					coldkey
+					consensus
+					dailyReward
+					dividends
+					emission
+					hotkey
+					incentive
+					lastUpdate
+					netUid
+					rank
+					stake
+					totalReward
+					uid
+					trust
+					validatorPermit
+					validatorTrust
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				${pagination.after === undefined ? "totalCount" : ""}
+			}
+		}`,
+		{
+			after: pagination.after,
+			first: pagination.limit,
+			filter,
+			order,
+		}
+	);
+
+	return extractItems(response.neuronInfos, pagination, transformMetagraph);
+}
+
 function addSubnetName<T extends { netUid: number; name?: string }>(
 	subnet: T,
 	subnetNames: Record<string, Record<string, string>>
@@ -307,3 +405,7 @@ function addSubnetName<T extends { netUid: number; name?: string }>(
 	const name = subnetNames[subnet.netUid]?.name || "Unknown";
 	return { ...subnet, name } as T;
 }
+
+const transformMetagraph = (metagraph: NeuronMetagraph): NeuronMetagraph => {
+	return metagraph;
+};

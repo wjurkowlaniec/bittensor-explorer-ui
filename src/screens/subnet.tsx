@@ -10,7 +10,7 @@ import { useSubnet } from "../hooks/useSubnet";
 import { SubnetTaoRecycledHistoryChart } from "../components/subnets/SubnetTaoRecycledHistoryChart";
 import { useSubnetOwners } from "../hooks/useSubnetOwners";
 import SubnetOwnersTable from "../components/subnets/SubnetOwnersTable";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
 import { SubnetTaoRecycled24HHistoryChart } from "../components/subnets/SubnetTaoRecycled24HHistoryChart";
 import Spinner from "../components/Spinner";
@@ -18,6 +18,11 @@ import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import { NETWORK_CONFIG } from "../config";
 import { useNeuronRegCostHistory } from "../hooks/useNeuronRegCostHistory";
 import { NeuronRegistrationChart } from "../components/subnets/NeuronRegistrationChart";
+import { NeuronMetagraphOrder } from "../services/subnetsService";
+import NeuronMetagraphTable from "../components/subnets/NeuronMetagraphTable";
+import { useNeuronMetagraph } from "../hooks/useNeuronMetagraph";
+import CheckShield from "../assets/check-shield.svg";
+import Certification from "../assets/certification.svg";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -72,6 +77,19 @@ const regCostValueStyle = (theme: Theme) => css`
 	}
 `;
 
+const metagraphComment = () => css`
+	font-size: 13px;
+	margin-left: 20px;
+	margin-bottom: 25px;
+`;
+
+const validatorComment = () => css`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
+`;
+
 export type SubnetPageParams = {
 	id: string;
 };
@@ -83,6 +101,14 @@ export const SubnetPage = () => {
 	const subnetsHistory = useSubnetHistory(id);
 	const subnetOwners = useSubnetOwners(id);
 	const neuronRegCostHistory = useNeuronRegCostHistory(id);
+
+	const neuronMetagraphInitialOrder: NeuronMetagraphOrder = "STAKE_DESC";
+	const [neuronMetagraphSort, setNeuronMetagraphSort] =
+		useState<NeuronMetagraphOrder>(neuronMetagraphInitialOrder);
+	const neuronMetagraph = useNeuronMetagraph(
+		{ netUid: { equalTo: parseInt(id) } },
+		neuronMetagraphSort
+	);
 
 	useDOMEventTrigger("data-loaded", !subnet.loading);
 
@@ -108,6 +134,31 @@ export const SubnetPage = () => {
 			</Card>
 			<Card data-test="subnet-metagraph">
 				<TabbedContent defaultTab={tab.slice(1).toString()}>
+					<TabPane
+						label="Metagraph"
+						loading={subnetOwners.loading}
+						error={!!subnetOwners.error}
+						value="metagraph"
+					>
+						<div css={metagraphComment}>
+							<div>Click on any UID for detailed stats.</div>
+							<div css={validatorComment}>
+								<img src={CheckShield} />
+								<span>are validators.</span>
+							</div>
+							<div css={validatorComment}>
+								<img src={Certification} />
+								<span>are keys in immunity.</span>
+							</div>
+						</div>
+						<NeuronMetagraphTable
+							metagraph={neuronMetagraph}
+							onSortChange={(sortKey: NeuronMetagraphOrder) =>
+								setNeuronMetagraphSort(sortKey)
+							}
+							initialSort={neuronMetagraphInitialOrder}
+						/>
+					</TabPane>
 					<TabPane
 						label="Registration"
 						loading={neuronRegCostHistory.loading}

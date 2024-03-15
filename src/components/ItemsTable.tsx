@@ -33,134 +33,134 @@ import { download, generateCsv, mkConfig } from "export-to-csv";
 import LoadingSpinner from "../assets/loading.svg";
 
 const tableStyle = css`
-  table-layout: auto;
-  width: max-content;
-  min-width: 100%;
+	table-layout: auto;
+	width: max-content;
+	min-width: 100%;
 
-  & > thead > tr > th,
-  & > tbody > tr > td {
-    border: none !important;
-  }
+	& > thead > tr > th,
+	& > tbody > tr > td {
+		border: none !important;
+	}
 
-  & > tbody > tr {
-    background-color: #1a1a1a;
-  }
+	& > tbody > tr {
+		background-color: #1a1a1a;
+	}
 
-  & > tbody > tr:nth-of-type(odd) {
-    background-color: rgba(18, 18, 18, 0.86);
-    -webkit-box-shadow: inset 0 0 8px 0 rgba(255, 255, 255, 0.05);
-    -moz-box-shadow: inset 0 0 8px 0 rgba(255, 255, 255, 0.05);
-    box-shadow: inset 0 0 8px 0 rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-  }
+	& > tbody > tr:nth-of-type(odd) {
+		background-color: rgba(18, 18, 18, 0.86);
+		-webkit-box-shadow: inset 0 0 8px 0 rgba(255, 255, 255, 0.05);
+		-moz-box-shadow: inset 0 0 8px 0 rgba(255, 255, 255, 0.05);
+		box-shadow: inset 0 0 8px 0 rgba(255, 255, 255, 0.05);
+		border-radius: 4px;
+	}
 
-  & > thead > tr > th:first-of-type,
-  & > tbody > tr > td:first-of-type {
-    padding-left: 20px;
-  }
+	& > thead > tr > th:first-of-type,
+	& > tbody > tr > td:first-of-type {
+		padding-left: 20px;
+	}
 
-  & > thead > tr > th:last-child,
-  & > tbody > tr > td:last-child {
-    padding-right: 20px;
-  }
+	& > thead > tr > th:last-child,
+	& > tbody > tr > td:last-child {
+		padding-right: 20px;
+	}
 `;
 
 const cellStyle = (theme: Theme) => css`
-  word-break: break-all;
-  border: none;
-  color: ${theme.palette.secondary.dark};
+	word-break: break-all;
+	border: none;
+	color: ${theme.palette.secondary.dark};
 
-  &:first-of-type {
-    padding-left: 0;
-  }
+	&:first-of-type {
+		padding-left: 0;
+	}
 
-  &:last-of-type {
-    padding-right: 0;
-  }
+	&:last-of-type {
+		padding-right: 0;
+	}
 `;
 
 const activeHeader = (theme: Theme) => css`
-  color: ${theme.palette.secondary.light} !important;
+	color: ${theme.palette.secondary.light} !important;
 `;
 
 const sortableHeaderBase = css`
-  cursor: pointer;
+	cursor: pointer;
 `;
 
 const sortableHeaderItem = css`
-  display: flex;
-  align-items: center;
-  gap: 4px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
 `;
 
 const sortArrows = css`
-  ::after,
-  ::bottom {
-    display: block;
-    line-height: 8px;
-    font-weight: 500;
-    opacity: 1;
-  }
+	::after,
+	::bottom {
+		display: block;
+		line-height: 8px;
+		font-weight: 500;
+		opacity: 1;
+	}
 
-  ::before {
-    content: "\\25B2";
-    font-size: 10px !important;
-  }
+	::before {
+		content: "\\25B2";
+		font-size: 10px !important;
+	}
 
-  ::after {
-    margin-left: -4px;
-    content: "\\25BC";
-    font-size: 10px !important;
-  }
+	::after {
+		margin-left: -4px;
+		content: "\\25BC";
+		font-size: 10px !important;
+	}
 `;
 
 const sortAsc = (theme: Theme) => css`
-  ::before {
-    color: ${theme.palette.secondary.light};
-  }
+	::before {
+		color: ${theme.palette.secondary.light};
+	}
 
-  ::after {
-    color: ${theme.palette.success.dark};
-  }
+	::after {
+		color: ${theme.palette.success.dark};
+	}
 `;
 
 const sortDesc = (theme: Theme) => css`
-  ::after {
-    color: ${theme.palette.secondary.light};
-  }
+	::after {
+		color: ${theme.palette.secondary.light};
+	}
 
-  ::before {
-    color: ${theme.palette.success.dark};
-  }
+	::before {
+		color: ${theme.palette.success.dark};
+	}
 `;
 
 const tableOptions = css`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: end;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: end;
 
-  @media (max-width: 767px) {
-    flex-direction: column;
-	align-items: start;
-  }
+	@media (max-width: 767px) {
+		flex-direction: column;
+		align-items: start;
+	}
 `;
 
 const tableFiltering = css`
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 `;
 
 const csvDownload = css`
-  text-align: right;
-  margin-bottom: 10px;
+	text-align: right;
+	margin-bottom: 10px;
 `;
 
 const spinnerStyle = css`
-  position: absolute;
-  top: 1px;
-  left: 2px;
-  width: 44px;
+	position: absolute;
+	top: 1px;
+	left: 2px;
+	width: 44px;
 `;
 
 type ItemsTableItem = {
@@ -247,6 +247,7 @@ export type ItemsTableProps<
 		| null
 	)[];
 	showRank?: boolean;
+	rankLabel?: string;
 	onSortChange?: (property: string | undefined) => void;
 	filterMappings?: any;
 	filter?: any;
@@ -276,6 +277,7 @@ export const ItemsTable = <
 		pagination,
 		children,
 		showRank,
+		rankLabel,
 		onSortChange,
 		filterMappings,
 		filter,
@@ -297,10 +299,9 @@ export const ItemsTable = <
 						size="small"
 						variant="outlined"
 						color="secondary"
-						style={{height: "48px"}}
+						style={{ height: "48px" }}
 						onClick={async () => {
-							if(isDownloading)
-								return;
+							if (isDownloading) return;
 							setDownloading(true);
 							const { columns, data, filename } = await getExportCSV();
 							const csvConfig = mkConfig({
@@ -313,7 +314,9 @@ export const ItemsTable = <
 						}}
 					>
 						{isDownloading && <img src={LoadingSpinner} css={spinnerStyle} />}
-						<span style={{marginLeft: isDownloading ? "24px": 0}}>Download CSV</span>
+						<span style={{ marginLeft: isDownloading ? "24px" : 0 }}>
+							Download CSV
+						</span>
 					</Button>
 				</div>
 			)}
@@ -321,17 +324,17 @@ export const ItemsTable = <
 				<div css={tableFiltering}>
 					{pagination && <TablePaginationHeader {...pagination} />}
 					{filterMappings &&
-					filter &&
-					Object.entries(filterMappings).map(([property, value], index) => (
-						<TableFilter
-							property={property}
-							filter={value}
-							value={filter[property][(value as any).operator]}
-							key={`filter-${property}-${index}`}
-							onFilterChange={onFilterChange}
-							pagination={pagination}
-						/>
-					))}
+						filter &&
+						Object.entries(filterMappings).map(([property, value], index) => (
+							<TableFilter
+								property={property}
+								filter={value}
+								value={filter[property][(value as any).operator]}
+								key={`filter-${property}-${index}`}
+								onFilterChange={onFilterChange}
+								pagination={pagination}
+							/>
+						))}
 				</div>
 				{search !== undefined && (
 					<TableSearch
@@ -359,7 +362,7 @@ export const ItemsTable = <
 					</colgroup>
 					<TableHead>
 						<TableRow>
-							{showRank ? <TableCell>Rank</TableCell> : <></>}
+							{showRank ? <TableCell>{rankLabel || "Rank"}</TableCell> : <></>}
 							{Children.map(children, (child) => {
 								if (!child) return null;
 								const { label, align, sortable, sortProperty } = child.props;
@@ -419,29 +422,29 @@ export const ItemsTable = <
 					</TableHead>
 					<TableBody>
 						{!loading &&
-						!notFound &&
-						!error &&
-						data?.map((item, index) => (
-							<TableRow key={item.id}>
-								{showRank ? (
-									<TableCell>
-										{pagination
-											? pagination.limit * (pagination.page - 1) + index + 1
-											: index + 1}
-									</TableCell>
-								) : (
-									<></>
-								)}
-								{Children.map(
-									children,
-									(child) =>
-										child &&
-								cloneElement(child, {
-									_data: item,
-								})
-								)}
-							</TableRow>
-						))}
+							!notFound &&
+							!error &&
+							data?.map((item, index) => (
+								<TableRow key={item.id}>
+									{showRank ? (
+										<TableCell>
+											{pagination
+												? pagination.limit * (pagination.page - 1) + index + 1
+												: index + 1}
+										</TableCell>
+									) : (
+										<></>
+									)}
+									{Children.map(
+										children,
+										(child) =>
+											child &&
+											cloneElement(child, {
+												_data: item,
+											})
+									)}
+								</TableRow>
+							))}
 					</TableBody>
 				</Table>
 				{loading ? (
