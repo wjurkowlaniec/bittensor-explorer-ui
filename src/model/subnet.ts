@@ -15,6 +15,18 @@ export type Subnet = {
 	timestamp: string;
 };
 
+export type SingleSubnetStat = {
+	id: string;
+	netUid: number;
+	regCost: bigint;
+	activeDual: number;
+	activeKeys: number;
+	activeMiners: number;
+	activeValidators: number;
+	maxNeurons: number;
+	validators: number;
+};
+
 export type SubnetHistory = {
 	netUid: bigint;
 	height: bigint;

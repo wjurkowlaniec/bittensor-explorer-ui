@@ -23,6 +23,8 @@ import NeuronMetagraphTable from "../components/subnets/NeuronMetagraphTable";
 import { useNeuronMetagraph } from "../hooks/useNeuronMetagraph";
 import CheckShield from "../assets/check-shield.svg";
 import Certification from "../assets/certification.svg";
+import { useSingleSubnetStat } from "../hooks/useSingleSubnetStat";
+import { StatItem } from "../components/network";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -33,17 +35,8 @@ const subnetHeader = (theme: Theme) => css`
 	color: ${theme.palette.text.primary};
 `;
 
-const subnetTitle = css`
-	display: block;
-	opacity: 0.8;
-	width: 144px;
-	font-size: 12px;
-`;
-
 const subnetName = css`
-	opacity: 0.5;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	font-size: 20px;
 `;
 
 const subnetDescription = css`
@@ -51,6 +44,29 @@ const subnetDescription = css`
 	display: block;
 	opacity: 0.8;
 	font-size: 12px;
+`;
+
+const statItems = css`
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex-grow: 1;
+	@media only screen and (max-width: 1399px) {
+		width: 100%;
+	}
+	padding-left: 20px;
+`;
+
+const statItemsRow = css`
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	width: 100%;
+	@media only screen and (max-width: 1199px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	@media only screen and (max-width: 767px) {
+		grid-template-columns: repeat(1, 1fr);
+	}
 `;
 
 const regCostContainerStyle = () => css`
@@ -98,6 +114,7 @@ export const SubnetPage = () => {
 	const { id } = useParams() as SubnetPageParams;
 	const subnetObj = (subnetsJson as any)[id];
 	const subnet = useSubnet({ id: { equalTo: id } });
+	const subnetStat = useSingleSubnetStat({ netUid: { equalTo: parseInt(id) } });
 	const subnetsHistory = useSubnetHistory(id);
 	const subnetOwners = useSubnetOwners(id);
 	const neuronRegCostHistory = useNeuronRegCostHistory(id);
@@ -126,11 +143,77 @@ export const SubnetPage = () => {
 		<>
 			<Card data-test="subnet-info">
 				<CardHeader css={subnetHeader}>
-					<div css={subnetTitle}>Subnet</div>
 					<div css={subnetName}>{subnetObj.name || "Unknown"}</div>
 				</CardHeader>
 				<div css={subnetDescription}>{subnetObj.description}</div>
 				<SubnetInfoTable info={subnet} additional={subnetObj} />
+				<div css={statItems}>
+					<div css={statItemsRow}>
+						<StatItem
+							title="Emissions"
+							value={`${formatNumber(
+								rawAmountToDecimal(subnet?.data?.emission).toNumber() * 100,
+								{
+									decimalPlaces: 2,
+								}
+							)}%`}
+						/>
+						<StatItem
+							title="Recycled (24h)"
+							value={`${formatNumber(
+								rawAmountToDecimal(
+									subnet.data?.recycled24H?.toString()
+								).toNumber(),
+								{
+									decimalPlaces: 2,
+								}
+							)}
+						${NETWORK_CONFIG.currency}`}
+						/>
+						<StatItem
+							title="Recycled (Lifetime)"
+							value={`${formatNumber(
+								rawAmountToDecimal(
+									subnet.data?.recycledLifetime?.toString()
+								).toNumber(),
+								{
+									decimalPlaces: 2,
+								}
+							)}
+						${NETWORK_CONFIG.currency}`}
+						/>
+						<StatItem
+							title="Active Keys"
+							value={subnetStat?.data?.activeKeys}
+						/>
+					</div>
+					<div css={statItemsRow}>
+						<StatItem
+							title="Active Validators"
+							value={subnetStat?.data?.activeValidators}
+						/>
+						<StatItem
+							title="Active Miners"
+							value={subnetStat?.data?.activeMiners}
+						/>
+						<StatItem
+							title="Active Dual Miners/Validators"
+							value={subnetStat?.data?.activeDual}
+						/>
+						<StatItem
+							title="Registration Cost"
+							value={`${formatNumber(
+								rawAmountToDecimal(
+									subnetStat.data?.regCost?.toString()
+								).toNumber(),
+								{
+									decimalPlaces: 2,
+								}
+							)}
+						${NETWORK_CONFIG.currency}`}
+						/>
+					</div>
+				</div>
 			</Card>
 			<Card data-test="subnet-metagraph">
 				<TabbedContent defaultTab={tab.slice(1).toString()}>
@@ -169,7 +252,7 @@ export const SubnetPage = () => {
 						<div css={regCostContainerStyle}>
 							<NeuronRegistrationChart
 								neuronRegCostHistory={neuronRegCostHistory}
-								subnet={subnet}
+								subnetStat={subnetStat}
 							/>
 							{subnet.loading ? (
 								<Spinner small />
@@ -179,7 +262,7 @@ export const SubnetPage = () => {
 									<span>
 										{formatNumber(
 											rawAmountToDecimal(
-												subnet.data?.regCost?.toString()
+												subnetStat.data?.regCost?.toString()
 											).toNumber(),
 											{
 												decimalPlaces: 2,

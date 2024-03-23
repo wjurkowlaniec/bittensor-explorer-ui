@@ -2,7 +2,6 @@
 import { InfoTable, InfoTableAttribute } from "../InfoTable";
 import { Resource } from "../../model/resource";
 import { Subnet } from "../../model/subnet";
-import { formatNumber, rawAmountToDecimal } from "../../utils/number";
 import { Time } from "../Time";
 import { Link } from "../Link";
 
@@ -29,23 +28,9 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 				render={() => <Link to={additional.github}>{additional.github}</Link>}
 			/>
 			<SubnetInfoTableAttribute
-				label="Reg date"
+				label="Registered at"
 				render={() => (
 					<Time time={info?.data?.timestamp || -1} utc timezone={false} />
-				)}
-			/>
-			<SubnetInfoTableAttribute
-				label="Emissions"
-				render={() => (
-					<div>
-						{formatNumber(
-							rawAmountToDecimal(info?.data?.emission).toNumber() * 100,
-							{
-								decimalPlaces: 2,
-							}
-						)}
-						%
-					</div>
 				)}
 			/>
 		</InfoTable>

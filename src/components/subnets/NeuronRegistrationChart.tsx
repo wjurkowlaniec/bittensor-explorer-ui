@@ -6,7 +6,7 @@ import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
 import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
-	Subnet,
+	SingleSubnetStat,
 	SubnetRegCostHistory,
 	SubnetRegCostHistoryResponse,
 } from "../../model/subnet";
@@ -22,7 +22,7 @@ const spinnerContainer = css`
 
 export type NeuronRegistrationChartProps = {
 	neuronRegCostHistory: SubnetRegCostHistoryResponse;
-	subnet: Resource<Subnet>;
+	subnetStat: Resource<SingleSubnetStat>;
 };
 
 export const NeuronRegistrationChart = (
@@ -30,9 +30,9 @@ export const NeuronRegistrationChart = (
 ) => {
 	const theme = useTheme();
 
-	const { neuronRegCostHistory, subnet } = props;
+	const { neuronRegCostHistory, subnetStat } = props;
 
-	const loading = neuronRegCostHistory.loading || subnet.loading;
+	const loading = neuronRegCostHistory.loading || subnetStat.loading;
 	const timestamps = useMemo(() => {
 		if (loading) return [];
 		const resp: string[] = (neuronRegCostHistory.data as any).reduce(
@@ -52,7 +52,7 @@ export const NeuronRegistrationChart = (
 		);
 		return [
 			...resp,
-			rawAmountToDecimal(subnet.data?.regCost.toString()).toNumber(),
+			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber(),
 		];
 	}, [neuronRegCostHistory]);
 	const minValue = useMemo(() => {
@@ -63,7 +63,7 @@ export const NeuronRegistrationChart = (
 				if (min === -1) return newMin;
 				return min < newMin ? min : newMin;
 			},
-			rawAmountToDecimal(subnet.data?.regCost.toString()).toNumber()
+			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber()
 		);
 	}, [neuronRegCostHistory]);
 	const maxValue = useMemo(() => {
@@ -73,7 +73,7 @@ export const NeuronRegistrationChart = (
 				const newMax = rawAmountToDecimal(cur.regCost.toString()).toNumber();
 				return max > newMax ? max : newMax;
 			},
-			rawAmountToDecimal(subnet.data?.regCost.toString()).toNumber()
+			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber()
 		);
 	}, [neuronRegCostHistory]);
 

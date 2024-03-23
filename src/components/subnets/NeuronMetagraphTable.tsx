@@ -334,7 +334,7 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 				sortProperty="coldkey"
 			/>
 			<NeuronMetagraphTableAttribute
-				label="daily rewards"
+				label={`daily ${NETWORK_CONFIG.currency}`}
 				sortable
 				render={(data) => (
 					<span css={orangeText}>

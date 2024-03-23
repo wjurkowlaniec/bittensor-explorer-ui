@@ -10,6 +10,7 @@ import {
 	NeuronRegCostHistory,
 	NeuronRegCostHistoryPaginatedResponse,
 	NeuronMetagraph,
+	SingleSubnetStat,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -18,6 +19,7 @@ import { extractItems } from "../utils/extractItems";
 import { fetchIndexer, fetchSubnets } from "./fetchService";
 
 export type SubnetsFilter = object;
+export type SingleSubnetStatsFilter = object;
 export type NeuronMetagraphFilter = object;
 
 export type SubnetsOrder =
@@ -110,7 +112,6 @@ export async function getSubnet(filter: SubnetsFilter | undefined) {
 					recycledAtCreation
 					recycledByOwner
 					recycledLifetime
-					regCost
 					timestamp
 				}
 				pageInfo {
@@ -398,6 +399,47 @@ export async function getNeuronMetagraph(
 	return extractItems(response.neuronInfos, pagination, transformMetagraph);
 }
 
+export async function getSingleSubnetStat(
+	filter: SingleSubnetStatsFilter | undefined
+) {
+	const response = await fetchSubnets<{
+		singleSubnetStats: ResponseItems<SingleSubnetStat>;
+	}>(
+		`query ($filter: SingleSubnetStatFilter) {
+			singleSubnetStats(first: 1, offset: 0, filter: $filter, orderBy: ID_DESC) {
+				nodes {
+					id
+					activeDual
+					activeKeys
+					activeMiners
+					activeValidators
+					maxNeurons
+					netUid
+					regCost
+					validators
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				totalCount
+			}
+		}`,
+		{
+			filter,
+		}
+	);
+
+	const data = extractItems(
+		response.singleSubnetStats,
+		{ limit: 1 },
+		transformSingleSubnetStat
+	);
+
+	return data.data[0];
+}
+
 function addSubnetName<T extends { netUid: number; name?: string }>(
 	subnet: T,
 	subnetNames: Record<string, Record<string, string>>
@@ -408,4 +450,10 @@ function addSubnetName<T extends { netUid: number; name?: string }>(
 
 const transformMetagraph = (metagraph: NeuronMetagraph): NeuronMetagraph => {
 	return metagraph;
+};
+
+const transformSingleSubnetStat = (
+	stat: SingleSubnetStat
+): SingleSubnetStat => {
+	return stat;
 };
