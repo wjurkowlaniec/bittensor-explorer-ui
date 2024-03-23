@@ -215,7 +215,7 @@ export const SubnetPage = () => {
 					</div>
 				</div>
 			</Card>
-			<Card data-test="subnet-metagraph">
+			<div>
 				<TabbedContent defaultTab={tab.slice(1).toString()}>
 					<TabPane
 						label="Metagraph"
@@ -275,7 +275,7 @@ export const SubnetPage = () => {
 						</div>
 					</TabPane>
 				</TabbedContent>
-			</Card>
+			</div>
 			<Card data-test="subnet-tables">
 				<TabbedContent defaultTab={tab.slice(1).toString()}>
 					<TabPane
