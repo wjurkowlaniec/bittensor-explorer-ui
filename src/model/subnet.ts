@@ -134,3 +134,12 @@ export type NeuronMetagraph = {
 	validatorPermit: any;
 	validatorTrust: number;
 };
+
+export type NeuronRegEvent = {
+	id: string;
+	uid: number;
+	hotkey: string;
+	coldkey: string;
+	height: number;
+	timestamp: string;
+};

@@ -10,6 +10,7 @@ import {
 	NeuronRegCostHistory,
 	NeuronRegCostHistoryPaginatedResponse,
 	NeuronMetagraph,
+	NeuronRegEvent,
 	SingleSubnetStat,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
@@ -21,6 +22,7 @@ import { fetchIndexer, fetchSubnets } from "./fetchService";
 export type SubnetsFilter = object;
 export type SingleSubnetStatsFilter = object;
 export type NeuronMetagraphFilter = object;
+export type NeuronRegEventsFilter = object;
 
 export type SubnetsOrder =
 	| "ID_ASC"
@@ -97,6 +99,20 @@ export type NeuronMetagraphOrder =
 	| "VALIDATOR_PERMIT_DESC"
 	| "VALIDATOR_TRUST_ASC"
 	| "VALIDATOR_TRUST_DESC";
+
+export type NeuronRegEventsOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "HOTKEY_ASC"
+	| "HOTKEY_DESC"
+	| "COLDKEY_ASC"
+	| "COLDKEY_DESC"
+	| "UID_ASC"
+	| "UID_DESC"
+	| "HEIGHT_ASC"
+	| "HEIGHT_DESC"
+	| "TIMESTAMP_ASC"
+	| "TIMESTAMP_DESC";
 
 export async function getSubnet(filter: SubnetsFilter | undefined) {
 	const response = await fetchSubnets<{ subnets: ResponseItems<Subnet> }>(
@@ -399,6 +415,43 @@ export async function getNeuronMetagraph(
 	return extractItems(response.neuronInfos, pagination, transformMetagraph);
 }
 
+export async function getNeuronRegEvents(
+	filter: NeuronRegEventsFilter | undefined,
+	order: NeuronRegEventsOrder = "ID_DESC",
+	pagination: PaginationOptions
+) {
+	const response = await fetchSubnets<{
+		neuronRegEvents: ResponseItems<NeuronRegEvent>;
+	}>(
+		`query ($first: Int!, $after: Cursor, $filter: NeuronRegEventFilter, $order: [NeuronRegEventsOrderBy!]!) {
+			neuronRegEvents(first: $first, after: $after, filter: $filter, orderBy: $order) {
+				nodes {
+					id
+					uid
+					hotkey
+					coldkey
+					height
+					timestamp
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				${pagination.after === undefined ? "totalCount" : ""}
+			}
+		}`,
+		{
+			after: pagination.after,
+			first: pagination.limit,
+			filter,
+			order,
+		}
+	);
+
+	return extractItems(response.neuronRegEvents, pagination, transformRegEvents);
+}
+
 export async function getSingleSubnetStat(
 	filter: SingleSubnetStatsFilter | undefined
 ) {
@@ -450,6 +503,10 @@ function addSubnetName<T extends { netUid: number; name?: string }>(
 
 const transformMetagraph = (metagraph: NeuronMetagraph): NeuronMetagraph => {
 	return metagraph;
+};
+
+const transformRegEvents = (regEvent: NeuronRegEvent): NeuronRegEvent => {
+	return regEvent;
 };
 
 const transformSingleSubnetStat = (

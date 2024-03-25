@@ -18,13 +18,18 @@ import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import { NETWORK_CONFIG } from "../config";
 import { useNeuronRegCostHistory } from "../hooks/useNeuronRegCostHistory";
 import { NeuronRegistrationChart } from "../components/subnets/NeuronRegistrationChart";
-import { NeuronMetagraphOrder } from "../services/subnetsService";
+import {
+	NeuronMetagraphOrder,
+	NeuronRegEventsOrder,
+} from "../services/subnetsService";
 import NeuronMetagraphTable from "../components/subnets/NeuronMetagraphTable";
 import { useNeuronMetagraph } from "../hooks/useNeuronMetagraph";
 import CheckShield from "../assets/check-shield.svg";
 import Certification from "../assets/certification.svg";
 import { useSingleSubnetStat } from "../hooks/useSingleSubnetStat";
 import { StatItem } from "../components/subnets/StatItem";
+import { useNeuronRegEvents } from "../hooks/useNeuronRegEvents";
+import NeuronRegEventsTable from "../components/subnets/NeuronRegEventsTable";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -102,6 +107,10 @@ const metagraphComment = () => css`
 	margin-bottom: 25px;
 `;
 
+const regEventsTable = () => css`
+	margin-top: 50px;
+`;
+
 const validatorComment = () => css`
 	display: flex;
 	flex-direction: row;
@@ -128,6 +137,23 @@ export const SubnetPage = () => {
 	const neuronMetagraph = useNeuronMetagraph(
 		{ netUid: { equalTo: parseInt(id) } },
 		neuronMetagraphSort
+	);
+
+	const [regEventsFrom, setRegEventsFrom] = useState("");
+	useEffect(() => {
+		const now = Date.now();
+		const from = new Date(now - 24 * 60 * 60 * 1000).toISOString();
+		setRegEventsFrom(from);
+	}, []);
+	const neuronRegEventsInitialOrder: NeuronRegEventsOrder = "TIMESTAMP_DESC";
+	const [neuronRegEventsSort, setNeuronRegEventsSort] =
+		useState<NeuronRegEventsOrder>(neuronRegEventsInitialOrder);
+	const neuronRegEvents = useNeuronRegEvents(
+		{
+			netUid: { equalTo: parseInt(id) },
+			timestamp: { greaterThan: regEventsFrom },
+		},
+		neuronRegEventsSort
 	);
 
 	useDOMEventTrigger("data-loaded", !subnet.loading);
@@ -280,6 +306,14 @@ export const SubnetPage = () => {
 								</div>
 							)}
 						</div>
+						<CardHeader css={regEventsTable}>REGISTRATIONS TABLE</CardHeader>
+						<NeuronRegEventsTable
+							regEvents={neuronRegEvents}
+							onSortChange={(sortKey: NeuronRegEventsOrder) =>
+								setNeuronRegEventsSort(sortKey)
+							}
+							initialSort={neuronRegEventsInitialOrder}
+						/>
 					</TabPane>
 				</TabbedContent>
 			</div>
