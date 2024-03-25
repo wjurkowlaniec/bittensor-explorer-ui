@@ -111,6 +111,17 @@ const regEventsTable = () => css`
 	margin-top: 50px;
 `;
 
+const regEventsDescription = css`
+	font-size: 14px;
+	margin-top: -45px;
+	margin-bottom: 25px;
+	margin-left: 20px;
+`;
+
+const regEventsTotal = (theme: Theme) => css`
+	color: ${theme.palette.success.main};
+`;
+
 const validatorComment = () => css`
 	display: flex;
 	flex-direction: row;
@@ -307,6 +318,12 @@ export const SubnetPage = () => {
 							)}
 						</div>
 						<CardHeader css={regEventsTable}>REGISTRATIONS TABLE</CardHeader>
+						<div css={regEventsDescription}>
+							<span css={regEventsTotal}>
+								{neuronRegEvents.pagination.totalCount}
+							</span>{" "}
+							in the last 24 hours.
+						</div>
 						<NeuronRegEventsTable
 							regEvents={neuronRegEvents}
 							onSortChange={(sortKey: NeuronRegEventsOrder) =>

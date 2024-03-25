@@ -438,7 +438,7 @@ export async function getNeuronRegEvents(
 					hasNextPage
 					hasPreviousPage
 				}
-				${pagination.after === undefined ? "totalCount" : ""}
+				totalCount
 			}
 		}`,
 		{
