@@ -24,7 +24,7 @@ import { useNeuronMetagraph } from "../hooks/useNeuronMetagraph";
 import CheckShield from "../assets/check-shield.svg";
 import Certification from "../assets/certification.svg";
 import { useSingleSubnetStat } from "../hooks/useSingleSubnetStat";
-import { StatItem } from "../components/network";
+import { StatItem } from "../components/subnets/StatItem";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -59,7 +59,7 @@ const statItems = css`
 
 const statItemsRow = css`
 	display: grid;
-	grid-template-columns: repeat(5, 1fr);
+	grid-template-columns: repeat(4, 1fr);
 	width: 100%;
 	@media only screen and (max-width: 1199px) {
 		grid-template-columns: repeat(2, 1fr);
@@ -67,6 +67,10 @@ const statItemsRow = css`
 	@media only screen and (max-width: 767px) {
 		grid-template-columns: repeat(1, 1fr);
 	}
+`;
+
+const metagraphStyle = css`
+	margin: 64px 0;
 `;
 
 const regCostContainerStyle = () => css`
@@ -95,7 +99,6 @@ const regCostValueStyle = (theme: Theme) => css`
 
 const metagraphComment = () => css`
 	font-size: 13px;
-	margin-left: 20px;
 	margin-bottom: 25px;
 `;
 
@@ -159,18 +162,6 @@ export const SubnetPage = () => {
 							)}%`}
 						/>
 						<StatItem
-							title="Recycled (24h)"
-							value={`${formatNumber(
-								rawAmountToDecimal(
-									subnet.data?.recycled24H?.toString()
-								).toNumber(),
-								{
-									decimalPlaces: 2,
-								}
-							)}
-						${NETWORK_CONFIG.currency}`}
-						/>
-						<StatItem
 							title="Recycled (Lifetime)"
 							value={`${formatNumber(
 								rawAmountToDecimal(
@@ -183,22 +174,16 @@ export const SubnetPage = () => {
 						${NETWORK_CONFIG.currency}`}
 						/>
 						<StatItem
-							title="Active Keys"
-							value={subnetStat?.data?.activeKeys}
-						/>
-					</div>
-					<div css={statItemsRow}>
-						<StatItem
-							title="Active Validators"
-							value={subnetStat?.data?.activeValidators}
-						/>
-						<StatItem
-							title="Active Miners"
-							value={subnetStat?.data?.activeMiners}
-						/>
-						<StatItem
-							title="Active Dual Miners/Validators"
-							value={subnetStat?.data?.activeDual}
+							title="Recycled (24h)"
+							value={`${formatNumber(
+								rawAmountToDecimal(
+									subnet.data?.recycled24H?.toString()
+								).toNumber(),
+								{
+									decimalPlaces: 2,
+								}
+							)}
+						${NETWORK_CONFIG.currency}`}
 						/>
 						<StatItem
 							title="Registration Cost"
@@ -213,10 +198,32 @@ export const SubnetPage = () => {
 						${NETWORK_CONFIG.currency}`}
 						/>
 					</div>
+					<div css={statItemsRow}>
+						<StatItem
+							title="Active Keys"
+							value={subnetStat?.data?.activeKeys}
+							total={subnetStat?.data?.maxNeurons}
+						/>
+						<StatItem
+							title="Active Validators"
+							value={subnetStat?.data?.activeValidators}
+							total={subnetStat?.data?.validators}
+						/>
+						<StatItem
+							title="Active Miners"
+							value={subnetStat?.data?.activeMiners}
+							total={subnetStat?.data?.maxNeurons}
+						/>
+						<StatItem
+							title="Active Dual Miners/Validators"
+							value={subnetStat?.data?.activeDual}
+							total={subnetStat?.data?.validators}
+						/>
+					</div>
 				</div>
 			</Card>
-			<div>
-				<TabbedContent defaultTab={tab.slice(1).toString()}>
+			<div css={metagraphStyle}>
+				<TabbedContent defaultTab={tab.slice(1).toString()} noPadding>
 					<TabPane
 						label="Metagraph"
 						loading={subnetOwners.loading}
@@ -298,10 +305,10 @@ export const SubnetPage = () => {
 						/>
 					</TabPane>
 					<TabPane
-						label="Recycled (Daily)"
+						label="Recycled (24h)"
 						loading={subnetsHistory.loading}
 						error={!!subnetsHistory.error}
-						value="recycled_daily"
+						value="recycled_24h"
 					>
 						<SubnetTaoRecycled24HHistoryChart
 							subnetHistory={subnetsHistory}

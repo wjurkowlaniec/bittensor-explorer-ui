@@ -16,71 +16,75 @@ import Spinner from "./Spinner";
 import { useNavigate } from "react-router-dom";
 
 const tabsWrapperStyle = css`
-  margin-bottom: 32px;
+	margin-bottom: 32px;
 `;
 
 const tabsStyle = (theme: Theme) => css`
-  margin-bottom: -1px;
-  min-height: 32px;
-  padding: 0px 20px;
+	margin-bottom: -1px;
+	min-height: 32px;
+	padding: 0px 20px;
 
-  .MuiTab-root {
-    text-transform: uppercase;
+	.MuiTab-root {
+		text-transform: uppercase;
 
-    & > span {
-      padding-bottom: 4px;
-    }
+		& > span {
+			padding-bottom: 4px;
+		}
 
-    & > span:first-of-type::after {
-      position: absolute;
-      content: "";
-      width: 0px;
-      height: 4px;
-      background-color: ${theme.palette.success.main};
-      transition: all 0.5s;
-      -webkit-transition: all 0.5s;
-      display: inline-block;
-      bottom: 0;
-      left: 0;
-    }
-  }
+		& > span:first-of-type::after {
+			position: absolute;
+			content: "";
+			width: 0px;
+			height: 4px;
+			background-color: ${theme.palette.success.main};
+			transition: all 0.5s;
+			-webkit-transition: all 0.5s;
+			display: inline-block;
+			bottom: 0;
+			left: 0;
+		}
+	}
 
-  .MuiTab-root:hover,
-  .MuiTab-root.Mui-selected {
-    & > span:first-of-type::after {
-      width: 9px;
-    }
-  }
+	.MuiTab-root:hover,
+	.MuiTab-root.Mui-selected {
+		& > span:first-of-type::after {
+			width: 9px;
+		}
+	}
 
-  .MuiTabs-indicator {
-    display: none;
-  }
+	.MuiTabs-indicator {
+		display: none;
+	}
+`;
+
+const noPaddingStyle = css`
+	padding: 0;
 `;
 
 const tabStyle = (theme: Theme) => css`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0px;
-  margin-right: 32px;
-  color: ${theme.palette.secondary.main};
-  justify-content: flex-start;
-  min-width: inherit;
-  min-height: inherit;
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 0px;
+	margin-right: 32px;
+	color: ${theme.palette.secondary.main};
+	justify-content: flex-start;
+	min-width: inherit;
+	min-height: inherit;
+	font-size: 17px;
+	font-weight: 500;
+	letter-spacing: 0.1em;
 
-  &.Mui-selected {
-    color: ${theme.palette.secondary.light};
-  }
+	&.Mui-selected {
+		color: ${theme.palette.secondary.light};
+	}
 `;
 
 const tabErrorStyle = css`
-  margin-left: 8px;
-  position: relative;
-  top: 1px;
-  color: #ef5350;
+	margin-left: 8px;
+	position: relative;
+	top: 1px;
+	color: #ef5350;
 `;
 
 export type TabPaneProps = Omit<TabProps, "children"> &
@@ -98,11 +102,12 @@ export const TabPane = (props: TabPaneProps) => {
 
 export type TabbedContentProps = {
 	defaultTab?: string;
+	noPadding?: boolean;
 	children: ReactElement<TabPaneProps> | (ReactElement<TabPaneProps> | false)[];
 };
 
 export const TabbedContent = (props: TabbedContentProps) => {
-	const { defaultTab, children } = props;
+	const { defaultTab, noPadding, children } = props;
 
 	const navigate = useNavigate();
 
@@ -147,9 +152,9 @@ export const TabbedContent = (props: TabbedContentProps) => {
 	);
 
 	const [tab, setTab] = useState<string | undefined>(tabPanes[0]?.props.value);
-	
+
 	useEffect(() => {
-		if(tabPanes.find((it) => it.props.value === defaultTab))
+		if (tabPanes.find((it) => it.props.value === defaultTab))
 			setTab(defaultTab);
 	}, [defaultTab]);
 
@@ -157,7 +162,7 @@ export const TabbedContent = (props: TabbedContentProps) => {
 		<>
 			<div css={tabsWrapperStyle}>
 				<Tabs
-					css={tabsStyle}
+					css={[tabsStyle, noPadding && noPaddingStyle]}
 					onChange={(_, tab) => {
 						setTab(tab);
 						navigate(`#${tab}`);

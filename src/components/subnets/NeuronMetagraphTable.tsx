@@ -199,12 +199,6 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 				sortProperty="stake"
 			/>
 			<NeuronMetagraphTableAttribute
-				label="rank"
-				sortable
-				render={(data) => <>{data.rank}</>}
-				sortProperty="rank"
-			/>
-			<NeuronMetagraphTableAttribute
 				label="vTrust"
 				sortable
 				render={(data) => (
