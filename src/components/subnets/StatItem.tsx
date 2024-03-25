@@ -26,14 +26,8 @@ const statItemLabel = (theme: Theme) => css`
 const statValues = (theme: Theme) => css`
 	display: flex;
 	flex-direction: row;
+	align-items: center;
 	color: ${theme.palette.secondary.dark};
-`;
-
-const statItemValue = (theme: Theme) => css`
-	font-weight: 300;
-	color: ${theme.palette.secondary.light};
-	margin: 0;
-	line-height: 1.3em;
 
 	@media only screen and (max-width: 1279px) {
 		font-size: 15px;
@@ -45,6 +39,13 @@ const statItemValue = (theme: Theme) => css`
 		font-size: 13px;
 		letter-spacing: 0.02em;
 	}
+`;
+
+const statItemValue = (theme: Theme) => css`
+	font-weight: 300;
+	color: ${theme.palette.secondary.light};
+	margin: 0;
+	line-height: 1.3em;
 `;
 
 type StatItemProps = {
