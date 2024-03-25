@@ -40,6 +40,10 @@ const orderMappings = {
 		[SortDirection.ASC]: "TIMESTAMP_ASC",
 		[SortDirection.DESC]: "TIMESTAMP_DESC",
 	},
+	height: {
+		[SortDirection.ASC]: "HEIGHT_ASC",
+		[SortDirection.DESC]: "HEIGHT_DESC",
+	},
 };
 
 function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
@@ -131,12 +135,10 @@ function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
 				sortProperty="date"
 			/>
 			<NeuronRegEventsTableAttribute
-				label="timestamp"
-				render={(data) => (
-					<span css={whiteText}>
-						{Math.floor(new Date(data.timestamp).getTime() / 1000)}
-					</span>
-				)}
+				label="height"
+				sortable
+				render={(data) => <span css={whiteText}>{data.height}</span>}
+				sortProperty="height"
 			/>
 		</ItemsTable>
 	);
