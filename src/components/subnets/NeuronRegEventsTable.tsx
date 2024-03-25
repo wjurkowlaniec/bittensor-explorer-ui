@@ -121,7 +121,7 @@ function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
 				sortProperty="coldkey"
 			/>
 			<NeuronRegEventsTableAttribute
-				label="date"
+				label="time(utc)"
 				sortable
 				render={(data) => (
 					<span css={whiteText}>
