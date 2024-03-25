@@ -96,7 +96,7 @@ export const NeuronRegistrationChart = (
 					animations: {
 						enabled: false,
 					},
-					background: "#1a1a1a",
+					background: "transparent",
 					toolbar: {
 						show: true,
 						offsetX: 0,
