@@ -30,7 +30,7 @@ function SubnetOwnersTable(props: SubnetOwnersTableProps) {
 				)}
 			/>
 			<SubnetOwnersTableAttribute
-				label="Created At"
+				label="Registered At"
 				render={(subnet) => <BlockTimestamp blockHeight={subnet.height} />}
 			/>
 			<SubnetOwnersTableAttribute
