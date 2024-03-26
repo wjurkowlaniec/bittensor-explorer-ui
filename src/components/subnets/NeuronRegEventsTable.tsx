@@ -138,9 +138,7 @@ function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
 				label="block"
 				sortable
 				render={(data) => (
-					<Link to={`/block/${data.height}`} color="white">
-						{data.height}
-					</Link>
+					<Link to={`/block/${data.height}`}>{data.height}</Link>
 				)}
 				sortProperty="height"
 			/>

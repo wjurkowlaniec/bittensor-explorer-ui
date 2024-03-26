@@ -3,6 +3,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { AccountAddress } from "../AccountAddress";
 import { SubnetOwner, SubnetOwnerResponse } from "../../model/subnet";
 import { BlockTimestamp } from "../BlockTimestamp";
+import { Link } from "../Link";
 
 export type SubnetOwnersTableProps = {
 	subnetOwners: SubnetOwnerResponse;
@@ -24,7 +25,9 @@ function SubnetOwnersTable(props: SubnetOwnersTableProps) {
 		>
 			<SubnetOwnersTableAttribute
 				label="Block"
-				render={(subnet) => <>{subnet.height}</>}
+				render={(subnet) => (
+					<Link to={`/block/${subnet.height}`}>{subnet.height.toString()}</Link>
+				)}
 			/>
 			<SubnetOwnersTableAttribute
 				label="Created At"
