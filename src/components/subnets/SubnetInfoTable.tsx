@@ -30,7 +30,12 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 			<SubnetInfoTableAttribute
 				label="Registered at"
 				render={() => (
-					<Time time={info?.data?.timestamp || -1} utc timezone={false} />
+					<Time
+						time={info?.data?.timestamp || -1}
+						utc
+						timezone={false}
+						format="d MMM yyyy HH:mm:ss"
+					/>
 				)}
 			/>
 		</InfoTable>
