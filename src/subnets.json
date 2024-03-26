@@ -15,7 +15,7 @@
         "description": ""
     },
     "3": {
-        "name": "HotKey",
+        "name": "Einstein AIT",
         "github": "https://github.com/gitphantomman/scraping_subnet",
         "description": ""
     },
@@ -35,12 +35,12 @@
         "description": ""
     },
     "7": {
-        "name": "Storage",
+        "name": "Subvortex",
         "github": "https://github.com/tensorage/tensorage",
         "description": ""
     },
     "8": {
-        "name": "Time Series Prediction",
+        "name": "Proprietary Trading Network",
         "github": "https://github.com/taoshidev/time-series-prediction-subnet",
         "description": ""
     },
@@ -70,7 +70,7 @@
         "description": ""
     },
     "14": {
-        "name": "LLm Defender",
+        "name": "LLM Defender",
         "github": "https://github.com/ceterum1/llm-defender-subnet",
         "description": ""
     },
@@ -110,7 +110,7 @@
         "description": ""
     },
     "22": {
-        "name": "Metasearch",
+        "name": "Meta Search",
         "github": "https://github.com/surcyf123/smart-scrape/",
         "description": ""
     },
@@ -145,12 +145,12 @@
         "description": ""
     },
     "29": {
-        "name": "Fractal Research",
+        "name": "Fractal",
         "github": "https://github.com/fractal-net/fractal",
         "description": ""
     },
     "30": {
-        "name": "wombo ",
+        "name": "WomboAI",
         "github": "https://github.com/womboai/wombo-bittensor-subnet",
         "description": ""
     },
