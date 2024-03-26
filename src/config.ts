@@ -27,7 +27,6 @@ export const HISTORICAL_ENDPOINT =
 export const SUBNETS_ENDPOINT = process.env.REACT_APP_SUBNETS_ENDPOINT || "";
 export const TAOSTATS_DATA_ENDPOINT =
 	process.env.REACT_APP_TAOSTATS_DATA_ENDPOINT || "";
-export const RPC_ENDPOINT = process.env.REACT_APP_RPC_ENDPOINT || "";
 
 export const NETWORK_CONFIG = {
 	currency: "𝞃",
