@@ -135,9 +135,13 @@ function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
 				sortProperty="date"
 			/>
 			<NeuronRegEventsTableAttribute
-				label="height"
+				label="block"
 				sortable
-				render={(data) => <span css={whiteText}>{data.height}</span>}
+				render={(data) => (
+					<Link to={`/block/${data.height}`} color="white">
+						{data.height}
+					</Link>
+				)}
 				sortProperty="height"
 			/>
 		</ItemsTable>
