@@ -72,7 +72,7 @@ export const StatItem = (props: StatItemProps) => {
 				) : (
 					<div css={statItemValue}>{value}</div>
 				)}
-				{total && <div>/{total}</div>}
+				{total !== undefined && <div>/{total}</div>}
 			</div>
 		</div>
 	);
