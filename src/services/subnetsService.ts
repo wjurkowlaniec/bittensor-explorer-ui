@@ -89,8 +89,6 @@ export type NeuronMetagraphOrder =
 	| "LAST_UPDATE_DESC"
 	| "NET_UID_ASC"
 	| "NET_UID_DESC"
-	| "PRIMARY_KEY_ASC"
-	| "PRIMARY_KEY_DESC"
 	| "RANK_ASC"
 	| "RANK_DESC"
 	| "STAKE_ASC"
