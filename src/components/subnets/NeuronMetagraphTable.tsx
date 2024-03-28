@@ -56,10 +56,6 @@ const orderMappings = {
 		[SortDirection.ASC]: "STAKE_ASC",
 		[SortDirection.DESC]: "STAKE_DESC",
 	},
-	rank: {
-		[SortDirection.ASC]: "RANK_ASC",
-		[SortDirection.DESC]: "RANK_DESC",
-	},
 	vTrust: {
 		[SortDirection.ASC]: "VALIDATOR_TRUST_ASC",
 		[SortDirection.DESC]: "VALIDATOR_TRUST_DESC",
