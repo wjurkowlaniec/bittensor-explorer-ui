@@ -38,6 +38,10 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 					/>
 				)}
 			/>
+			<SubnetInfoTableAttribute
+				label="Registered to"
+				render={() => <span>{info.data?.owner}</span>}
+			/>
 		</InfoTable>
 	);
 };
