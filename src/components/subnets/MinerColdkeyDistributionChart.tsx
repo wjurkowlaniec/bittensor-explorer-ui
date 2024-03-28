@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
-import { MinerColdKey, MinerColdKeyResponse } from "../../model/subnet";
+import { MinerColdKeyResponse } from "../../model/subnet";
 
 const spinnerContainer = css`
 	display: flex;
@@ -25,7 +25,7 @@ export const MinerColdkeyDistributionChart = (
 	const loading = minerColdkeys.loading;
 	const series = useMemo(() => {
 		if (loading) return [];
-		return minerColdkeys.data.map(({coldkey, minersCount}) => ({
+		return minerColdkeys.data.map(({ coldkey, minersCount }) => ({
 			x: coldkey,
 			y: minersCount,
 		}));
