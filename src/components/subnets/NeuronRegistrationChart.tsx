@@ -7,17 +7,16 @@ import { useMemo } from "react";
 import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import {
 	SingleSubnetStat,
-	SubnetRegCostHistory,
 	SubnetRegCostHistoryResponse,
 } from "../../model/subnet";
 import { NETWORK_CONFIG } from "../../config";
 import { Resource } from "../../model/resource";
 
 const spinnerContainer = css`
-	display: flex;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
 export type NeuronRegistrationChartProps = {
@@ -33,48 +32,35 @@ export const NeuronRegistrationChart = (
 	const { neuronRegCostHistory, subnetStat } = props;
 
 	const loading = neuronRegCostHistory.loading || subnetStat.loading;
+
 	const timestamps = useMemo(() => {
 		if (loading) return [];
-		const resp: string[] = (neuronRegCostHistory.data as any).reduce(
-			(prev: string[], cur: SubnetRegCostHistory) => [...prev, cur.timestamp],
-			[]
+		const resp: string[] = neuronRegCostHistory.data.map(
+			({ timestamp }) => timestamp
 		);
 		return [...resp, new Date().toISOString().substring(0, 19)];
 	}, [neuronRegCostHistory]);
+
 	const series = useMemo(() => {
 		if (loading) return [];
-		const resp: number[] = (neuronRegCostHistory.data as any).reduce(
-			(prev: number[], cur: SubnetRegCostHistory) => [
-				...prev,
-				rawAmountToDecimal(cur.regCost.toString()).toNumber(),
-			],
-			[]
+		const resp: number[] = neuronRegCostHistory.data.map(({ regCost }) =>
+			rawAmountToDecimal(regCost.toString()).toNumber()
 		);
 		return [
 			...resp,
 			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber(),
 		];
 	}, [neuronRegCostHistory]);
-	const minValue = useMemo(() => {
-		if (loading) return 0;
-		return neuronRegCostHistory.data.reduce(
-			(min: number, cur: SubnetRegCostHistory) => {
-				const newMin = rawAmountToDecimal(cur.regCost.toString()).toNumber();
-				if (min === -1) return newMin;
-				return min < newMin ? min : newMin;
-			},
+
+	const [minValue, maxValue] = useMemo(() => {
+		if (loading) return [0, 0];
+		const regCosts = neuronRegCostHistory.data.map(({ regCost }) =>
+			rawAmountToDecimal(regCost.toString()).toNumber()
+		);
+		regCosts.push(
 			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber()
 		);
-	}, [neuronRegCostHistory]);
-	const maxValue = useMemo(() => {
-		if (loading) return 0;
-		return neuronRegCostHistory.data.reduce(
-			(max: number, cur: SubnetRegCostHistory) => {
-				const newMax = rawAmountToDecimal(cur.regCost.toString()).toNumber();
-				return max > newMax ? max : newMax;
-			},
-			rawAmountToDecimal(subnetStat.data?.regCost.toString()).toNumber()
-		);
+		return [Math.min(...regCosts), Math.max(...regCosts)];
 	}, [neuronRegCostHistory]);
 
 	return loading ? (
