@@ -12,5 +12,5 @@ export function useNeuronMetagraph(
 	order?: NeuronMetagraphOrder,
 	options?: FetchOptions
 ) {
-	return usePaginatedResource(getNeuronMetagraph, [filter, order], options);
+	return usePaginatedResource(getNeuronMetagraph, [filter, order], options, 25);
 }
