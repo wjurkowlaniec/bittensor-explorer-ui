@@ -28,6 +28,9 @@ const orangeText = css`
 const whiteText = css`
 	color: #ffffff;
 `;
+const boldText = css`
+	font-weight: bold;
+`;
 const iconContainer = css`
 	display: flex;
 	flex-direction: row;
@@ -192,7 +195,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 				label="uid"
 				sortable
 				render={(data) => (
-					<Link to={`https://taostats.io/hotkey/?hkey=${data.hotkey}`}>
+					<Link
+						to={`https://taostats.io/hotkey/?hkey=${data.hotkey}`}
+						css={boldText}
+					>
 						{data.uid}
 					</Link>
 				)}

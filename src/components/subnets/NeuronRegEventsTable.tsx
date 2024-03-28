@@ -13,6 +13,9 @@ import { Time } from "../Time";
 const whiteText = css`
 	color: white;
 `;
+const boldText = css`
+	font-weight: bold;
+`;
 
 export type NeuronRegEventsTableProps = {
 	regEvents: PaginatedResource<NeuronRegEvent>;
@@ -105,7 +108,10 @@ function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
 				label="uid"
 				sortable
 				render={(data) => (
-					<Link to={`https://taostats.io/hotkey/?hkey=${data.hotkey}`}>
+					<Link
+						to={`https://taostats.io/hotkey/?hkey=${data.hotkey}`}
+						css={boldText}
+					>
 						{data.uid}
 					</Link>
 				)}
