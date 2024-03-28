@@ -29,11 +29,13 @@ export function useMinerIncentive(id: string): MinerIncentiveResponse {
 							netUid: {
 								equalTo: parseInt(id),
 							},
-							stake: {
-								lessThan: "1000000000000",
-							},
-							validatorPermit: {
-								equalTo: false,
+							not: {
+								stake: {
+									greaterThan: "1000000000000",
+								},
+								validatorPermit: {
+									equalTo: true,
+								},	
 							},
 						},
 						"INCENTIVE_ASC",
