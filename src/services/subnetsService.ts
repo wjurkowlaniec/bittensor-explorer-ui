@@ -23,7 +23,7 @@ import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
 import subnetsJson from "../subnets.json";
 import { extractItems } from "../utils/extractItems";
-import { fetchIndexer, fetchSubnets } from "./fetchService";
+import { fetchSubnets } from "./fetchService";
 
 export type SubnetsFilter = object;
 export type SingleSubnetStatsFilter = object;
@@ -182,7 +182,7 @@ export async function getSubnets(
 	order: SubnetsOrder = "NET_UID_ASC",
 	pagination: PaginationOptions
 ) {
-	const response = await fetchIndexer<{ subnets: ResponseItems<Subnet> }>(
+	const response = await fetchSubnets<{ subnets: ResponseItems<Subnet> }>(
 		`query ($filter: SubnetFilter, $order: [SubnetsOrderBy!]!) {
 			subnets(filter: $filter, orderBy: $order) {
 				nodes {
@@ -331,7 +331,7 @@ export async function getSubnetOwners(
 	order: SubnetOwnerOrder = "ID_ASC",
 	after?: string
 ): Promise<SubnetOwnerPaginatedResponse> {
-	const response = await fetchIndexer<{
+	const response = await fetchSubnets<{
 		subnetOwners: ResponseItems<SubnetOwner>;
 	}>(
 		`query($filter: SubnetOwnerFilter, $order: [SubnetOwnersOrderBy!]!, $after: Cursor) {
