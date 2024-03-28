@@ -43,6 +43,8 @@ export type NeuronMetagraphTableProps = {
 	initialSortOrder?: string;
 	onSortChange?: (orderBy: NeuronMetagraphOrder) => void;
 	initialSort?: string;
+	onSearchChange?: (newSearch?: string) => void;
+	initialSearch?: string;
 };
 
 const NeuronMetagraphTableAttribute = ItemsTableAttribute<NeuronMetagraph>;
@@ -122,8 +124,9 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 		state: { chainStats },
 	} = useAppStats();
 
-	const { initialSort, onSortChange } = props;
+	const { initialSort, onSortChange, initialSearch, onSearchChange } = props;
 	const [sort, setSort] = useState<SortOrder<string>>();
+	const [search, setSearch] = useState(initialSearch);
 
 	useEffect(() => {
 		Object.entries(orderMappings).forEach(([property, value]) => {
@@ -162,6 +165,15 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 		onSortChange((orderMappings as any)[sort.property][sort.direction]);
 	}, [JSON.stringify(sort)]);
 
+	const handleSearchChange = (value?: string) => {
+		setSearch(value);
+	};
+
+	useEffect(() => {
+		if (!onSearchChange) return;
+		onSearchChange(search);
+	}, [search]);
+
 	return (
 		<ItemsTable
 			data={metagraph.data}
@@ -173,6 +185,9 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			data-test="metagraph-table"
 			sort={sort}
 			onSortChange={handleSortChange}
+			search={search}
+			onSearchChange={handleSearchChange}
+			searchBackground="#1a1a1a"
 			showRank
 			rankLabel="POS"
 		>

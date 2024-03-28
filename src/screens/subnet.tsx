@@ -165,8 +165,26 @@ export const SubnetPage = () => {
 	const neuronMetagraphInitialOrder: NeuronMetagraphOrder = "STAKE_DESC";
 	const [neuronMetagraphSort, setNeuronMetagraphSort] =
 		useState<NeuronMetagraphOrder>(neuronMetagraphInitialOrder);
+	const metagraphInitialSearch = "";
+	const [metagraphSearch, setMetagraphSearch] = useState<string | undefined>(
+		metagraphInitialSearch
+	);
 	const neuronMetagraph = useNeuronMetagraph(
-		{ netUid: { equalTo: parseInt(id) } },
+		{
+			netUid: { equalTo: parseInt(id) },
+			or: [
+				{
+					hotkey: {
+						includesInsensitive: metagraphSearch,
+					},
+				},
+				{
+					coldkey: {
+						includesInsensitive: metagraphSearch,
+					},
+				},
+			],
+		},
 		neuronMetagraphSort
 	);
 
@@ -330,6 +348,10 @@ export const SubnetPage = () => {
 								setNeuronMetagraphSort(sortKey)
 							}
 							initialSort={neuronMetagraphInitialOrder}
+							onSearchChange={(newSearch?: string) =>
+								setMetagraphSearch(newSearch)
+							}
+							initialSearch={metagraphInitialSearch}
 						/>
 					</TabPane>
 					<TabPane

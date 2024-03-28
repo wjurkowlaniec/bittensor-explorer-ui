@@ -255,6 +255,7 @@ export type ItemsTableProps<
 	search?: string;
 	onSearchChange?: (value?: string) => void;
 	searchPlaceholder?: string;
+	searchBackground?: string;
 	getExportCSV?: () => Promise<CSVData>;
 };
 
@@ -285,6 +286,7 @@ export const ItemsTable = <
 		search,
 		onSearchChange,
 		searchPlaceholder,
+		searchBackground,
 		getExportCSV,
 		...restProps
 	} = props;
@@ -349,6 +351,7 @@ export const ItemsTable = <
 							});
 						}}
 						placeholder={searchPlaceholder}
+						background={searchBackground}
 					/>
 				)}
 			</div>
