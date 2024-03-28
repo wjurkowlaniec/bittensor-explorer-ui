@@ -97,7 +97,7 @@ function NeuronRegEventsTable(props: NeuronRegEventsTableProps) {
 			data={regEvents.data}
 			loading={regEvents.loading}
 			notFound={regEvents.notFound}
-			notFoundMessage="No Reg Events"
+			notFoundMessage="No registration events found."
 			error={regEvents.error}
 			pagination={regEvents.pagination}
 			data-test="reg-events-table"
