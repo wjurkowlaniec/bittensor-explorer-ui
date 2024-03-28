@@ -19,7 +19,7 @@ function SubnetOwnersTable(props: SubnetOwnersTableProps) {
 		<ItemsTable
 			data={subnetOwners.data}
 			loading={subnetOwners.loading}
-			notFoundMessage="No subnet owners found"
+			notFoundMessage="No records found for the subnet owner history."
 			error={subnetOwners.error}
 			data-test="subnet-owners-table"
 		>
