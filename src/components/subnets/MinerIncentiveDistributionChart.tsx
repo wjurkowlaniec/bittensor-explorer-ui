@@ -72,7 +72,7 @@ export const MinerIncentiveDistributionChart = (
 	const lowestActiveKey = useMemo(() => {
 		if (loading) return 0;
 		return minerIncentive.data.reduce((min: number, cur: MinerIncentive) => {
-			if (cur.isImmunityPeriod || cur.incentive === 0) return min;
+			if (cur.isImmunityPeriod) return min;
 			const newMin = cur.incentive / 65535;
 			if (min === -1) return newMin;
 			return min < newMin ? min : newMin;
@@ -228,6 +228,9 @@ export const MinerIncentiveDistributionChart = (
 						},
 					},
 					axisTicks: {
+						show: false,
+					},
+					axisBorder: {
 						show: false,
 					},
 					tickAmount: 2,
