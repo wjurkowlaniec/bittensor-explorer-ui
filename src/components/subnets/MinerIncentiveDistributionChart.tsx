@@ -7,10 +7,10 @@ import { useMemo } from "react";
 import { MinerIncentiveResponse } from "../../model/subnet";
 
 const spinnerContainer = css`
-	display: flex;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
 export type MinerIncentiveDistributionChartProps = {
@@ -52,14 +52,16 @@ export const MinerIncentiveDistributionChart = (
 
 	const [minValue, maxValue, lowestActiveKey] = useMemo(() => {
 		if (loading) return [0, 0, 0];
-		const activeKeys = minerIncentive.data.filter(({ isImmunityPeriod }) => !isImmunityPeriod);
+		const activeKeys = minerIncentive.data.filter(
+			({ isImmunityPeriod }) => !isImmunityPeriod
+		);
 		return [
 			minerIncentive.data.at(0)?.incentive ?? 0,
 			minerIncentive.data.at(-1)?.incentive ?? 0,
 			activeKeys[0]?.incentive ?? 0,
 		];
 	}, [minerIncentive]);
-	
+
 	return loading ? (
 		<div css={spinnerContainer}>
 			<img src={LoadingSpinner} />
