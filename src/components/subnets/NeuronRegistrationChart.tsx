@@ -97,14 +97,14 @@ export const NeuronRegistrationChart = (
 						},
 						export: {
 							csv: {
-								filename: "subnet-registration-data",
+								filename: "neuron-registration-data",
 								headerCategory: "Date",
 							},
 							png: {
-								filename: "subnet-registration-data",
+								filename: "neuron-registration-data",
 							},
 							svg: {
-								filename: "subnet-registration-data",
+								filename: "neuron-registration-data",
 							},
 						},
 					},
