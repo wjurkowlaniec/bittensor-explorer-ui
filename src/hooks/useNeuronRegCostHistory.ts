@@ -20,8 +20,6 @@ export function useNeuronRegCostHistory(
 
 	const fetchData = useCallback(async () => {
 		try {
-			const limit = 100;
-
 			let finished = false;
 			let after: string | undefined = undefined;
 
@@ -41,8 +39,7 @@ export function useNeuronRegCostHistory(
 							},
 						},
 						"HEIGHT_ASC",
-						after,
-						limit
+						after
 					);
 				result.push(...regCost.data);
 				finished = !regCost.hasNextPage;

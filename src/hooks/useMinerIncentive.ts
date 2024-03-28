@@ -18,8 +18,6 @@ export function useMinerIncentive(id: string): MinerIncentiveResponse {
 
 	const fetchData = useCallback(async () => {
 		try {
-			const limit = 100;
-
 			let finished = false;
 			let after: string | undefined = undefined;
 
@@ -33,8 +31,7 @@ export function useMinerIncentive(id: string): MinerIncentiveResponse {
 							},
 						},
 						"INCENTIVE_ASC",
-						after,
-						limit
+						after
 					);
 				result.push(...incentive.data);
 				finished = !incentive.hasNextPage;

@@ -217,14 +217,13 @@ export async function getSubnets(
 export async function getSubnetHistory(
 	filter?: object,
 	order: SubnetHistoryOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<SubnetHistoryPaginatedResponse> {
 	const response = await fetchSubnets<{
 		subnetHistoricals: ResponseItems<SubnetHistory>;
 	}>(
-		`query($filter: SubnetHistoricalFilter, $order: [SubnetHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
-			subnetHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: SubnetHistoricalFilter, $order: [SubnetHistoricalsOrderBy!]!, $after: Cursor) {
+			subnetHistoricals(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					netUid
@@ -238,10 +237,9 @@ export async function getSubnetHistory(
 					hasNextPage
 					endCursor
 				}
-			  }
+			}
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,
@@ -258,14 +256,13 @@ export async function getSubnetHistory(
 export async function getSubnetRegCostHistory(
 	filter?: object,
 	order: SubnetHistoryOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<SubnetRegCostHistoryPaginatedResponse> {
 	const response = await fetchSubnets<{
 		subnetRegHistoricals: ResponseItems<SubnetRegCostHistory>;
 	}>(
-		`query($filter: SubnetRegHistoricalFilter, $order: [SubnetRegHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
-			subnetRegHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: SubnetRegHistoricalFilter, $order: [SubnetRegHistoricalsOrderBy!]!, $after: Cursor) {
+			subnetRegHistoricals(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					height
@@ -279,7 +276,6 @@ export async function getSubnetRegCostHistory(
 			  }
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,
@@ -296,14 +292,13 @@ export async function getSubnetRegCostHistory(
 export async function getNeuronRegCostHistory(
 	filter?: object,
 	order: NeuronHistoryOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<NeuronRegCostHistoryPaginatedResponse> {
 	const response = await fetchSubnets<{
 		neuronRegHistoricals: ResponseItems<NeuronRegCostHistory>;
 	}>(
-		`query($filter: NeuronRegHistoricalFilter, $order: [NeuronRegHistoricalsOrderBy!]!, $after: Cursor, $first: Int!) {
-			neuronRegHistoricals(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: NeuronRegHistoricalFilter, $order: [NeuronRegHistoricalsOrderBy!]!, $after: Cursor) {
+			neuronRegHistoricals(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					height
@@ -318,7 +313,6 @@ export async function getNeuronRegCostHistory(
 			}
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,
@@ -335,14 +329,13 @@ export async function getNeuronRegCostHistory(
 export async function getSubnetOwners(
 	filter?: object,
 	order: SubnetOwnerOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<SubnetOwnerPaginatedResponse> {
 	const response = await fetchIndexer<{
 		subnetOwners: ResponseItems<SubnetOwner>;
 	}>(
-		`query($filter: SubnetOwnerFilter, $order: [SubnetOwnersOrderBy!]!, $after: Cursor, $first: Int!) {
-			subnetOwners(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: SubnetOwnerFilter, $order: [SubnetOwnersOrderBy!]!, $after: Cursor) {
+			subnetOwners(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					netid
@@ -356,7 +349,6 @@ export async function getSubnetOwners(
 			  }
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,
@@ -521,14 +513,13 @@ export async function getSingleSubnetStat(
 export async function getMinerColdkeys(
 	filter?: object,
 	order: MinerColdkeyOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<MinerColdKeyPaginatedResponse> {
 	const response = await fetchSubnets<{
 		minerColdkeys: ResponseItems<MinerColdKey>;
 	}>(
-		`query($filter: MinerColdkeyFilter, $order: [MinerColdkeysOrderBy!]!, $after: Cursor, $first: Int!) {
-			minerColdkeys(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: MinerColdkeyFilter, $order: [MinerColdkeysOrderBy!]!, $after: Cursor) {
+			minerColdkeys(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					coldkey
@@ -541,7 +532,6 @@ export async function getMinerColdkeys(
 			}
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,
@@ -592,14 +582,13 @@ export async function getPaginatedMinerColdkeys(
 export async function getMinerIPs(
 	filter?: object,
 	order: MinerIPOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<MinerIPPaginatedResponse> {
 	const response = await fetchSubnets<{
 		minerIps: ResponseItems<MinerIP>;
 	}>(
-		`query($filter: MinerIpFilter, $order: [MinerIpsOrderBy!]!, $after: Cursor, $first: Int!) {
-			minerIps(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: MinerIpFilter, $order: [MinerIpsOrderBy!]!, $after: Cursor) {
+			minerIps(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					ipAddress
@@ -612,7 +601,6 @@ export async function getMinerIPs(
 			}
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,
@@ -663,14 +651,13 @@ export async function getPaginatedMinerIPs(
 export async function getMinerIncentive(
 	filter?: object,
 	order: MinerIncentiveOrder = "ID_ASC",
-	after?: string,
-	limit = 100
+	after?: string
 ): Promise<MinerIncentivePaginatedResponse> {
 	const response = await fetchSubnets<{
 		neuronInfos: ResponseItems<MinerIncentive>;
 	}>(
-		`query($filter: NeuronInfoFilter, $order: [NeuronInfosOrderBy!]!, $after: Cursor, $first: Int!) {
-			neuronInfos(filter: $filter, orderBy: $order, after: $after, first: $first) {
+		`query($filter: NeuronInfoFilter, $order: [NeuronInfosOrderBy!]!, $after: Cursor) {
+			neuronInfos(filter: $filter, orderBy: $order, after: $after) {
 				nodes {
 					id
 					incentive
@@ -683,7 +670,6 @@ export async function getMinerIncentive(
 			}
 		}`,
 		{
-			first: limit,
 			after,
 			filter,
 			order,

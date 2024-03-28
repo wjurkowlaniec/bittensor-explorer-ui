@@ -25,8 +25,6 @@ export function useSubnetsHistory(): SubnetHistoryResponse {
 			const subnetIds = subnets.data.slice(0, 12).map((x) => x.netUid);
 			setIds(subnetIds);
 
-			const limit = 100;
-
 			let finished = false;
 			let after: string | undefined = undefined;
 
@@ -45,8 +43,7 @@ export function useSubnetsHistory(): SubnetHistoryResponse {
 						},
 					},
 					"HEIGHT_ASC",
-					after,
-					limit
+					after
 				);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;

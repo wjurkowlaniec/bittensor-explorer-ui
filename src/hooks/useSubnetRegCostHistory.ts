@@ -18,15 +18,13 @@ export function useSubnetRegCostHistory(): SubnetRegCostHistoryResponse {
 
 	const fetchData = useCallback(async () => {
 		try {
-			const limit = 100;
-
 			let finished = false;
 			let after: string | undefined = undefined;
 
 			const result: SubnetRegCostHistory[] = [];
 			while (!finished) {
 				const regCost: SubnetRegCostHistoryPaginatedResponse =
-					await getSubnetRegCostHistory(undefined, "HEIGHT_ASC", after, limit);
+					await getSubnetRegCostHistory(undefined, "HEIGHT_ASC", after);
 				result.push(...regCost.data);
 				finished = !regCost.hasNextPage;
 				after = regCost.endCursor;

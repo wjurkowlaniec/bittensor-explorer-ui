@@ -18,8 +18,6 @@ export function useMinerIPs(id: string): MinerIPResponse {
 
 	const fetchData = useCallback(async () => {
 		try {
-			const limit = 100;
-
 			let finished = false;
 			let after: string | undefined = undefined;
 
@@ -32,8 +30,7 @@ export function useMinerIPs(id: string): MinerIPResponse {
 						},
 					},
 					"MINERS_COUNT_DESC",
-					after,
-					limit
+					after
 				);
 				result.push(...ips.data);
 				finished = !ips.hasNextPage;

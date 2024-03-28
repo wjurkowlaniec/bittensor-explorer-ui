@@ -18,8 +18,6 @@ export function useSubnetOwners(subnetId: string): SubnetOwnerResponse {
 
 	const fetchData = useCallback(async () => {
 		try {
-			const limit = 100;
-
 			let finished = false;
 			let after: string | undefined = undefined;
 
@@ -32,8 +30,7 @@ export function useSubnetOwners(subnetId: string): SubnetOwnerResponse {
 						},
 					},
 					"HEIGHT_ASC",
-					after,
-					limit
+					after
 				);
 				result.push(...stats.data);
 				finished = !stats.hasNextPage;
