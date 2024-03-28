@@ -25,12 +25,10 @@ export const MinerColdkeyDistributionChart = (
 	const loading = minerColdkeys.loading;
 	const series = useMemo(() => {
 		if (loading) return [];
-		return minerColdkeys.data.map((cur: MinerColdKey) => {
-			return {
-				x: cur.coldkey,
-				y: cur.minersCount,
-			};
-		});
+		return minerColdkeys.data.map(({coldkey, minersCount}) => ({
+			x: coldkey,
+			y: minersCount,
+		}));
 	}, [minerColdkeys]);
 
 	return loading ? (
