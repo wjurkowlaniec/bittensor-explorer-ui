@@ -4,6 +4,8 @@ import { Resource } from "../../model/resource";
 import { Subnet } from "../../model/subnet";
 import { Time } from "../Time";
 import { Link } from "../Link";
+import { AccountAddress } from "../AccountAddress";
+import { NETWORK_CONFIG } from "../../config";
 
 export type SubnetInfoTableProps = {
 	info: Resource<Subnet>;
@@ -14,6 +16,7 @@ const SubnetInfoTableAttribute = InfoTableAttribute<any>;
 
 export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 	const { info, additional } = props;
+	const { prefix } = NETWORK_CONFIG;
 
 	return (
 		<InfoTable
@@ -40,7 +43,14 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 			/>
 			<SubnetInfoTableAttribute
 				label="Registered to"
-				render={() => <span>{info.data?.owner}</span>}
+				render={() => (
+					<AccountAddress
+						address={info.data?.owner ?? ""}
+						prefix={prefix}
+						link
+						copyToClipboard="small"
+					/>
+				)}
 			/>
 		</InfoTable>
 	);
