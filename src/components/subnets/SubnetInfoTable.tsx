@@ -24,11 +24,11 @@ export const SubnetInfoTable = (props: SubnetInfoTableProps) => {
 			error={info.error}
 		>
 			<SubnetInfoTableAttribute
-				label="Github"
+				label="Subnet info"
 				render={() => <Link to={additional.github}>{additional.github}</Link>}
 			/>
 			<SubnetInfoTableAttribute
-				label="Registered at"
+				label="Registered on"
 				render={() => (
 					<Time
 						time={info?.data?.timestamp || -1}
