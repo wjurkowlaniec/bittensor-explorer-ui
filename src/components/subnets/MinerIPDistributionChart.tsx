@@ -26,12 +26,10 @@ export const MinerIPDistributionChart = (
 	const loading = minerIPs.loading;
 	const series = useMemo(() => {
 		if (loading) return [];
-		return minerIPs.data.map((cur: MinerIP) => {
-			return {
-				x: numberToIP(cur.ipAddress),
-				y: cur.minersCount,
-			};
-		});
+		return minerIPs.data.map(({ipAddress, minersCount}) => ({
+			x: numberToIP(ipAddress),
+			y: minersCount,
+		}));
 	}, [minerIPs]);
 
 	return loading ? (
