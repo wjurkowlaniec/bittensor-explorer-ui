@@ -25,16 +25,12 @@ export const MinerColdkeyDistributionChart = (
 	const loading = minerColdkeys.loading;
 	const series = useMemo(() => {
 		if (loading) return [];
-		return (minerColdkeys.data as any).reduce(
-			(prev: { x: string; y: number }[], cur: MinerColdKey) => [
-				...prev,
-				{
-					x: cur.coldkey,
-					y: cur.minersCount,
-				},
-			],
-			[]
-		);
+		return minerColdkeys.data.map((cur: MinerColdKey) => {
+			return {
+				x: cur.coldkey,
+				y: cur.minersCount,
+			};
+		});
 	}, [minerColdkeys]);
 
 	return loading ? (

@@ -25,20 +25,16 @@ export const MinerIncentiveDistributionChart = (
 	const loading = minerIncentive.loading;
 	const series = useMemo(() => {
 		if (loading) return [];
-		const result = (minerIncentive.data as any).reduce(
-			(
-				prev: { x: number; y: number; flag: boolean }[],
-				cur: MinerIncentive
-			) => [
-				...prev,
-				{
-					x: prev.length + 1,
+		const result = minerIncentive.data.map(
+			(cur: MinerIncentive, index: number) => {
+				return {
+					x: index + 1,
 					y: cur.incentive / 65535,
 					flag: cur.isImmunityPeriod,
-				},
-			],
-			[]
+				};
+			}
 		);
+
 		const immuneKeys = result.filter((x: any) => x.flag);
 		const activeKeys = result.filter((x: any) => !x.flag);
 
