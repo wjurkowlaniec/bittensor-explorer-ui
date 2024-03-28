@@ -31,9 +31,6 @@ export function useMinerIncentive(id: string): MinerIncentiveResponse {
 							netUid: {
 								equalTo: parseInt(id),
 							},
-							incentive: {
-								greaterThan: 0,
-							}
 						},
 						"INCENTIVE_ASC",
 						after,
