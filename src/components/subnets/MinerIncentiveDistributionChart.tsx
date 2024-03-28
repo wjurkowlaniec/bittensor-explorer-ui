@@ -52,16 +52,18 @@ export const MinerIncentiveDistributionChart = (
 
 	const minValue = useMemo(() => {
 		if (loading) return 0;
-		return minerIncentive.data.at(0)?.incentive;
+		return minerIncentive.data.at(0)?.incentive ?? 0;
 	}, [minerIncentive]);
 	const maxValue = useMemo(() => {
 		if (loading) return 0;
+		return minerIncentive.data.at(-1)?.incentive ?? 0;
 	}, [minerIncentive]);
 	const lowestActiveKey = useMemo(() => {
 		if (loading) return 0;
 		const activeKeys = minerIncentive.data.filter(
 			({ isImmunityPeriod }) => !isImmunityPeriod
 		);
+		if (activeKeys.length === 0) return 0;
 		return activeKeys[0]?.incentive ?? 0;
 	}, [minerIncentive]);
 
