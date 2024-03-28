@@ -50,23 +50,16 @@ export const MinerIncentiveDistributionChart = (
 		];
 	}, [minerIncentive]);
 
-	const minValue = useMemo(() => {
-		if (loading) return 0;
-		return minerIncentive.data.at(0)?.incentive ?? 0;
+	const [minValue, maxValue, lowestActiveKey] = useMemo(() => {
+		if (loading) return [0, 0, 0];
+		const activeKeys = minerIncentive.data.filter(({ isImmunityPeriod }) => !isImmunityPeriod);
+		return [
+			minerIncentive.data.at(0)?.incentive ?? 0,
+			minerIncentive.data.at(-1)?.incentive ?? 0,
+			activeKeys[0]?.incentive ?? 0,
+		];
 	}, [minerIncentive]);
-	const maxValue = useMemo(() => {
-		if (loading) return 0;
-		return minerIncentive.data.at(-1)?.incentive ?? 0;
-	}, [minerIncentive]);
-	const lowestActiveKey = useMemo(() => {
-		if (loading) return 0;
-		const activeKeys = minerIncentive.data.filter(
-			({ isImmunityPeriod }) => !isImmunityPeriod
-		);
-		if (activeKeys.length === 0) return 0;
-		return activeKeys[0]?.incentive ?? 0;
-	}, [minerIncentive]);
-
+	
 	return loading ? (
 		<div css={spinnerContainer}>
 			<img src={LoadingSpinner} />
