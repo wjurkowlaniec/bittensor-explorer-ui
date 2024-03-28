@@ -163,7 +163,7 @@ function SubnetsTable(props: SubnetsTableProps) {
 				}
 			/>
 			<SubnetsTableAttribute
-				label="Created At (UTC)"
+				label="Registered on (UTC)"
 				sortable
 				render={(subnet) =>
 					subnet.timestamp !== undefined && (
