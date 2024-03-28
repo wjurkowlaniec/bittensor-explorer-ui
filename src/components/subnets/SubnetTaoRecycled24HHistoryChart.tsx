@@ -9,10 +9,10 @@ import { SubnetHistory, SubnetHistoryResponse } from "../../model/subnet";
 import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`
-	display: flex;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
 export type SubnetTaoRecycled24HHistoryChartProps = {
@@ -36,6 +36,7 @@ export const SubnetTaoRecycled24HHistoryChart = (
 			.filter((x) => x.netUid.toString() == defaultSubnetId)
 			.map((x: SubnetHistory) => x.timestamp);
 	}, [subnetHistory]);
+
 	const series = useMemo(() => {
 		if (!subnetHistory.data) return [];
 
@@ -62,18 +63,12 @@ export const SubnetTaoRecycled24HHistoryChart = (
 
 		return result;
 	}, [subnetHistory]);
-	const minValue = useMemo(() => {
-		return subnetHistory.data.reduce((min: number, cur: SubnetHistory) => {
-			const newMin = rawAmountToDecimal(cur.recycled24H.toString()).toNumber();
-			if (min === -1) return newMin;
-			return min < newMin ? min : newMin;
-		}, -1);
-	}, [subnetHistory]);
-	const maxValue = useMemo(() => {
-		return subnetHistory.data.reduce((max: number, cur: SubnetHistory) => {
-			const newMax = rawAmountToDecimal(cur.recycled24H.toString()).toNumber();
-			return max > newMax ? max : newMax;
-		}, 0);
+
+	const [minValue, maxValue] = useMemo(() => {
+		const data = subnetHistory.data.map(({ recycled24H }) =>
+			rawAmountToDecimal(recycled24H.toString()).toNumber()
+		);
+		return [Math.min(...data), Math.max(...data)];
 	}, [subnetHistory]);
 
 	return loading ? (
