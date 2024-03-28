@@ -50,10 +50,11 @@ const subnetHeader = (theme: Theme) => css`
 	align-items: center;
 	word-break: keep-all;
 	color: ${theme.palette.text.primary};
+	padding-bottom: 20px;
 `;
 
 const subnetName = css`
-	font-size: 20px;
+	font-size: 28px;
 `;
 
 const subnetDescription = css`
@@ -121,11 +122,13 @@ const metagraphComment = () => css`
 
 const regEventsTable = () => css`
 	margin-top: 50px;
+	font-size: 19px;
 `;
 
 const distributionHeader = () => css`
 	margin-top: 50px;
 	margin-left: -20px;
+	font-size: 19px;
 `;
 
 const regEventsDescription = css`
@@ -224,7 +227,9 @@ export const SubnetPage = () => {
 		<>
 			<Card data-test="subnet-info">
 				<CardHeader css={subnetHeader}>
-					<div css={subnetName}>{subnetObj.name || "Unknown"}</div>
+					<div css={subnetName}>
+						{id} : {subnetObj.name || "Unknown"}
+					</div>
 				</CardHeader>
 				<div css={subnetDescription}>{subnetObj.description}</div>
 				<SubnetInfoTable info={subnet} additional={subnetObj} />
@@ -333,7 +338,7 @@ export const SubnetPage = () => {
 						error={!!neuronRegCostHistory.error}
 						value="registration"
 					>
-						<CardHeader>REGISTRATION DATA</CardHeader>
+						<CardHeader css={regEventsTable}>REGISTRATION DATA</CardHeader>
 						<div css={regCostContainerStyle}>
 							<NeuronRegistrationChart
 								neuronRegCostHistory={neuronRegCostHistory}
