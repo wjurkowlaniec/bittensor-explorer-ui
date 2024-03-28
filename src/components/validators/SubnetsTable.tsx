@@ -42,9 +42,7 @@ function SubnetsTable(props: SubnetsTableProps) {
 			<SubnetsTableAttribute
 				label="Name"
 				render={(subnet) => (
-					<Link to={`https://taostats.io/subnets/netuid-${subnet.netUid}`}>
-						{subnet.name}
-					</Link>
+					<Link to={`/subnet/${subnet.netUid}`}>{subnet.name}</Link>
 				)}
 			/>
 			<SubnetsTableAttribute
