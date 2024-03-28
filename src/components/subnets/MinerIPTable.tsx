@@ -40,7 +40,6 @@ function MinerIPTable(props: MinerIPTableProps) {
 	useEffect(() => {
 		Object.entries(orderMappings).forEach(([property, value]) => {
 			Object.entries(value).forEach(([dir, orderKey]) => {
-				console.log([dir, orderKey, initialSort]);
 				if (orderKey === initialSort) {
 					setSort({
 						property,
