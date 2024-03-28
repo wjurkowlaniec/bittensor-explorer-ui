@@ -3945,6 +3945,10 @@ span.menuItem-glow {
 	grid-template-columns: repeat(4, 1fr);
 }
 
+.apexcharts-datalabel {
+	font-size: 12px !important;
+}
+
 @media only screen and (max-width: 1023px) {
 	.apexcharts-legend.apexcharts-align-right.apx-legend-position-top {
 		display: grid;

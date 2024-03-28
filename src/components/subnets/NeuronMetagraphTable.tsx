@@ -18,6 +18,7 @@ import { shortenHash } from "../../utils/shortenHash";
 import { useTaoPrice } from "../../hooks/useTaoPrice";
 import { useAppStats } from "../../contexts";
 import CheckShield from "../../assets/check-shield.svg";
+import Certification from "../../assets/certification.svg";
 import Spinner from "../Spinner";
 import { css } from "@emotion/react";
 
@@ -26,6 +27,12 @@ const orangeText = css`
 `;
 const whiteText = css`
 	color: #ffffff;
+`;
+const iconContainer = css`
+	display: flex;
+	flex-direction: row;
+	gap: 5px;
+	align-items: center;
 `;
 
 export type NeuronMetagraphTableProps = {
@@ -172,9 +179,14 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 		>
 			<NeuronMetagraphTableAttribute
 				label=""
-				render={(data) =>
-					data.validatorPermit && <img src={CheckShield} alt="validator" />
-				}
+				render={(data) => (
+					<div css={iconContainer}>
+						{data.validatorPermit && <img src={CheckShield} alt="validator" />}
+						{data.isImmunityPeriod && (
+							<img src={Certification} alt="immunity" />
+						)}
+					</div>
+				)}
 			/>
 			<NeuronMetagraphTableAttribute
 				label="uid"

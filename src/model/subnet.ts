@@ -124,6 +124,7 @@ export type NeuronMetagraph = {
 	emission: bigint;
 	hotkey: string;
 	incentive: number;
+	isImmunityPeriod: boolean;
 	lastUpdate: number;
 	netUid: number;
 	rank: number;
@@ -142,4 +143,58 @@ export type NeuronRegEvent = {
 	coldkey: string;
 	height: number;
 	timestamp: string;
+};
+
+export type MinerColdKey = {
+	id: string;
+	coldkey: string;
+	minersCount: number;
+};
+
+export type MinerColdKeyPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: MinerColdKey[];
+};
+
+export type MinerColdKeyResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: MinerColdKey[];
+};
+
+export type MinerIP = {
+	id: string;
+	ipAddress: string;
+	minersCount: number;
+};
+
+export type MinerIPPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: MinerIP[];
+};
+
+export type MinerIPResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: MinerIP[];
+};
+
+export type MinerIncentive = {
+	id: string;
+	incentive: number;
+	isImmunityPeriod: boolean;
+};
+
+export type MinerIncentivePaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: MinerIncentive[];
+};
+
+export type MinerIncentiveResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: MinerIncentive[];
 };

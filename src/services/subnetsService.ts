@@ -12,6 +12,12 @@ import {
 	NeuronMetagraph,
 	NeuronRegEvent,
 	SingleSubnetStat,
+	MinerColdKeyPaginatedResponse,
+	MinerColdKey,
+	MinerIP,
+	MinerIPPaginatedResponse,
+	MinerIncentive,
+	MinerIncentivePaginatedResponse,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -113,6 +119,24 @@ export type NeuronRegEventsOrder =
 	| "HEIGHT_DESC"
 	| "TIMESTAMP_ASC"
 	| "TIMESTAMP_DESC";
+
+export type MinerColdkeyOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "MINERS_COUNT_ASC"
+	| "MINERS_COUNT_DESC";
+
+export type MinerIPOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "MINERS_COUNT_ASC"
+	| "MINERS_COUNT_DESC";
+
+export type MinerIncentiveOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "INCENTIVE_ASC"
+	| "INCENTIVE_DESC";
 
 export async function getSubnet(filter: SubnetsFilter | undefined) {
 	const response = await fetchSubnets<{ subnets: ResponseItems<Subnet> }>(
@@ -386,6 +410,7 @@ export async function getNeuronMetagraph(
 					emission
 					hotkey
 					incentive
+					isImmunityPeriod
 					lastUpdate
 					netUid
 					rank
@@ -412,7 +437,7 @@ export async function getNeuronMetagraph(
 		}
 	);
 
-	return extractItems(response.neuronInfos, pagination, transformMetagraph);
+	return extractItems(response.neuronInfos, pagination, transform);
 }
 
 export async function getNeuronRegEvents(
@@ -449,7 +474,7 @@ export async function getNeuronRegEvents(
 		}
 	);
 
-	return extractItems(response.neuronRegEvents, pagination, transformRegEvents);
+	return extractItems(response.neuronRegEvents, pagination, transform);
 }
 
 export async function getSingleSubnetStat(
@@ -487,10 +512,189 @@ export async function getSingleSubnetStat(
 	const data = extractItems(
 		response.singleSubnetStats,
 		{ limit: 1 },
-		transformSingleSubnetStat
+		transform
 	);
 
 	return data.data[0];
+}
+
+export async function getMinerColdkeys(
+	filter?: object,
+	order: MinerColdkeyOrder = "ID_ASC",
+	after?: string,
+	limit = 100
+): Promise<MinerColdKeyPaginatedResponse> {
+	const response = await fetchSubnets<{
+		minerColdkeys: ResponseItems<MinerColdKey>;
+	}>(
+		`query($filter: MinerColdkeyFilter, $order: [MinerColdkeysOrderBy!]!, $after: Cursor, $first: Int!) {
+			minerColdkeys(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					coldkey
+					minersCount
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			first: limit,
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.minerColdkeys?.pageInfo.hasNextPage,
+		endCursor: response.minerColdkeys?.pageInfo.endCursor,
+		data: response.minerColdkeys?.nodes,
+	};
+}
+
+export async function getPaginatedMinerColdkeys(
+	filter: object,
+	order: MinerColdkeyOrder = "ID_DESC",
+	pagination: PaginationOptions
+) {
+	const response = await fetchSubnets<{
+		minerColdkeys: ResponseItems<MinerColdKey>;
+	}>(
+		`query($filter: MinerColdkeyFilter, $order: [MinerColdkeysOrderBy!]!, $after: Cursor, $first: Int!) {
+			minerColdkeys(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					coldkey
+					minersCount
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				${pagination.after === undefined ? "totalCount" : ""}
+			}
+		}`,
+		{
+			after: pagination.after,
+			first: pagination.limit,
+			filter,
+			order,
+		}
+	);
+
+	return extractItems(response.minerColdkeys, pagination, transform);
+}
+
+export async function getMinerIPs(
+	filter?: object,
+	order: MinerIPOrder = "ID_ASC",
+	after?: string,
+	limit = 100
+): Promise<MinerIPPaginatedResponse> {
+	const response = await fetchSubnets<{
+		minerIps: ResponseItems<MinerIP>;
+	}>(
+		`query($filter: MinerIpFilter, $order: [MinerIpsOrderBy!]!, $after: Cursor, $first: Int!) {
+			minerIps(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					ipAddress
+					minersCount
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			first: limit,
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.minerIps?.pageInfo.hasNextPage,
+		endCursor: response.minerIps?.pageInfo.endCursor,
+		data: response.minerIps?.nodes,
+	};
+}
+
+export async function getPaginatedMinerIPs(
+	filter: object,
+	order: MinerIPOrder = "ID_DESC",
+	pagination: PaginationOptions
+) {
+	const response = await fetchSubnets<{
+		minerIps: ResponseItems<MinerIP>;
+	}>(
+		`query($filter: MinerIpFilter, $order: [MinerIpsOrderBy!]!, $after: Cursor, $first: Int!) {
+			minerIps(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					ipAddress
+					minersCount
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				${pagination.after === undefined ? "totalCount" : ""}
+			}
+		}`,
+		{
+			after: pagination.after,
+			first: pagination.limit,
+			filter,
+			order,
+		}
+	);
+
+	return extractItems(response.minerIps, pagination, transform);
+}
+
+export async function getMinerIncentive(
+	filter?: object,
+	order: MinerIncentiveOrder = "ID_ASC",
+	after?: string,
+	limit = 100
+): Promise<MinerIncentivePaginatedResponse> {
+	const response = await fetchSubnets<{
+		neuronInfos: ResponseItems<MinerIncentive>;
+	}>(
+		`query($filter: NeuronInfoFilter, $order: [NeuronInfosOrderBy!]!, $after: Cursor, $first: Int!) {
+			neuronInfos(filter: $filter, orderBy: $order, after: $after, first: $first) {
+				nodes {
+					id
+					incentive
+					isImmunityPeriod
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			first: limit,
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.neuronInfos?.pageInfo.hasNextPage,
+		endCursor: response.neuronInfos?.pageInfo.endCursor,
+		data: response.neuronInfos?.nodes,
+	};
 }
 
 function addSubnetName<T extends { netUid: number; name?: string }>(
@@ -501,16 +705,6 @@ function addSubnetName<T extends { netUid: number; name?: string }>(
 	return { ...subnet, name } as T;
 }
 
-const transformMetagraph = (metagraph: NeuronMetagraph): NeuronMetagraph => {
-	return metagraph;
-};
-
-const transformRegEvents = (regEvent: NeuronRegEvent): NeuronRegEvent => {
-	return regEvent;
-};
-
-const transformSingleSubnetStat = (
-	stat: SingleSubnetStat
-): SingleSubnetStat => {
-	return stat;
-};
+function transform<T = any>(value: T): T {
+	return value;
+}

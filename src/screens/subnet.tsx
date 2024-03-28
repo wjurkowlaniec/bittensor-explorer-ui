@@ -19,6 +19,8 @@ import { NETWORK_CONFIG } from "../config";
 import { useNeuronRegCostHistory } from "../hooks/useNeuronRegCostHistory";
 import { NeuronRegistrationChart } from "../components/subnets/NeuronRegistrationChart";
 import {
+	MinerColdkeyOrder,
+	MinerIPOrder,
 	NeuronMetagraphOrder,
 	NeuronRegEventsOrder,
 } from "../services/subnetsService";
@@ -30,6 +32,16 @@ import { useSingleSubnetStat } from "../hooks/useSingleSubnetStat";
 import { StatItem } from "../components/subnets/StatItem";
 import { useNeuronRegEvents } from "../hooks/useNeuronRegEvents";
 import NeuronRegEventsTable from "../components/subnets/NeuronRegEventsTable";
+import { useMinerIncentive } from "../hooks/useMinerIncentive";
+import { MinerIncentiveDistributionChart } from "../components/subnets/MinerIncentiveDistributionChart";
+import { useMinerColdkeys } from "../hooks/useMinerColdkeys";
+import { MinerColdkeyDistributionChart } from "../components/subnets/MinerColdkeyDistributionChart";
+import { usePaginatedMinerColdkeys } from "../hooks/usePaginatedMinerColdkeys";
+import MinerColdkeyTable from "../components/subnets/MinerColdkeyTable";
+import { useMinerIPs } from "../hooks/useMinerIPs";
+import { MinerIPDistributionChart } from "../components/subnets/MinerIPDistributionChart";
+import { usePaginatedMinerIPs } from "../hooks/usePaginatedMinerIPs";
+import MinerIPTable from "../components/subnets/MinerIPTable";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -111,6 +123,11 @@ const regEventsTable = () => css`
 	margin-top: 50px;
 `;
 
+const distributionHeader = () => css`
+	margin-top: 50px;
+	margin-left: -20px;
+`;
+
 const regEventsDescription = css`
 	font-size: 14px;
 	margin-top: -45px;
@@ -165,6 +182,30 @@ export const SubnetPage = () => {
 			timestamp: { greaterThan: regEventsFrom },
 		},
 		neuronRegEventsSort
+	);
+
+	const minerIncentive = useMinerIncentive(id);
+	const minerColdkeys = useMinerColdkeys(id);
+	const minerIPs = useMinerIPs(id);
+
+	const minerColdkeyInitialOrder: MinerIPOrder = "MINERS_COUNT_DESC";
+	const [minerColdkeySort, setMinerColdkeySort] = useState<MinerIPOrder>(
+		minerColdkeyInitialOrder
+	);
+	const paginatedMinerColdkeys = usePaginatedMinerColdkeys(
+		{
+			netUid: { equalTo: parseInt(id) },
+		},
+		minerColdkeySort
+	);
+	const minerIPInitialOrder: MinerIPOrder = "MINERS_COUNT_DESC";
+	const [minerIPSort, setMinerIPSort] =
+		useState<MinerIPOrder>(minerIPInitialOrder);
+	const paginatedMinerIPs = usePaginatedMinerIPs(
+		{
+			netUid: { equalTo: parseInt(id) },
+		},
+		minerIPSort
 	);
 
 	useDOMEventTrigger("data-loaded", !subnet.loading);
@@ -263,8 +304,8 @@ export const SubnetPage = () => {
 				<TabbedContent defaultTab={tab.slice(1).toString()} noPadding>
 					<TabPane
 						label="Metagraph"
-						loading={subnetOwners.loading}
-						error={!!subnetOwners.error}
+						loading={neuronMetagraph.loading}
+						error={!!neuronMetagraph.error}
 						value="metagraph"
 					>
 						<div css={metagraphComment}>
@@ -330,6 +371,37 @@ export const SubnetPage = () => {
 								setNeuronRegEventsSort(sortKey)
 							}
 							initialSort={neuronRegEventsInitialOrder}
+						/>
+					</TabPane>
+					<TabPane
+						label="Distribution"
+						loading={minerIncentive.loading}
+						error={!!minerIncentive.error}
+						value="distribution"
+					>
+						<CardHeader css={distributionHeader}>
+							MINER INCENTIVE DISTRIBUTION
+						</CardHeader>
+						<MinerIncentiveDistributionChart minerIncentive={minerIncentive} />
+						<CardHeader css={distributionHeader}>
+							MINER COLDKEY DISTRIBUTION
+						</CardHeader>
+						<MinerColdkeyDistributionChart minerColdkeys={minerColdkeys} />
+						<MinerColdkeyTable
+							minerColdkeys={paginatedMinerColdkeys}
+							onSortChange={(sortKey: MinerColdkeyOrder) =>
+								setMinerColdkeySort(sortKey)
+							}
+							initialSort={minerColdkeyInitialOrder}
+						/>
+						<CardHeader css={distributionHeader}>
+							MINER IP DISTRIBUTION
+						</CardHeader>
+						<MinerIPDistributionChart minerIPs={minerIPs} />
+						<MinerIPTable
+							minerIPs={paginatedMinerIPs}
+							onSortChange={(sortKey: MinerIPOrder) => setMinerIPSort(sortKey)}
+							initialSort={minerIPInitialOrder}
 						/>
 					</TabPane>
 				</TabbedContent>

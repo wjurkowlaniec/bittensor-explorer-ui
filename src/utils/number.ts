@@ -161,7 +161,9 @@ export function zeroPad(input: string | number, length: number): string {
 	return (Array(length + 1).join("0") + input).slice(-length);
 }
 
-export function numberToIP(ip: number) {
+export function numberToIP(val: number | string) {
+	const ip = parseInt(val.toString());
+
 	const part1 = ip & 255;
 	const part2 = (ip >> 8) & 255;
 	const part3 = (ip >> 16) & 255;
