@@ -167,7 +167,7 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			data={metagraph.data}
 			loading={metagraph.loading}
 			notFound={metagraph.notFound}
-			notFoundMessage="No metagraph"
+			notFoundMessage="No metagraph records."
 			error={metagraph.error}
 			pagination={metagraph.pagination}
 			data-test="metagraph-table"
