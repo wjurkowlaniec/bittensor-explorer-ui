@@ -90,7 +90,7 @@ export const MinerIPDistributionChart = (
 					show: true,
 					curve: "smooth",
 					lineCap: "butt",
-					colors: ["white"],
+					colors: ["black"],
 					width: 2,
 					dashArray: 0,
 				},
