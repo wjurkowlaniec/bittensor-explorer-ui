@@ -6,42 +6,43 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounce } from "../hooks/useDebounce";
 
 const searchStyle = () => css`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 0 0 16px 20px;
-  font-size: 14px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 0 0 16px 20px;
+	font-size: 14px;
 `;
 
 const searchLabelStyle = (theme: Theme) => css`
-  color: ${theme.palette.secondary.main};
-  margin-right: 5px;
+	color: ${theme.palette.secondary.main};
+	margin-right: 5px;
 `;
 
 const searchInputStyle = css`
-  background-color: rgb(18, 18, 18);
-  background-image: url(/search.svg);
-  background-position: 18px center;
-  background-repeat: no-repeat;
-  background-size: 16px;
-  border: 0;
-  border-radius: 3px;
-  color: #fff;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 5px 0 41px;
-  max-width: 200px;
-  width: 100%;
+	background-color: rgb(18, 18, 18);
+	background-image: url(/search.svg);
+	background-position: 18px center;
+	background-repeat: no-repeat;
+	background-size: 16px;
+	border: 0;
+	border-radius: 3px;
+	color: #fff;
+	height: 40px;
+	line-height: 40px;
+	padding: 0 5px 0 41px;
+	max-width: 200px;
+	width: 100%;
 `;
 
 type TableSearchProps = {
 	value?: string;
 	onChange?: (newValue?: string) => void;
 	placeholder?: string;
+	background?: string;
 };
 
 export function TableSearch(props: TableSearchProps) {
-	const { onChange, placeholder } = props;
+	const { onChange, placeholder, background } = props;
 	const [value, setValue] = useState<string>("");
 	const debouncedValue = useDebounce<string>(value, 800);
 
@@ -61,6 +62,7 @@ export function TableSearch(props: TableSearchProps) {
 				value={value}
 				onChange={handleChange}
 				placeholder={placeholder}
+				style={{ backgroundColor: background }}
 			/>
 		</div>
 	);

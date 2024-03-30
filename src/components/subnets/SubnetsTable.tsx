@@ -15,6 +15,7 @@ import {
 	formatNumberWithPrecision,
 	nFormatter,
 	rawAmountToDecimal,
+	zeroPad,
 } from "../../utils/number";
 import { Currency } from "../Currency";
 
@@ -32,10 +33,6 @@ const orderMappings = {
 		[SortDirection.ASC]: "NET_UID_ASC",
 		[SortDirection.DESC]: "NET_UID_DESC",
 	},
-	createdAt: {
-		[SortDirection.ASC]: "CREATED_AT_ASC",
-		[SortDirection.DESC]: "CREATED_AT_DESC",
-	},
 	emission: {
 		[SortDirection.ASC]: "EMISSION_ASC",
 		[SortDirection.DESC]: "EMISSION_DESC",
@@ -52,6 +49,10 @@ const orderMappings = {
 		[SortDirection.ASC]: "RECYCLED_BY_OWNER_ASC",
 		[SortDirection.DESC]: "RECYCLED_BY_OWNER_DESC",
 	},
+	timestamp: {
+		[SortDirection.ASC]: "TIMESTAMP_ASC",
+		[SortDirection.DESC]: "TIMESTAMP_DESC",
+	},
 };
 
 function SubnetsTable(props: SubnetsTableProps) {
@@ -62,26 +63,34 @@ function SubnetsTable(props: SubnetsTableProps) {
 
 	const rows = useMemo(() => {
 		if (!subnets || subnets.loading || !subnets.data) return [];
-		const { totalSum, daySum, ownerSum } = subnets.data.reduce(
+		const { id, totalSum, daySum, ownerSum } = subnets.data.reduce(
 			(
 				{
+					id,
 					totalSum,
 					daySum,
 					ownerSum,
-				}: { totalSum: bigint; daySum: bigint; ownerSum: bigint },
+				}: { id: string; totalSum: bigint; daySum: bigint; ownerSum: bigint },
 				subnet
 			) => {
 				return {
+					id,
 					totalSum: totalSum + BigInt(subnet.recycledLifetime),
 					daySum: daySum + BigInt(subnet.recycled24H),
 					ownerSum: ownerSum + BigInt(subnet.recycledByOwner),
 				};
 			},
-			{ totalSum: BigInt(0), daySum: BigInt(0), ownerSum: BigInt(0) }
+			{
+				id: "total",
+				totalSum: BigInt(0),
+				daySum: BigInt(0),
+				ownerSum: BigInt(0),
+			}
 		);
 		return [
 			...subnets.data,
 			{
+				id,
 				recycledLifetime: totalSum,
 				recycled24H: daySum,
 				recycledByOwner: ownerSum,
@@ -140,30 +149,28 @@ function SubnetsTable(props: SubnetsTableProps) {
 			<SubnetsTableAttribute
 				label="ID"
 				sortable
-				render={(subnet) => <>{subnet.netUid}</>}
+				render={(subnet) => <>{subnet.netUid && zeroPad(subnet.netUid, 2)}</>}
 				sortProperty="netUid"
 			/>
 			<SubnetsTableAttribute
 				label="Name"
 				render={(subnet) =>
 					subnet.name ? (
-						<Link to={`https://taostats.io/subnets/netuid-${subnet.netUid}`}>
-							{subnet.name}
-						</Link>
+						<Link to={`/subnet/${subnet.netUid}`}>{subnet.name}</Link>
 					) : (
 						<>TOTAL</>
 					)
 				}
 			/>
 			<SubnetsTableAttribute
-				label="Created At (UTC)"
+				label="Registered on (UTC)"
 				sortable
 				render={(subnet) =>
 					subnet.timestamp !== undefined && (
 						<Time time={subnet.timestamp} utc timezone={false} />
 					)
 				}
-				sortProperty="createdAt"
+				sortProperty="timestamp"
 			/>
 			<SubnetsTableAttribute
 				label="Owner"
@@ -184,8 +191,15 @@ function SubnetsTable(props: SubnetsTableProps) {
 				render={({ emission }) =>
 					emission !== undefined && (
 						<>
-							{emission >= 100000 ? formatNumber(rawAmountToDecimal(emission).toNumber() * 100, {decimalPlaces: 2})
-								: formatNumberWithPrecision(rawAmountToDecimal(emission).toNumber() * 100, 1, true)}
+							{emission >= 100000
+								? formatNumber(rawAmountToDecimal(emission).toNumber() * 100, {
+									decimalPlaces: 2,
+								})
+								: formatNumberWithPrecision(
+									rawAmountToDecimal(emission).toNumber() * 100,
+									1,
+									true
+								)}
 							%
 						</>
 					)

@@ -24,6 +24,7 @@ export const DICTIONARY_ENDPOINT =
 export const INDEXER_ENDPOINT = process.env.REACT_APP_INDEXER_ENDPOINT || "";
 export const HISTORICAL_ENDPOINT =
 	process.env.REACT_APP_HISTORICAL_ENDPOINT || "";
+export const SUBNETS_ENDPOINT = process.env.REACT_APP_SUBNETS_ENDPOINT || "";
 export const TAOSTATS_DATA_ENDPOINT =
 	process.env.REACT_APP_TAOSTATS_DATA_ENDPOINT || "";
 

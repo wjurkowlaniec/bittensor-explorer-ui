@@ -14,7 +14,8 @@ export function usePaginatedResource<T = any, F extends any[] = any[]>(
 		...args: [...F, PaginationOptions]
 	) => ItemsResponse<T> | Promise<ItemsResponse<T>>,
 	args: F,
-	options?: FetchOptions
+	options?: FetchOptions,
+	limit?: number
 ) {
 	const rollbar = useRollbar();
 
@@ -22,7 +23,7 @@ export function usePaginatedResource<T = any, F extends any[] = any[]>(
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<any>();
 
-	const pagination = usePagination();
+	const pagination = usePagination(limit);
 
 	const argsRef = useRef(args);
 	const paginationRef = useRef(pagination);

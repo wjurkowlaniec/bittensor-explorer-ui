@@ -9,7 +9,17 @@ export function rawAmountToDecimal(amount: string | number | undefined) {
 	return new Decimal(amount || 0).mul(scale);
 }
 
-export function rawAmountToDecimaledString(amount: string | number | undefined) {
+export function rawAmountToDecimalBy(
+	amount: string | number | undefined,
+	divideBy: number
+) {
+	const scale = new Decimal(divideBy);
+	return new Decimal(amount || 0).div(scale);
+}
+
+export function rawAmountToDecimaledString(
+	amount: string | number | undefined
+) {
 	const { decimals } = NETWORK_CONFIG;
 	const scale = new Decimal(10).pow(decimals);
 	return new Decimal(amount || 0).mul(scale).toString();
@@ -18,20 +28,31 @@ export function rawAmountToDecimaledString(amount: string | number | undefined) 
 export type FormatNumberOptions = {
 	decimalPlaces?: number;
 	compact?: boolean;
-}
+};
 
-export function formatNumber(value: number | Decimal, options: FormatNumberOptions = {}) {
+export function formatNumber(
+	value: number | Decimal,
+	options: FormatNumberOptions = {}
+) {
 	if (!(value instanceof Decimal)) {
 		value = new Decimal(value);
 	}
 
 	return Intl.NumberFormat("en-US", {
-		maximumFractionDigits: options.compact ? 3 : (options.decimalPlaces === undefined ? 20 : options.decimalPlaces),
-		notation: options.compact ? "compact" : undefined
+		maximumFractionDigits: options.compact
+			? 3
+			: options.decimalPlaces === undefined
+				? 20
+				: options.decimalPlaces,
+		notation: options.compact ? "compact" : undefined,
 	}).format(value.toString() as any);
 }
 
-export function formatNumberWithPrecision(value: number | Decimal, precision: number, disableExponential?: boolean) {
+export function formatNumberWithPrecision(
+	value: number | Decimal,
+	precision: number,
+	disableExponential?: boolean
+) {
 	let formattedNumber = value.toPrecision(precision);
 
 	// Check if the number is in exponential format
@@ -41,7 +62,7 @@ export function formatNumberWithPrecision(value: number | Decimal, precision: nu
 		const precision = parseInt(formattedNumber.substring(exponentIndex + 2));
 		formattedNumber = Number(formattedNumber).toFixed(precision);
 	}
-  
+
 	return formattedNumber;
 }
 
@@ -64,29 +85,36 @@ export const nFormatter = (num: number, digits: number) => {
 			return num >= item.value;
 		});
 
-	return item ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol : Number(num).toFixed(digits);
+	return item
+		? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol
+		: Number(num).toFixed(digits);
 };
-
 
 export type FormatCurrencyOptions = {
 	decimalPlaces?: "optimal" | number;
 	minimalUsdValue?: Decimal;
 	usdRate?: Decimal;
 	compact?: boolean;
-}
+};
 
-export function formatCurrency(value: number | Decimal, currency: string, options: FormatCurrencyOptions = {}) {
+export function formatCurrency(
+	value: number | Decimal,
+	currency: string,
+	options: FormatCurrencyOptions = {}
+) {
 	if (!(value instanceof Decimal)) {
 		value = new Decimal(value);
 	}
 
-	let decimalPlaces = options.decimalPlaces === undefined ? 20 : options.decimalPlaces;
+	let decimalPlaces =
+		options.decimalPlaces === undefined ? 20 : options.decimalPlaces;
 
 	if (decimalPlaces === "optimal") {
-		decimalPlaces =
-			options.usdRate ? getOptimalDecimalPlaces(options.usdRate, options.minimalUsdValue)
-				: currency.toUpperCase() === "USD" ? 2 // default for USD
-					: 4; // default for crypto
+		decimalPlaces = options.usdRate
+			? getOptimalDecimalPlaces(options.usdRate, options.minimalUsdValue)
+			: currency.toUpperCase() === "USD"
+				? 2 // default for USD
+				: 4; // default for crypto
 	}
 
 	// Intl formats fiat currencies using proper symbols like $
@@ -96,14 +124,16 @@ export function formatCurrency(value: number | Decimal, currency: string, option
 			style: "decimal",
 			currency,
 			maximumFractionDigits: options.compact ? 3 : decimalPlaces,
-			notation: options.compact ? "compact" : undefined
+			notation: options.compact ? "compact" : undefined,
 		}).format(value.toString() as any);
 	}
 
 	// cryptocurrencies are formatted simply using the code (KSM)
-	return `${formatNumber(value, { decimalPlaces, compact: options.compact })} ${currency}`;
+	return `${formatNumber(value, {
+		decimalPlaces,
+		compact: options.compact,
+	})} ${currency}`;
 }
-
 
 /**
  * Get optimal decimal places for a cryptocurrency to able
@@ -114,12 +144,31 @@ export function formatCurrency(value: number | Decimal, currency: string, option
  * @param defaultDecimalPlaces
  * @returns
  */
-export function getOptimalDecimalPlaces(usdRate: Decimal, minimalUsdValue = new Decimal("0.01")) {
+export function getOptimalDecimalPlaces(
+	usdRate: Decimal,
+	minimalUsdValue = new Decimal("0.01")
+) {
 	const cryptoValueOfMinimalUsdValue = minimalUsdValue.div(usdRate);
-	const mostSignificantDecimalPlace = cryptoValueOfMinimalUsdValue.log().neg().ceil().toNumber();
+	const mostSignificantDecimalPlace = cryptoValueOfMinimalUsdValue
+		.log()
+		.neg()
+		.ceil()
+		.toNumber();
 	return mostSignificantDecimalPlace;
 }
 
 export function zeroPad(input: string | number, length: number): string {
 	return (Array(length + 1).join("0") + input).slice(-length);
+}
+
+export function numberToIP(val: number | string) {
+	const ip = parseInt(val.toString());
+
+	const part1 = ip & 255;
+	const part2 = (ip >> 8) & 255;
+	const part3 = (ip >> 16) & 255;
+	const part4 = (ip >> 24) & 255;
+
+	const ipStr = part4 + "." + part3 + "." + part2 + "." + part1;
+	return ipStr.slice(0, 7) + "xx.xx";
 }

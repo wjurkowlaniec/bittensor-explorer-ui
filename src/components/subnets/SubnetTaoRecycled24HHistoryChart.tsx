@@ -4,93 +4,71 @@ import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
-import {
-	formatNumber,
-	formatNumberWithPrecision,
-	rawAmountToDecimal,
-	zeroPad,
-} from "../../utils/number";
+import { formatCurrency, rawAmountToDecimal } from "../../utils/number";
 import { SubnetHistory, SubnetHistoryResponse } from "../../model/subnet";
-import subnetsJson from "../../subnets.json";
-const subnetsObj = subnetsJson as Record<string, Record<string, string>>;
+import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`
-	display: flex;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 `;
 
-export type SubnetEmissionsHistoryChartProps = {
+export type SubnetTaoRecycled24HHistoryChartProps = {
 	subnetHistory: SubnetHistoryResponse;
+	subnetId: string;
 };
 
-export const SubnetEmissionsHistoryChart = (
-	props: SubnetEmissionsHistoryChartProps
+export const SubnetTaoRecycled24HHistoryChart = (
+	props: SubnetTaoRecycled24HHistoryChartProps
 ) => {
 	const theme = useTheme();
 
-	const { subnetHistory } = props;
+	const { subnetHistory, subnetId } = props;
+	const { currency } = NETWORK_CONFIG;
 
 	const loading = subnetHistory.loading;
 	const timestamps = useMemo(() => {
 		if (!subnetHistory.data) return [];
-		const resp: string[] = (subnetHistory.data as any).reduce(
-			(prev: string[], cur: SubnetHistory) => {
-				if (prev.find((x) => x === cur.timestamp) === undefined)
-					prev.push(cur.timestamp);
-				return prev;
-			},
-			[]
-		);
-		return resp;
+		const defaultSubnetId = subnetHistory.data[0]?.netUid.toString();
+		return subnetHistory.data
+			.filter((x) => x.netUid.toString() == defaultSubnetId)
+			.map((x: SubnetHistory) => x.timestamp);
 	}, [subnetHistory]);
+
 	const series = useMemo(() => {
 		if (!subnetHistory.data) return [];
 
-		const subnets: any[] = [];
+		const subnets: any = {};
 		for (const subnet of subnetHistory.data) {
-			const { netUid, timestamp, emission } = subnet;
+			const { netUid, recycled24H } = subnet;
 			const subnetIdStr = netUid.toString();
 
-			let subnetIdx = subnets.findIndex((x) => x.id == subnetIdStr);
-			if (subnetIdx === -1) {
-				subnets.push({
-					name:
-						zeroPad(subnetIdStr, 2) +
-						": " +
-						(subnetsObj[subnetIdStr]?.name || "Unknown"),
-					id: subnetIdStr,
+			const data = rawAmountToDecimal(recycled24H.toString()).toNumber();
+			if (!subnets[subnetIdStr]) {
+				subnets[subnetIdStr] = {
+					name: "",
 					type: "line",
 					data: [],
-				});
-				subnetIdx = subnets.length - 1;
+				};
 			}
-			subnets[subnetIdx].data.push({
-				x: timestamp,
-				y: emission,
-			});
+			subnets[subnetIdStr].data.push(data);
 		}
 
-		const result: any[] = [];
-		subnetHistory.ids.forEach((id) => {
-			const subnet = subnets.find((x) => x.id == id);
-			result.push(subnet);
-		});
+		const result: any = [];
+		for (const x in subnets) {
+			result.push(subnets[x]);
+		}
+
 		return result;
 	}, [subnetHistory]);
-	const minValue = useMemo(() => {
-		return subnetHistory.data.reduce((min: number, cur: SubnetHistory) => {
-			const newMin = parseInt(cur.emission.toString());
-			if (min === -1) return newMin;
-			return min < newMin ? min : newMin;
-		}, -1);
-	}, [subnetHistory]);
-	const maxValue = useMemo(() => {
-		return subnetHistory.data.reduce((max: number, cur: SubnetHistory) => {
-			const newMax = parseInt(cur.emission.toString());
-			return max > newMax ? max : newMax;
-		}, 0);
+
+	const [minValue, maxValue] = useMemo(() => {
+		const data = subnetHistory.data.map(({ recycled24H }) =>
+			rawAmountToDecimal(recycled24H.toString()).toNumber()
+		);
+		return [Math.min(...data), Math.max(...data)];
 	}, [subnetHistory]);
 
 	return loading ? (
@@ -121,14 +99,14 @@ export const SubnetEmissionsHistoryChart = (
 						},
 						export: {
 							csv: {
-								filename: "top-subnets",
+								filename: `subnet-${subnetId}`,
 								headerCategory: "Date",
 							},
 							png: {
-								filename: "top-subnets",
+								filename: `subnet-${subnetId}`,
 							},
 							svg: {
-								filename: "top-subnets",
+								filename: `subnet-${subnetId}`,
 							},
 						},
 					},
@@ -158,7 +136,7 @@ export const SubnetEmissionsHistoryChart = (
 				},
 				labels: timestamps,
 				legend: {
-					show: true,
+					show: false,
 					showForSingleSeries: true,
 					position: "top",
 					horizontalAlign: "right",
@@ -205,17 +183,12 @@ export const SubnetEmissionsHistoryChart = (
 					theme: "dark",
 					shared: true,
 					intersect: false,
+					marker: {
+						show: false,
+					},
 					x: {
 						formatter: (val: number) => {
 							const day = new Date(val);
-							const lastDay = new Date();
-							lastDay.setDate(lastDay.getDate() + 1);
-							if (
-								day.getFullYear() === lastDay.getFullYear() &&
-								day.getMonth() === lastDay.getMonth() &&
-								day.getDate() === lastDay.getDate()
-							)
-								return "Now";
 							const options: Intl.DateTimeFormatOptions = {
 								day: "2-digit",
 								month: "short",
@@ -227,15 +200,7 @@ export const SubnetEmissionsHistoryChart = (
 					},
 					y: {
 						formatter: (val: number) =>
-							(val >= 100000
-								? formatNumber(rawAmountToDecimal(val).toNumber() * 100, {
-									decimalPlaces: 2,
-								})
-								: formatNumberWithPrecision(
-									rawAmountToDecimal(val).toNumber() * 100,
-									1,
-									true
-								)) + "%",
+							formatCurrency(val, "USD", { decimalPlaces: 2 }) + ` ${currency}`,
 					},
 				},
 				xaxis: {
@@ -255,24 +220,15 @@ export const SubnetEmissionsHistoryChart = (
 				},
 				yaxis: {
 					opposite: true,
-					decimalsInFloat: 3,
+					decimalsInFloat: 0,
+					tickAmount: 5,
 					labels: {
 						style: {
 							colors: theme.palette.neutral.main,
 						},
-						formatter: (val: number) =>
-							(val >= 100000
-								? formatNumber(rawAmountToDecimal(val).toNumber() * 100, {
-									decimalPlaces: 2,
-								})
-								: formatNumberWithPrecision(
-									rawAmountToDecimal(val).toNumber() * 100,
-									1,
-									true
-								)) + "%",
 					},
 					title: {
-						text: "EMISSION",
+						text: "TAO RECYCLED (24H)",
 						style: {
 							color: theme.palette.neutral.main,
 						},

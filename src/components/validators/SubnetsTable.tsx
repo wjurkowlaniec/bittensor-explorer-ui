@@ -6,13 +6,13 @@ import { Subnet } from "../../model/subnet";
 import { Theme, css } from "@emotion/react";
 
 const successStyle = (theme: Theme) => css`
-  font-size: 16px;
-  color: ${theme.palette.success.main};
+	font-size: 16px;
+	color: ${theme.palette.success.main};
 `;
 
 const failedStyle = (theme: Theme) => css`
-  font-size: 16px;
-  color: ${theme.palette.error.main};
+	font-size: 16px;
+	color: ${theme.palette.error.main};
 `;
 
 export type SubnetsTableProps = {
@@ -42,17 +42,14 @@ function SubnetsTable(props: SubnetsTableProps) {
 			<SubnetsTableAttribute
 				label="Name"
 				render={(subnet) => (
-					<Link to={`https://taostats.io/subnets/netuid-${subnet.netUid}`}>
-						{subnet.name}
-					</Link>
+					<Link to={`/subnet/${subnet.netUid}`}>{subnet.name}</Link>
 				)}
 			/>
 			<SubnetsTableAttribute
 				label="Registration"
 				render={(subnet) =>
 					registrations?.find((regist: number) => {
-						if(regist.toString() == subnet.netUid.toString())
-							return true;
+						if (regist.toString() == subnet.netUid.toString()) return true;
 						return false;
 					}) ? (
 							<span css={successStyle}>&#x1F5F9;</span>
@@ -65,8 +62,7 @@ function SubnetsTable(props: SubnetsTableProps) {
 				label="Validator Permits"
 				render={(subnet) =>
 					validatorPermits?.find((permit: number) => {
-						if(permit.toString() == subnet.netUid.toString())
-							return true;
+						if (permit.toString() == subnet.netUid.toString()) return true;
 						return false;
 					}) ? (
 							<span css={successStyle}>&#x1F5F9;</span>
