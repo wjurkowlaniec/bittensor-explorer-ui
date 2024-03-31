@@ -155,13 +155,13 @@
         "description": ""
     },
     "31": {
-        "name": "Healthcare",
-        "github": "https://github.com/bthealthcare/healthcare-subnet",
+        "name": "TAS",
+        "github": "https://github.com/tao-accounting-system-protocol/tas-protocol",
         "description": ""
     },
     "32": {
         "name": "It's AI",
-        "github": "",
+        "github": "https://github.com/It-s-AI/llm-detection",
         "description": ""
     }
 }
