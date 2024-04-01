@@ -166,7 +166,7 @@ export const SubnetPage = () => {
 	const [neuronMetagraphSort, setNeuronMetagraphSort] =
 		useState<NeuronMetagraphOrder>(neuronMetagraphInitialOrder);
 	const metagraphInitialSearch = "";
-	const [metagraphSearch, setMetagraphSearch] = useState<string | undefined>(
+	const [searchText, setSearchText] = useState<string | undefined>(
 		metagraphInitialSearch
 	);
 	const neuronMetagraph = useNeuronMetagraph(
@@ -175,14 +175,15 @@ export const SubnetPage = () => {
 			or: [
 				{
 					hotkey: {
-						includesInsensitive: metagraphSearch,
+						includesInsensitive: searchText,
 					},
 				},
 				{
 					coldkey: {
-						includesInsensitive: metagraphSearch,
+						includesInsensitive: searchText,
 					},
 				},
+				...(searchText ? [{ uid: { equalTo: parseInt(searchText) } }]: [])
 			],
 		},
 		neuronMetagraphSort
@@ -349,7 +350,7 @@ export const SubnetPage = () => {
 							}
 							initialSort={neuronMetagraphInitialOrder}
 							onSearchChange={(newSearch?: string) =>
-								setMetagraphSearch(newSearch)
+								setSearchText(newSearch)
 							}
 							initialSearch={metagraphInitialSearch}
 						/>
