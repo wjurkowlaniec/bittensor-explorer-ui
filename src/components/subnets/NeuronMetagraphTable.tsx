@@ -111,8 +111,8 @@ const orderMappings = {
 		[SortDirection.DESC]: "DAILY_REWARD_DESC",
 	},
 	totalDollar: {
-		[SortDirection.ASC]: "TOTAL_REWARD_ASC",
-		[SortDirection.DESC]: "TOTAL_REWARD_DESC",
+		[SortDirection.ASC]: "STAKE_ASC",
+		[SortDirection.DESC]: "STAKE_DESC",
 	},
 };
 
@@ -390,24 +390,28 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 				}
 				sortProperty="dailyDollar"
 			/>
-			{/*<NeuronMetagraphTableAttribute
+			<NeuronMetagraphTableAttribute
 				label="total $"
 				sortable
-				render={(data) => (
-					<span css={whiteText}>
-						$
-						{formatNumber(
-							rawAmountToDecimal(data.totalReward.toString()).mul(
-								taoPrice.data || 1
-							),
-							{
-								decimalPlaces: 2,
-							}
-						)}
-					</span>
-				)}
+				render={(data) =>
+					taoPrice.loading ? (
+						<Spinner small />
+					) : (
+						<span css={whiteText}>
+							$
+							{formatNumber(
+								rawAmountToDecimal(data.stake.toString()).mul(
+									taoPrice.data || 0
+								),
+								{
+									decimalPlaces: 2,
+								}
+							)}
+						</span>
+					)
+				}
 				sortProperty="totalDollar"
-			/>*/}
+			/>
 		</ItemsTable>
 	);
 }
