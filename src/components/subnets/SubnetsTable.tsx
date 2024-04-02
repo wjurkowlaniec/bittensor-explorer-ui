@@ -63,25 +63,22 @@ function SubnetsTable(props: SubnetsTableProps) {
 
 	const rows = useMemo(() => {
 		if (!subnets || subnets.loading || !subnets.data) return [];
-		const { id, totalSum, daySum, ownerSum } = subnets.data.reduce(
+		const { totalSum, daySum, ownerSum } = subnets.data.reduce(
 			(
 				{
-					id,
 					totalSum,
 					daySum,
 					ownerSum,
-				}: { id: string; totalSum: bigint; daySum: bigint; ownerSum: bigint },
+				}: { totalSum: bigint; daySum: bigint; ownerSum: bigint },
 				subnet
 			) => {
 				return {
-					id,
 					totalSum: totalSum + BigInt(subnet.recycledLifetime),
 					daySum: daySum + BigInt(subnet.recycled24H),
 					ownerSum: ownerSum + BigInt(subnet.recycledByOwner),
 				};
 			},
 			{
-				id: "total",
 				totalSum: BigInt(0),
 				daySum: BigInt(0),
 				ownerSum: BigInt(0),
@@ -90,7 +87,7 @@ function SubnetsTable(props: SubnetsTableProps) {
 		return [
 			...subnets.data,
 			{
-				id,
+				id: "total",
 				recycledLifetime: totalSum,
 				recycled24H: daySum,
 				recycledByOwner: ownerSum,
@@ -208,12 +205,12 @@ function SubnetsTable(props: SubnetsTableProps) {
 			/>
 			<SubnetsTableAttribute
 				label="Recycled"
-				render={({ recycledByOwner }) => {
+				render={({ name, recycledByOwner }) => {
 					return (
 						<>
 							{nFormatter(
 								rawAmountToDecimal(recycledByOwner.toString()).toNumber(),
-								2
+								name ? 2: 0
 							).toString() + ` ${NETWORK_CONFIG.currency}`}
 						</>
 					);
@@ -223,12 +220,12 @@ function SubnetsTable(props: SubnetsTableProps) {
 			/>
 			<SubnetsTableAttribute
 				label="Recycled(24h)"
-				render={({ recycled24H }) => {
+				render={({ name, recycled24H }) => {
 					return (
 						<Currency
 							amount={recycled24H}
 							currency={currency}
-							decimalPlaces={2}
+							decimalPlaces={name? 2: 0}
 							showFullInTooltip
 						/>
 					);
@@ -238,12 +235,12 @@ function SubnetsTable(props: SubnetsTableProps) {
 			/>
 			<SubnetsTableAttribute
 				label="Lifetime"
-				render={({ recycledLifetime }) => {
+				render={({ name, recycledLifetime }) => {
 					return (
 						<>
 							{nFormatter(
 								rawAmountToDecimal(recycledLifetime.toString()).toNumber(),
-								2
+								name ? 2: 0
 							).toString() + ` ${NETWORK_CONFIG.currency}`}
 						</>
 					);
