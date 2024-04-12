@@ -18,6 +18,9 @@ import {
 	MinerIPPaginatedResponse,
 	MinerIncentive,
 	MinerIncentivePaginatedResponse,
+	SubnetHyperparams,
+	NeuronPerformance,
+	NeuronPerformancePaginatedResponse,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -26,8 +29,10 @@ import { extractItems } from "../utils/extractItems";
 import { fetchSubnets } from "./fetchService";
 
 export type SubnetsFilter = object;
+export type SubnetHyperparamsFilter = object;
 export type SingleSubnetStatsFilter = object;
 export type NeuronMetagraphFilter = object;
+export type NeuronPerformanceFilter = object;
 export type NeuronRegEventsFilter = object;
 
 export type SubnetsOrder =
@@ -93,8 +98,6 @@ export type NeuronMetagraphOrder =
 	| "RANK_DESC"
 	| "STAKE_ASC"
 	| "STAKE_DESC"
-	| "TOTAL_REWARD_ASC"
-	| "TOTAL_REWARD_DESC"
 	| "TRUST_ASC"
 	| "TRUST_DESC"
 	| "UID_ASC"
@@ -103,6 +106,12 @@ export type NeuronMetagraphOrder =
 	| "VALIDATOR_PERMIT_DESC"
 	| "VALIDATOR_TRUST_ASC"
 	| "VALIDATOR_TRUST_DESC";
+
+export type NeuronPerformanceOrder =
+	| "ID_ASC"
+	| "ID_DESC"
+	| "HEIGHT_ASC"
+	| "HEIGHT_DESC";
 
 export type NeuronRegEventsOrder =
 	| "ID_ASC"
@@ -210,6 +219,62 @@ export async function getSubnets(
 	);
 
 	return extractItems(response.subnets, pagination, addSubnetName, subnetsJson);
+}
+
+export async function getSubnetHyperparams(
+	filter: SubnetHyperparamsFilter | undefined
+) {
+	const response = await fetchSubnets<{
+		subnetHyperparams: ResponseItems<SubnetHyperparams>;
+	}>(
+		`query ($filter: SubnetHyperparamFilter) {
+			subnetHyperparams(filter: $filter) {
+				nodes {
+					id
+					activityCutoff
+					adjustmentAlpha
+					adjustmentInterval
+					bondsMovingAvg
+					difficulty
+					immunityPeriod
+					kappa
+					lastUpdate
+					maxBurn
+					maxDifficulty
+					maxRegsPerBlock
+					maxValidators
+					minAllowedWeights
+					maxWeightsLimit
+					minBurn
+					minDifficulty
+					registrationAllowed
+					rho
+					servingRateLimit
+					targetRegsPerInterval
+					tempo
+					timestamp
+					weightsRateLimit
+					weightsVersion
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				totalCount
+			}
+		}`,
+		{
+			filter,
+		}
+	);
+
+	const data = extractItems(
+		response.subnetHyperparams,
+		{ limit: 1 },
+		transform
+	);
+	return data.data[0];
 }
 
 export async function getSubnetHistory(
@@ -404,8 +469,8 @@ export async function getNeuronMetagraph(
 					lastUpdate
 					netUid
 					rank
+					registeredAt
 					stake
-					totalReward
 					uid
 					trust
 					validatorPermit
@@ -428,6 +493,45 @@ export async function getNeuronMetagraph(
 	);
 
 	return extractItems(response.neuronInfos, pagination, transform);
+}
+
+export async function getNeuronPerformance(
+	filter: NeuronPerformanceFilter | undefined,
+	order: NeuronPerformanceOrder = "ID_DESC",
+	after?: string
+): Promise<NeuronPerformancePaginatedResponse> {
+	const response = await fetchSubnets<{
+		neuronPerformances: ResponseItems<NeuronPerformance>;
+	}>(
+		`query ($after: Cursor, $filter: NeuronPerformanceFilter, $order: [NeuronPerformancesOrderBy!]!) {
+			neuronPerformances(after: $after, filter: $filter, orderBy: $order) {
+				nodes {
+					id
+					emission
+					height
+					timestamp
+					updated
+				}
+				pageInfo {
+					endCursor
+					hasNextPage
+					hasPreviousPage
+				}
+				totalCount
+			}
+		}`,
+		{
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.neuronPerformances?.pageInfo.hasNextPage,
+		endCursor: response.neuronPerformances?.pageInfo.endCursor,
+		data: response.neuronPerformances?.nodes,
+	};
 }
 
 export async function getNeuronRegEvents(
@@ -679,6 +783,54 @@ export async function getMinerIncentive(
 		endCursor: response.neuronInfos?.pageInfo.endCursor,
 		data: response.neuronInfos?.nodes,
 	};
+}
+
+export async function getColdkeySubnets(filter: NeuronMetagraphFilter) {
+	const response = await fetchSubnets<{
+		neuronInfos: ResponseItems<NeuronMetagraph>;
+	}>(
+		`query($filter: NeuronInfoFilter) {
+			neuronInfos(filter: $filter, orderBy: NET_UID_ASC, distinct: NET_UID) {
+				nodes {
+					netUid
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			filter,
+		}
+	);
+
+	return extractItems(response.neuronInfos, { limit: 1024 }, transform);
+}
+
+export async function getColdkeyInfo(filter: NeuronMetagraphFilter) {
+	const response = await fetchSubnets<{
+		neuronInfos: ResponseItems<NeuronMetagraph>;
+	}>(
+		`query($filter: NeuronInfoFilter) {
+			neuronInfos(filter: $filter) {
+				nodes {
+					hotkey
+					stake
+					dailyReward
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			filter,
+		}
+	);
+
+	return extractItems(response.neuronInfos, { limit: 1024 }, transform);
 }
 
 function addSubnetName<T extends { netUid: number; name?: string }>(

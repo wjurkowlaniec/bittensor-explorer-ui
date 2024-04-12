@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import WebSvg from "../assets/web.svg";
 import NominatorsTable from "../components/validators/NominatorsTable";
 import { css, Theme } from "@emotion/react";
-import { MIN_DELEGATION_AMOUNT } from "../config";
+import { MIN_DELEGATION_AMOUNT, NETWORK_CONFIG } from "../config";
 import { ButtonLink } from "../components/ButtonLink";
 import { ValidatorPortfolio } from "../components/validators/ValidatorPortfolio";
 import { ValidatorStakeHistoryChart } from "../components/validators/ValidatorStakeHistoryChart";
@@ -27,6 +27,15 @@ import { useVerifiedDelegates } from "../hooks/useVerifiedDelegates";
 import { useValidator } from "../hooks/useValidator";
 import { useSubnets } from "../hooks/useSubnets";
 import SubnetsTable from "../components/validators/SubnetsTable";
+import { HotkeyPerformanceChart } from "../components/hotkey/HotkeyPerformanceChart";
+import { useNeuronMetagraph } from "../hooks/useNeuronMetagraph";
+import {
+	formatNumber,
+	rawAmountToDecimal,
+	rawAmountToDecimalBy,
+	shortenIP,
+} from "../utils/number";
+import { useAppStats } from "../contexts";
 
 const validatorHeader = (theme: Theme) => css`
 	display: flex;
@@ -39,7 +48,7 @@ const validatorHeader = (theme: Theme) => css`
 
 const infoSection = css`
 	display: flex;
-	@media only screen and (max-width: 767px) {
+	@media only screen and (max-width: 1139px) {
 		flex-direction: column;
 	}
 `;
@@ -83,6 +92,91 @@ const validatorDescription = css`
 	font-size: 12px;
 `;
 
+const neuronBoxes = css`
+	display: grid;
+	grid-template-columns: repeat(8, 1fr);
+	gap: 5px;
+	@media only screen and (max-width: 1779px) {
+		grid-template-columns: repeat(7, 1fr);
+	}
+	@media only screen and (max-width: 1569px) {
+		grid-template-columns: repeat(6, 1fr);
+	}
+	@media only screen and (max-width: 1339px) {
+		grid-template-columns: repeat(5, 1fr);
+	}
+	@media only screen and (max-width: 1199px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	@media only screen and (max-width: 991px) {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	@media only screen and (max-width: 767px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+`;
+const neuronBox = css`
+	border: 1px solid gray;
+	padding: 10px 0 10px 10px;
+	cursor: pointer;
+
+	&:hover {
+		border-color: white;
+	}
+
+	@media only screen and (max-width: 429px) {
+		padding: 5px 0 5px 5px;
+	}
+`;
+const selectedNeuronBox = css`
+	border-color: #14dec2 !important;
+`;
+const statRow = css`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+`;
+const statBigLabel = css`
+	font-size: 26px;
+	line-height: 26px;
+	color: #fa9b00;
+`;
+const statFullWidth = css`
+	flex: 1;
+`;
+const statThreeItems = css`
+	display: grid;
+	grid-template-columns: 1fr 1fr 3fr;
+	margin: 2px 0;
+`;
+const statTwoItems = css`
+	display: grid;
+	grid-template-columns: 3fr 2fr;
+	margin: 2px 0;
+`;
+const statLabel = css`
+	color: gray;
+	font-size: 11px;
+	line-height: 11px;
+	@media only screen and (max-width: 429px) {
+		font-size: 9px;
+		line-height: 9px;
+	}
+`;
+const statValue = css`
+	color: #fff;
+	font-size: 13px;
+	line-height: 13px;
+	@media only screen and (max-width: 429px) {
+		font-size: 11px;
+		line-height: 11px;
+	}
+`;
+const statBreak = css`
+	margin-top: 5px;
+`;
+
 const stakeButton = css`
 	padding: 20px;
 `;
@@ -94,6 +188,10 @@ const portfolioStyle = (theme: Theme) => css`
 	${theme.breakpoints.down("lg")} {
 		width: auto;
 	}
+`;
+
+const perfContainer = css`
+	margin-top: 50px;
 `;
 
 export type ValidatorPageParams = {
@@ -142,6 +240,18 @@ export const ValidatorPage = () => {
 		delegateSort
 	);
 
+	const neuronMetagraph = useNeuronMetagraph(
+		{
+			hotkey: { equalTo: address },
+			netUid: { notEqualTo: 0 },
+		},
+		1024,
+		"NET_UID_ASC"
+	);
+	const {
+		state: { chainStats },
+	} = useAppStats();
+
 	useDOMEventTrigger(
 		"data-loaded",
 		!balance.loading && !nominators.loading && !delegates.loading
@@ -170,6 +280,12 @@ export const ValidatorPage = () => {
 	}, [tab]);
 
 	const subnets = useSubnets(undefined);
+
+	const [activeSubnet, setActiveSubnet] = useState(-1);
+	useEffect(() => {
+		const firstId = neuronMetagraph.data?.at(0)?.netUid || -1;
+		if (activeSubnet === -1 && firstId !== -1) setActiveSubnet(firstId);
+	}, [neuronMetagraph]);
 
 	return validator.notFound ? (
 		<CardRow css={infoSection}>
@@ -224,7 +340,7 @@ export const ValidatorPage = () => {
 				</Card>
 			</CardRow>
 			<Card data-test="account-historical-items">
-				<TabbedContent>
+				<TabbedContent defaultTab={tab.slice(1).toString()}>
 					<TabPane
 						label="Staked"
 						loading={validatorStakeHistory.loading}
@@ -236,6 +352,91 @@ export const ValidatorPage = () => {
 							stakeHistory={validatorStakeHistory}
 							balance={balance}
 						/>
+					</TabPane>
+					<TabPane
+						label="Performance"
+						loading={validator.loading}
+						error={!!validator.error}
+						value="performance"
+					>
+						<div css={perfContainer}>
+							<div css={neuronBoxes}>
+								{neuronMetagraph.data?.map((meta) => (
+									<div
+										css={[
+											neuronBox,
+											meta.netUid === activeSubnet
+												? selectedNeuronBox
+												: undefined,
+										]}
+										onClick={() => setActiveSubnet(meta.netUid)}
+										key={`validator_performance_subnet_${meta.netUid}`}
+									>
+										<div css={statRow}>
+											<div css={statBigLabel}>{meta.netUid}</div>
+											<div css={statFullWidth}>
+												<div css={statThreeItems}>
+													<span css={statLabel}>Pos</span>
+													<span css={statLabel}>UID</span>
+													<span css={statLabel}>Axon</span>
+												</div>
+												<div css={statThreeItems}>
+													<span css={statValue}>{meta.rank}</span>
+													<span css={statValue}>{meta.uid}</span>
+													<span css={statValue}>{shortenIP(meta.axonIp)}</span>
+												</div>
+											</div>
+										</div>
+										<div css={[statTwoItems, statBreak]}>
+											<span css={statLabel}>Daily Rewards</span>
+											<span css={statLabel}>Dividends</span>
+										</div>
+										<div css={statTwoItems}>
+											<span css={statValue}>
+												{NETWORK_CONFIG.currency}
+												{formatNumber(
+													rawAmountToDecimal(meta.dailyReward.toString()),
+													{
+														decimalPlaces: 2,
+													}
+												)}
+											</span>
+											<span css={statValue}>
+												{formatNumber(
+													rawAmountToDecimalBy(meta.dividends, 65535),
+													{
+														decimalPlaces: 5,
+													}
+												)}
+											</span>
+										</div>
+										<div css={[statTwoItems, statBreak]}>
+											<span css={statLabel}>Updated</span>
+											<span css={statLabel}>vTrust</span>
+										</div>
+										<div css={statTwoItems}>
+											<span css={statValue}>
+												{chainStats ? parseInt(chainStats.blocksFinalized.toString()) - meta.lastUpdate : 0}
+											</span>
+											<span css={statValue}>
+												{formatNumber(
+													rawAmountToDecimalBy(meta.validatorTrust, 65535),
+													{
+														decimalPlaces: 5,
+													}
+												)}
+											</span>
+										</div>
+									</div>
+								))}
+							</div>
+							{activeSubnet > -1 && (
+								<HotkeyPerformanceChart
+									netUid={activeSubnet}
+									hotkey={address}
+								/>
+							)}
+						</div>
 					</TabPane>
 				</TabbedContent>
 			</Card>
