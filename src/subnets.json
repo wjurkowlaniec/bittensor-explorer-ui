@@ -80,7 +80,7 @@
         "description": ""
     },
     "16": {
-        "name": "Audio",
+        "name": "BittAudio",
         "github": "https://github.com/UncleTensor/AudioSubnet",
         "description": ""
     },
