@@ -50,9 +50,9 @@
         "description": ""
     },
    "10": {
-        "name": "Unknown",
-        "github": "",
-        "description": ""
+        "name": "Apollo ZK ",
+        "github": "https://github.com/apollozkp/zkp-subnet",
+        "description": "Apollo Collaborative Zero-knowledge Proof Generation Subnet"
     },
     "11": {
         "name": "Transcription",
