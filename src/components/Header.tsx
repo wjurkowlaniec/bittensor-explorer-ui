@@ -379,6 +379,114 @@ export const Header = () => {
 											</ul>
 											<span className="menuItem-glow" />
 										</li>
+										<li className="menu-item-has-children">
+											<a href="https://docs.taostats.io/?_gl=1*znpib6*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNDEzMTAxNy40LjAuMTcxNDEzMTAxNy4wLjAuMA..">
+												Docs
+											</a>
+											<ul
+												className="megaMenu subMenu"
+												style={{ left: "auto", right: 0 }}
+											>
+												<li style={{ width: "25%", paddingRight: "16px" }}>
+													<div className="menu-col-box">
+														<p>
+															Dive into detailed guides on Bittensor, Taostats,
+															subnets, miners, validators, and blockchain
+															analytics.
+														</p>
+													</div>
+												</li>
+												<li style={{ width: "25%", paddingRight: "16px" }}>
+													<ul>
+														<li className="mi-title">
+															<a href="https://docs.taostats.io/docs/index">
+																What is Bittensor
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/getting-started-with-bittensor">
+																Getting Started
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/tao">
+																Tao
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/tao-allocation">
+																Tao Allocation
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/faq">
+																FAQ
+															</a>
+														</li>
+													</ul>
+												</li>
+												<li style={{ width: "25%", paddingRight: "16px" }}>
+													<ul>
+														<li className="mi-title">
+															<a href="https://docs.taostats.io/docs/subnet">
+																Bittensor Architecture
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/subnet">
+																Subnet Architecture
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/consensus">
+																Yuma Consensus
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/blockchain">
+																Blockchain
+															</a>
+														</li>
+														<li>
+															<a href="https://docs.taostats.io/docs/user">
+																Bittensor Personas
+															</a>
+														</li>
+													</ul>
+												</li>
+												<li style={{ width: "25%", paddingRight: "16px" }}>
+													<ul>
+														<li className="mi-title">
+															<a href="https://docs.taostats.io/docs/what-is-taostats">
+																Taostats
+															</a>
+														</li>
+														<li className="">
+															<a href="https://docs.taostats.io/docs/subnets">
+																Subnets
+															</a>
+														</li>
+														<li className="">
+															<a href="https://docs.taostats.io/docs/validators">
+																Validators
+															</a>
+														</li>
+														<li className="">
+															<a href="https://docs.taostats.io/docs/delegation">
+																Delegation
+															</a>
+														</li>
+														<li className="">
+															<a href="https://docs.taostats.io/docs/accounts">
+																Accounts
+															</a>
+														</li>
+													</ul>
+												</li>
+											</ul>
+											<span className="menuItem-glow"></span>
+											<span className="has-btn"></span>
+										</li>
 									</ul>
 								</nav>
 								<div className="ht-btns">
