@@ -35,6 +35,7 @@ import {
 	rawAmountToDecimalBy,
 	shortenIP,
 } from "../utils/number";
+import { useAppStats } from "../contexts";
 
 const validatorHeader = (theme: Theme) => css`
 	display: flex;
@@ -172,6 +173,9 @@ const statValue = css`
 		line-height: 11px;
 	}
 `;
+const statWarning = css`
+	color: #ff7a7a;
+`;
 const statBreak = css`
 	margin-top: 5px;
 `;
@@ -207,6 +211,15 @@ export const ValidatorPage = () => {
 	const info = verifiedDelegates[address];
 
 	const balance = useValidatorBalance({ address: { equalTo: address } });
+	const {
+		state: { tokenLoading, tokenStats },
+	} = useAppStats();
+	const dominance =
+		tokenLoading || tokenStats === undefined || tokenStats.delegatedSupply === 0
+			? 0
+			: rawAmountToDecimal(balance.data).toNumber() /
+			tokenStats.delegatedSupply;
+
 	const validatorStakeHistory = useValidatorStakeHistory(address);
 
 	const nominatorsInitialOrder: DelegateBalancesOrder = "AMOUNT_DESC";
@@ -247,6 +260,11 @@ export const ValidatorPage = () => {
 		1024,
 		"NET_UID_ASC"
 	);
+
+	useEffect(() => {
+		const interval = setInterval(neuronMetagraph.refetch, 12 * 1000);
+		return () => clearInterval(interval);
+	}, [neuronMetagraph]);
 
 	useDOMEventTrigger(
 		"data-loaded",
@@ -397,7 +415,16 @@ export const ValidatorPage = () => {
 													}
 												)}
 											</span>
-											<span css={statValue}>
+											<span
+												css={[
+													statValue,
+													rawAmountToDecimalBy(meta.dividends, 65535).lessThan(
+														dominance
+													)
+														? statWarning
+														: undefined,
+												]}
+											>
 												{formatNumber(
 													rawAmountToDecimalBy(meta.dividends, 65535),
 													{
@@ -411,7 +438,12 @@ export const ValidatorPage = () => {
 											<span css={statLabel}>vTrust</span>
 										</div>
 										<div css={statTwoItems}>
-											<span css={statValue}>
+											<span
+												css={[
+													statValue,
+													meta.updated > 1000 ? statWarning : undefined,
+												]}
+											>
 												{meta.updated}
 											</span>
 											<span css={statValue}>
