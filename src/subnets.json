@@ -11,7 +11,7 @@
     },
     "2": {
         "name": "Omron",
-        "github": "",
+        "github": "https://github.com/inference-labs-inc/omron-subnet",
         "description": "Omron subnet, building cryptographically verified efficient and intelligent capital networks. "
     },
     "3": {
