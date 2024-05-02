@@ -50,9 +50,9 @@
         "description": ""
     },
    "10": {
-        "name": "Apollo ZK ",
-        "github": "https://github.com/apollozkp/zkp-subnet",
-        "description": "Apollo Collaborative Zero-knowledge Proof Generation Subnet"
+        "name": "Sturdy",
+        "github": "https://github.com/Sturdy-Subnet/sturdy-subnet/",
+        "description": "The Sturdy Subnet is a Bittensor subnetwork that enables the creation of decentralized, autonomous yield optimizers. "
     },
     "11": {
         "name": "Transcription",
