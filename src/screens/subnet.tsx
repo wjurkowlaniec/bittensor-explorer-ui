@@ -177,7 +177,8 @@ export const SubnetPage = () => {
 		metagraphInitialSearch
 	);
 
-	const getSearchQuery = (searchText: string) => {
+	const getSearchQuery = (search: string) => {
+		const searchText = search.trim();
 		const query = [];
 
 		// Search by hotkey
