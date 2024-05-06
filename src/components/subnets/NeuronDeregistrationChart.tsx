@@ -85,23 +85,32 @@ export const NeuronDeregistrationChart = (
 			options={{
 				chart: {
 					toolbar: {
-						show: false,
+						show: true,
 						offsetX: 0,
 						offsetY: 0,
 						autoSelected: "pan",
 						tools: {
-							download: false,
-							selection: false,
+							selection: true,
 							zoom: true,
 							zoomin: true,
 							zoomout: true,
 							pan: true,
 						},
+						export: {
+							csv: {
+								filename: "neuron-deregistration-data",
+								headerCategory: "Date",
+							},
+							png: {
+								filename: "neuron-deregistration-data",
+							},
+							svg: {
+								filename: "neuron-deregistration-data",
+							},
+						},
 					},
 					zoom: {
-						type: "x",
 						enabled: true,
-						autoScaleYaxis: true,
 					},
 				},
 				colors: [theme.palette.success.main, theme.palette.neutral.main],
