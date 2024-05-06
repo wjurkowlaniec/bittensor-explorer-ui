@@ -216,7 +216,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 				sortProperty="nominatorChange"
 			/>
 			<ValidatorsTableAttribute
-				label="Validator Take"
+				label="Take"
 				align="right"
 				render={(validator) =>
 					`${formatNumber(
