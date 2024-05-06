@@ -49,6 +49,8 @@ import { usePaginatedMinerIPs } from "../hooks/usePaginatedMinerIPs";
 import MinerIPTable from "../components/subnets/MinerIPTable";
 import { useSubnetHyperparams } from "../hooks/useSubnetHyperparams";
 import SubnetHyperparamTable from "../components/subnets/SubnetHyperparamTable";
+import { useNeuronDeregistrations } from "../hooks/useNeuronDeregistrations";
+import { NeuronDeregistrationChart } from "../components/subnets/NeuronDeregistrationChart";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -110,13 +112,13 @@ const regCostContainerStyle = () => css`
 const regCostValueStyle = (theme: Theme) => css`
 	display: flex;
 	flex-direction: column;
-	width: 200px;
+	width: 225px;
 	gap: 10px;
 	margin-left: 24px;
 	padding-left: 24px;
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
 
-	& > span:first-of-type {
+	& > span:nth-of-type(odd) {
 		font-size: 13px;
 		color: ${theme.palette.secondary.dark};
 	}
@@ -168,6 +170,7 @@ export const SubnetPage = () => {
 	const subnetsHistory = useSubnetHistory(id);
 	const subnetOwners = useSubnetOwners(id);
 	const neuronRegCostHistory = useNeuronRegCostHistory(id);
+	const neuronDeregistrations = useNeuronDeregistrations(id);
 
 	const neuronMetagraphInitialOrder: NeuronMetagraphOrder = "STAKE_DESC";
 	const [neuronMetagraphSort, setNeuronMetagraphSort] =
@@ -421,6 +424,22 @@ export const SubnetPage = () => {
 										)}
 										{NETWORK_CONFIG.currency}
 									</span>
+								</div>
+							)}
+						</div>
+						<CardHeader css={regEventsTable}>DE-REGISTRATION DATA</CardHeader>
+						<div css={regCostContainerStyle}>
+							<NeuronDeregistrationChart
+								neuronDeregistrations={neuronDeregistrations}
+							/>
+							{subnet.loading ? (
+								<Spinner small />
+							) : (
+								<div css={regCostValueStyle}>
+									<span>Last De-registration Emission</span>
+									<span>0.001073</span>
+									<span>Last De-registration Incentive</span>
+									<span>0.000534</span>
 								</div>
 							)}
 						</div>

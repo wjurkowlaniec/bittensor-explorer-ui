@@ -140,6 +140,26 @@ export type NeuronRegCostHistoryResponse = {
 	data: NeuronRegCostHistory[];
 };
 
+export type NeuronDeregistration = {
+	height: bigint;
+	timestamp: string;
+	emission: bigint;
+	incentive: number;
+	netUid: number;
+};
+
+export type NeuronDeregistrationPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: NeuronDeregistration[];
+};
+
+export type NeuronDeregistrationResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: NeuronDeregistration[];
+};
+
 export type NeuronMetagraph = {
 	id: string;
 	active: boolean;

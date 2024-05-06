@@ -21,6 +21,8 @@ import {
 	SubnetHyperparams,
 	NeuronPerformance,
 	NeuronPerformancePaginatedResponse,
+	NeuronDeregistration,
+	NeuronDeregistrationPaginatedResponse,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -386,6 +388,44 @@ export async function getNeuronRegCostHistory(
 		hasNextPage: response.neuronRegHistoricals?.pageInfo.hasNextPage,
 		endCursor: response.neuronRegHistoricals?.pageInfo.endCursor,
 		data: response.neuronRegHistoricals?.nodes,
+	};
+}
+
+export async function getNeuronDeregistration(
+	filter?: object,
+	order: NeuronHistoryOrder = "ID_ASC",
+	after?: string
+): Promise<NeuronDeregistrationPaginatedResponse> {
+	const response = await fetchSubnets<{
+		neuronDeregistrations: ResponseItems<NeuronDeregistration>;
+	}>(
+		`query($filter: NeuronDeregistrationFilter, $order: [NeuronDeregistrationsOrderBy!]!, $after: Cursor) {
+			neuronDeregistrations(filter: $filter, orderBy: $order, after: $after) {
+				nodes {
+					id
+					height
+					emission
+					incentive
+					timestamp
+					netUid
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			after,
+			filter,
+			order,
+		}
+	);
+
+	return {
+		hasNextPage: response.neuronDeregistrations?.pageInfo.hasNextPage,
+		endCursor: response.neuronDeregistrations?.pageInfo.endCursor,
+		data: response.neuronDeregistrations?.nodes,
 	};
 }
 
