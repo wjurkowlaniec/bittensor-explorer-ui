@@ -24,7 +24,7 @@ export function useNeuronDeregistrations(
 			let after: string | undefined = undefined;
 
 			const now = Date.now();
-			const from = new Date(now - 1 * 24 * 60 * 60 * 1000).toISOString();
+			const from = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
 
 			const result: NeuronDeregistration[] = [];
 			while (!finished) {
