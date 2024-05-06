@@ -35,7 +35,7 @@ export function useNeuronRegCostHistory(
 								equalTo: parseInt(id),
 							},
 							timestamp: {
-								greaterThan: new Date(from).toISOString().substring(0, 19),
+								greaterThan: from,
 							},
 						},
 						"HEIGHT_ASC",
