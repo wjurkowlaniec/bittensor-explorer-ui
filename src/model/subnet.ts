@@ -141,7 +141,7 @@ export type NeuronRegCostHistoryResponse = {
 };
 
 export type NeuronDeregistration = {
-	height: bigint;
+	height: number;
 	timestamp: string;
 	emission: bigint;
 	incentive: number;
