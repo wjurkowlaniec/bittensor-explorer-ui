@@ -299,7 +299,7 @@ export const SubnetPage = () => {
 							title="Recycled (Lifetime)"
 							value={`${formatNumber(
 								rawAmountToDecimal(
-									subnet.data?.recycledLifetime?.toString()
+									subnet.data?.recycledByOwner?.toString()
 								).toNumber(),
 								{
 									decimalPlaces: 2,
