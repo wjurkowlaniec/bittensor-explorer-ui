@@ -6,10 +6,7 @@ import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
 import { nFormatter, rawAmountToDecimal } from "../../utils/number";
 import { NETWORK_CONFIG } from "../../config";
-import {
-	NeuronDeregistration,
-	NeuronDeregistrationResponse,
-} from "../../model/subnet";
+import { NeuronDeregistrationResponse } from "../../model/subnet";
 
 const spinnerContainer = css`
 	display: flex;
@@ -31,34 +28,33 @@ export const NeuronDeregistrationChart = (
 
 	const loading = neuronDeregistrations.loading;
 	const timestamps = useMemo(() => {
-		if (!neuronDeregistrations.data) return [];
-		return neuronDeregistrations.data.map(
-			(x: NeuronDeregistration) => x.timestamp
-		);
+		const { data } = neuronDeregistrations;
+		if (!data) return [];
+		return data.map(({ timestamp }) => timestamp);
 	}, [neuronDeregistrations]);
 	const [minIncentive, maxIncentive] = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [0, 0];
-
 		const dat = data.map(({ incentive }) => incentive / 65535);
 		return [Math.min(...dat), Math.max(...dat)];
 	}, [neuronDeregistrations]);
 	const [minEmission, maxEmission] = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [0, 0];
-
 		const dat = data.map(({ emission }) =>
 			rawAmountToDecimal(emission.toString()).toNumber()
 		);
 		return [Math.min(...dat), Math.max(...dat)];
 	}, [neuronDeregistrations]);
-	const incentive = useMemo(() => {
-		if (!neuronDeregistrations.data) return [];
-		return neuronDeregistrations.data.map(({ incentive }) => incentive / 65535);
+	const incentives = useMemo(() => {
+		const { data } = neuronDeregistrations;
+		if (!data) return [];
+		return data.map(({ incentive }) => incentive / 65535);
 	}, [neuronDeregistrations]);
-	const emission = useMemo(() => {
-		if (!neuronDeregistrations.data) return [];
-		return neuronDeregistrations.data.map(({ emission }) =>
+	const emissions = useMemo(() => {
+		const { data } = neuronDeregistrations;
+		if (!data) return [];
+		return data.map(({ emission }) =>
 			rawAmountToDecimal(emission.toString()).toNumber()
 		);
 	}, [neuronDeregistrations]);
@@ -74,12 +70,12 @@ export const NeuronDeregistrationChart = (
 				{
 					name: "Incentive",
 					type: "area",
-					data: incentive,
+					data: incentives,
 				},
 				{
 					name: `Emission (${NETWORK_CONFIG.currency})`,
 					type: "area",
-					data: emission,
+					data: emissions,
 				},
 			]}
 			options={{
