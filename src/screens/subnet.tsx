@@ -296,7 +296,7 @@ export const SubnetPage = () => {
 							)}%`}
 						/>
 						<StatItem
-							title="Recycled (Lifetime)"
+							title="Recycled"
 							value={`${formatNumber(
 								rawAmountToDecimal(
 									subnet.data?.recycledByOwner?.toString()
