@@ -3,7 +3,7 @@ import { css } from "@emotion/react";
 import { NETWORK_CONFIG } from "../../config";
 import { Currency } from "../Currency";
 import { InfoTable, InfoTableAttribute } from "../InfoTable";
-import { rawAmountToDecimal } from "../../utils/number";
+import { formatNumber, rawAmountToDecimal, rawAmountToDecimalBy } from "../../utils/number";
 import { useAppStats } from "../../contexts";
 import { Resource } from "../../model/resource";
 import { ValidatorResponse } from "../../model/validator";
@@ -54,7 +54,7 @@ export const ValidatorInfoTable = (props: ValidatorInfoTableProps) => {
 				copyToClipboard={() => account}
 			/>
 			<ValidatorInfoTableAttribute
-				label="Staked Amount"
+				label="Staked amount"
 				render={() => (
 					<Currency
 						amount={balance.data}
@@ -91,6 +91,10 @@ export const ValidatorInfoTable = (props: ValidatorInfoTableProps) => {
 						showFullInTooltip
 					/>
 				)}
+			/>
+			<ValidatorInfoTableAttribute
+				label="Validator take"
+				render={() => `${formatNumber(rawAmountToDecimalBy(info?.data?.take ?? 0, 65535).mul(100),{decimalPlaces: 2})} %`}
 			/>
 			<ValidatorInfoTableAttribute
 				label="NOM. / 24h / k𝞃"

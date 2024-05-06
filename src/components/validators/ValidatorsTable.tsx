@@ -13,7 +13,7 @@ import { SortOrder } from "../../model/sortOrder";
 import { PaginatedResource } from "../../model/paginatedResource";
 import { weightCopiers } from "../../consts";
 import { Tooltip } from "@mui/material";
-import { formatCurrency, rawAmountToDecimal } from "../../utils/number";
+import { formatCurrency, formatNumber, rawAmountToDecimal, rawAmountToDecimalBy } from "../../utils/number";
 
 export type ValidatorsTableProps = {
 	validators: PaginatedResource<Validator>;
@@ -61,6 +61,10 @@ const orderMappings = {
 	validatorReturn: {
 		[SortDirection.ASC]: "VALIDATOR_RETURN_ASC",
 		[SortDirection.DESC]: "VALIDATOR_RETURN_DESC",
+	},
+	take: {
+		[SortDirection.ASC]: "TAKE_ASC",
+		[SortDirection.DESC]: "TAKE_DESC",
 	},
 };
 
@@ -211,7 +215,18 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 				sortable
 				sortProperty="nominatorChange"
 			/>
-
+			<ValidatorsTableAttribute
+				label="Take"
+				align="right"
+				render={(validator) =>
+					`${formatNumber(
+						rawAmountToDecimalBy(validator.take ?? 0, 65535).mul(100),
+						{ decimalPlaces: 2 }
+					)} %`
+				}
+				sortable
+				sortProperty="take"
+			/>
 			<ValidatorsTableAttribute
 				label="NOM. / 24h / k𝞃"
 				align="right"

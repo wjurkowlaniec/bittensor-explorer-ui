@@ -24,7 +24,9 @@ export type ValidatorsOrder =
 	| "NOMINATORS_ASC"
 	| "NOMINATORS_DESC"
 	| "NOMINATOR_RETURN_PER_K_ASC"
-	| "NOMINATOR_RETURN_PER_K_DESC";
+	| "NOMINATOR_RETURN_PER_K_DESC"
+	| "TAKE_ASC"
+	| "TAKE_DESC";
 
 export async function getValidator(filter: ValidatorsFilter) {
 	const response = await fetchIndexer<{ validators: ResponseItems<Validator> }>(
@@ -39,6 +41,7 @@ export async function getValidator(filter: ValidatorsFilter) {
 					validatorStake
 					validatorPermits
 					registrations
+					take
 				}
 				pageInfo {
 					endCursor
@@ -89,6 +92,7 @@ export async function getValidators(
 					totalDailyReturn
 					validatorStake
 					validatorReturn
+					take
 				}
 				pageInfo {
 					endCursor

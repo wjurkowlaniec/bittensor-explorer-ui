@@ -14,6 +14,7 @@ export type ValidatorResponse = {
 	validatorReturn: bigint;
 	registrations: string;
 	validatorPermits: string;
+	take: number;
 };
 
 export type Validator = ValidatorResponse & {
