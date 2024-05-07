@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
-import { getNeuronRegCostHistory } from "../services/subnetsService";
+import { getNeuronDeregistration } from "../services/subnetsService";
 
 import { useRollbar } from "@rollbar/react";
 import { DataError } from "../utils/error";
 import {
-	NeuronRegCostHistory,
-	NeuronRegCostHistoryPaginatedResponse,
-	NeuronRegCostHistoryResponse,
+	NeuronDeregistration,
+	NeuronDeregistrationPaginatedResponse,
+	NeuronDeregistrationResponse,
 } from "../model/subnet";
 
-export function useNeuronRegCostHistory(
+export function useNeuronDeregistrations(
 	id: string
-): NeuronRegCostHistoryResponse {
+): NeuronDeregistrationResponse {
 	const rollbar = useRollbar();
 
-	const [data, setData] = useState<NeuronRegCostHistory[]>([]);
+	const [data, setData] = useState<NeuronDeregistration[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
 
@@ -26,10 +26,10 @@ export function useNeuronRegCostHistory(
 			const now = Date.now();
 			const from = new Date(now - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-			const result: NeuronRegCostHistory[] = [];
+			const result: NeuronDeregistration[] = [];
 			while (!finished) {
-				const regCost: NeuronRegCostHistoryPaginatedResponse =
-					await getNeuronRegCostHistory(
+				const deregistration: NeuronDeregistrationPaginatedResponse =
+					await getNeuronDeregistration(
 						{
 							netUid: {
 								equalTo: parseInt(id),
@@ -41,9 +41,9 @@ export function useNeuronRegCostHistory(
 						"HEIGHT_ASC",
 						after
 					);
-				result.push(...regCost.data);
-				finished = !regCost.hasNextPage;
-				after = regCost.endCursor;
+				result.push(...deregistration.data);
+				finished = !deregistration.hasNextPage;
+				after = deregistration.endCursor;
 			}
 			setData(result);
 		} catch (e) {

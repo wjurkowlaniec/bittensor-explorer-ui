@@ -10,7 +10,7 @@ import { useSubnet } from "../hooks/useSubnet";
 import { SubnetTaoRecycledHistoryChart } from "../components/subnets/SubnetTaoRecycledHistoryChart";
 import { useSubnetOwners } from "../hooks/useSubnetOwners";
 import SubnetOwnersTable from "../components/subnets/SubnetOwnersTable";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TabbedContent, TabPane } from "../components/TabbedContent";
 import { SubnetTaoRecycled24HHistoryChart } from "../components/subnets/SubnetTaoRecycled24HHistoryChart";
 import Spinner from "../components/Spinner";
@@ -18,6 +18,7 @@ import {
 	containsOnlyDigits,
 	formatNumber,
 	isIPFormat,
+	nFormatter,
 	rawAmountToDecimal,
 } from "../utils/number";
 import { NETWORK_CONFIG } from "../config";
@@ -49,6 +50,8 @@ import { usePaginatedMinerIPs } from "../hooks/usePaginatedMinerIPs";
 import MinerIPTable from "../components/subnets/MinerIPTable";
 import { useSubnetHyperparams } from "../hooks/useSubnetHyperparams";
 import SubnetHyperparamTable from "../components/subnets/SubnetHyperparamTable";
+import { useNeuronDeregistrations } from "../hooks/useNeuronDeregistrations";
+import { NeuronDeregistrationChart } from "../components/subnets/NeuronDeregistrationChart";
 
 const subnetHeader = (theme: Theme) => css`
 	display: flex;
@@ -110,13 +113,13 @@ const regCostContainerStyle = () => css`
 const regCostValueStyle = (theme: Theme) => css`
 	display: flex;
 	flex-direction: column;
-	width: 200px;
+	width: 225px;
 	gap: 10px;
 	margin-left: 24px;
 	padding-left: 24px;
 	border-left: 1px solid rgba(255, 255, 255, 0.1);
 
-	& > span:first-of-type {
+	& > span:nth-of-type(odd) {
 		font-size: 13px;
 		color: ${theme.palette.secondary.dark};
 	}
@@ -168,6 +171,17 @@ export const SubnetPage = () => {
 	const subnetsHistory = useSubnetHistory(id);
 	const subnetOwners = useSubnetOwners(id);
 	const neuronRegCostHistory = useNeuronRegCostHistory(id);
+	const neuronDeregistrations = useNeuronDeregistrations(id);
+	const [lastDeRegEmission, lastDeRegIncentive] = useMemo(() => {
+		const { data } = neuronDeregistrations;
+		if (!data) return [0, 0];
+		const emission = data.at(-1)?.emission || BigInt(0);
+		const incentive = data.at(-1)?.incentive || 0;
+		return [
+			rawAmountToDecimal(emission.toString()).toNumber(),
+			incentive / 65535,
+		];
+	}, [neuronDeregistrations]);
 
 	const neuronMetagraphInitialOrder: NeuronMetagraphOrder = "STAKE_DESC";
 	const [neuronMetagraphSort, setNeuronMetagraphSort] =
@@ -421,6 +435,22 @@ export const SubnetPage = () => {
 										)}
 										{NETWORK_CONFIG.currency}
 									</span>
+								</div>
+							)}
+						</div>
+						<CardHeader css={regEventsTable}>DE-REGISTRATION DATA</CardHeader>
+						<div css={regCostContainerStyle}>
+							<NeuronDeregistrationChart
+								neuronDeregistrations={neuronDeregistrations}
+							/>
+							{subnet.loading ? (
+								<Spinner small />
+							) : (
+								<div css={regCostValueStyle}>
+									<span>Last De-registration Emission</span>
+									<span>{nFormatter(lastDeRegEmission, 6)}</span>
+									<span>Last De-registration Incentive</span>
+									<span>{nFormatter(lastDeRegIncentive, 6)}</span>
 								</div>
 							)}
 						</div>
