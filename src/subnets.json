@@ -165,9 +165,9 @@
         "description": ""
     },
     "33": {
-        "name": "Unknown",
-        "github": "",
-        "description": ""
+        "name": "Conversation Genome",
+        "github": "https://github.com/afterpartyai/bittensor-conversation-genome-project",
+        "description": "The Conversation Genome Project (conversations.xyz) enables structured data processing at scale to decentralize access to personalized AI."
     },
     "34": {
         "name": "Unknown",
