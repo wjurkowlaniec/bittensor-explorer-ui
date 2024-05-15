@@ -8,7 +8,7 @@ export async function getTokenStats(
 	const response = await fetchHistorical<{
 		tokenStats: ResponseItems<TokenStats>;
 	}>(
-		`query($after: Cursor, $first: Int!) {
+		`query($after: Cursor) {
 			tokenStats(after: $after, orderBy: HEIGHT_ASC) {
 				pageInfo {
 					hasNextPage
