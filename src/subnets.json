@@ -130,7 +130,7 @@
         "description": "Audio-to-Animation (A2A), also referred to as audio-driven animation, generates visuals that dynamically respond to audio inputs."
     },
     "26": {
-        "name": "Image Alchemy",
+        "name": "TensorAlchemy",
         "github": "https://github.com/Supreme-Emperor-Wang/ImageAlchemy",
         "description": ""
     },
