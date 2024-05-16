@@ -170,9 +170,9 @@
         "description": "The Conversation Genome Project (conversations.xyz) enables structured data processing at scale to decentralize access to personalized AI."
     },
     "34": {
-        "name": "Unregistered",
-        "github": "",
-        "description": ""
+        "name": "Healthi",
+        "github": "https://github.com/Healthi-Labs/healthi-subnet",
+        "description": "Leverages AI to predict health outcomes by analyzing electronic health records."
     },
     "35": {
         "name": "Unregistered",
