@@ -24,9 +24,6 @@ import {
 	NeuronDeregistration,
 	NeuronDeregistrationPaginatedResponse,
 	RootValidator,
-	ColdkeySubnetPaginatedResponse,
-	ColdkeyInfo,
-	ColdkeyInfoPaginatedResponse,
 } from "../model/subnet";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -876,12 +873,12 @@ export async function getMinerIncentive(
 	};
 }
 
-export async function getColdkeySubnets(coldkey: string, after?: string): Promise<ColdkeySubnetPaginatedResponse> {
+export async function getColdkeySubnets(filter: NeuronMetagraphFilter) {
 	const response = await fetchSubnets<{
-		neuronInfos: ResponseItems<{netUid: number}>;
+		neuronInfos: ResponseItems<NeuronMetagraph>;
 	}>(
-		`query($after: Cursor) {
-			neuronInfos(filter: {coldkey: {equalTo: "${coldkey}"}}, after: $after, orderBy: NET_UID_ASC, distinct: NET_UID) {
+		`query($filter: NeuronInfoFilter) {
+			neuronInfos(filter: $filter, orderBy: NET_UID_ASC, distinct: NET_UID) {
 				nodes {
 					netUid
 				}
@@ -892,26 +889,19 @@ export async function getColdkeySubnets(coldkey: string, after?: string): Promis
 			}
 		}`,
 		{
-			after
+			filter,
 		}
 	);
 
-	return {
-		hasNextPage: response.neuronInfos?.pageInfo.hasNextPage,
-		endCursor: response.neuronInfos?.pageInfo.endCursor,
-		data: response.neuronInfos?.nodes.map(({netUid}) => netUid),
-	};
+	return extractItems(response.neuronInfos, { limit: 1024 }, transform);
 }
 
-export async function getColdkeyInfo(
-	coldkey: string,
-	after?: string
-): Promise<ColdkeyInfoPaginatedResponse> {
+export async function getColdkeyInfo(filter: NeuronMetagraphFilter) {
 	const response = await fetchSubnets<{
-		neuronInfos: ResponseItems<ColdkeyInfo>;
+		neuronInfos: ResponseItems<NeuronMetagraph>;
 	}>(
-		`query($after: Cursor) {
-			neuronInfos(after: $after, filter: {coldkey: {equalTo: "${coldkey}"}}) {
+		`query($filter: NeuronInfoFilter) {
+			neuronInfos(filter: $filter) {
 				nodes {
 					hotkey
 					stake
@@ -924,14 +914,11 @@ export async function getColdkeyInfo(
 			}
 		}`,
 		{
-			after,
+			filter,
 		}
 	);
-	return {
-		hasNextPage: response.neuronInfos?.pageInfo.hasNextPage,
-		endCursor: response.neuronInfos?.pageInfo.endCursor,
-		data: response.neuronInfos?.nodes,
-	};
+
+	return extractItems(response.neuronInfos, { limit: 1024 }, transform);
 }
 
 function addSubnetName<T extends { netUid: number; name?: string }>(

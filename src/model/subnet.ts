@@ -276,21 +276,3 @@ export type MinerIncentiveResponse = {
 	error?: DataError;
 	data: MinerIncentive[];
 };
-
-export type ColdkeySubnetPaginatedResponse = {
-	hasNextPage: boolean;
-	endCursor: string;
-	data: number[];
-};
-
-export type ColdkeyInfo = {
-	hotkey: string;
-	stake: bigint;
-	dailyReward: bigint;
-};
-
-export type ColdkeyInfoPaginatedResponse = {
-	hasNextPage: boolean;
-	endCursor: string;
-	data: ColdkeyInfo[];
-};

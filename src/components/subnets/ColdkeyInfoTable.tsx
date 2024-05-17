@@ -1,20 +1,17 @@
 /** @jsxImportSource @emotion/react */
 import { InfoTable, InfoTableAttribute } from "../InfoTable";
-import { ColdkeyInfo } from "../../model/subnet";
+import { Resource } from "../../model/resource";
+import { NeuronMetagraph } from "../../model/subnet";
+import { ItemsResponse } from "../../model/itemsResponse";
 import { useMemo } from "react";
 import { useTaoPrice } from "../../hooks/useTaoPrice";
 import { formatNumber, rawAmountToDecimal } from "../../utils/number";
 import Spinner from "../Spinner";
 import Decimal from "decimal.js";
 import { NETWORK_CONFIG } from "../../config";
-import { DataError } from "../../utils/error";
 
 export type ColdkeyInfoTableProps = {
-	info: {
-		loading: boolean;
-		data: ColdkeyInfo[];
-		error?: DataError;
-	};
+	info: Resource<ItemsResponse<NeuronMetagraph>>;
 };
 
 const ColdkeyInfoTableAttribute = InfoTableAttribute<any>;
@@ -33,7 +30,7 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 			if (info.loading || !info.data)
 				return [hotkeys.size, 0, totalStake, totalDailyReward];
 
-			info.data.forEach(({hotkey, stake, dailyReward}) => {
+			info.data.data.forEach(({hotkey, stake, dailyReward}) => {
 				totalDailyReward = totalDailyReward.add(
 					rawAmountToDecimal(dailyReward.toString())
 				);
@@ -42,17 +39,18 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 				totalStake = totalStake.add(
 					rawAmountToDecimal(stake.toString())
 				);
+				
 			});
 
 
-			return [hotkeys.size, info.data.length, totalStake, totalDailyReward];
+			return [hotkeys.size, info.data.data.length, totalStake, totalDailyReward];
 		}, [info]);
 
 	return (
 		<InfoTable
 			data={info}
 			loading={info.loading}
-			notFound={info.error !== undefined}
+			notFound={info.notFound}
 			notFoundMessage="Invalid coldkey."
 			error={info.error}
 		>
