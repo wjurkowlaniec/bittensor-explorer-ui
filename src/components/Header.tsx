@@ -310,7 +310,7 @@ export const Header = () => {
 											onMouseEnter={onSubMenuMouseEnter}
 											onMouseLeave={onSubMenuMouseLeave}
 										>
-											<a href="https://taostats.io/verified-validators/">
+											<a href="/validators">
 												Validators
 												<span
 													className="has-btn"
