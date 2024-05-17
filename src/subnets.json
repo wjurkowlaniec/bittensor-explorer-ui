@@ -125,9 +125,9 @@
         "description": ""
     },
     "25": {
-        "name": "Audio-to-Animation",
-        "github": "https://github.com/Virtual-Protocol/tao-vpsubnet",
-        "description": "Audio-to-Animation (A2A), also referred to as audio-driven animation, generates visuals that dynamically respond to audio inputs."
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
     },
     "26": {
         "name": "TensorAlchemy",
