@@ -3,6 +3,8 @@ import {
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryPaginatedResponse,
 	Validator,
+	Validator7DayMAPaginatedResponse,
+	Validator7DayMA,
 } from "../model/validator";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -169,9 +171,44 @@ export async function getValidatorStakeHistory(
 					hasNextPage
 					endCursor
 				}
-			  }
+			}
 		}`,
 		{
+			after,
+		}
+	);
+
+	return {
+		hasNextPage: response.validators?.pageInfo.hasNextPage,
+		endCursor: response.validators?.pageInfo.endCursor,
+		data: response.validators?.nodes,
+	};
+}
+
+export async function getValidator7DayMA(
+	filter: any,
+	after?: string
+): Promise<Validator7DayMAPaginatedResponse> {
+	const response = await fetchHistorical<{
+		validators: ResponseItems<Validator7DayMA>;
+	}>(
+		`query($after: Cursor, $filter: ValidatorFilter) {
+			validators(after: $after, filter: $filter, orderBy: HEIGHT_ASC) {
+				nodes {
+					address
+					height
+					normWeeklyAvg
+					nominatorReturnPerK
+					timestamp
+				}
+				pageInfo {
+					hasNextPage
+					endCursor
+				}
+			}
+		}`,
+		{
+			filter,
 			after,
 		}
 	);
