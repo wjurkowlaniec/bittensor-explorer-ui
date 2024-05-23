@@ -248,8 +248,8 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 						axisBorder: {
 							show: false,
 						},
-						min: minTake * 0.9,
-						max: maxTake * 1.1,
+						min: minTake * 0.95,
+						max: maxTake * 1.05,
 					},
 				],
 			}}
