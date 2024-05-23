@@ -3,15 +3,15 @@ import { css, useTheme } from "@emotion/react";
 import Chart from "react-apexcharts";
 
 import LoadingSpinner from "../../assets/loading.svg";
-import { AccountStats, AccountStatsResponse } from "../../model/accountStats";
+import { AccountStatsResponse } from "../../model/accountStats";
 import { useMemo } from "react";
 import { formatNumber, nFormatter } from "../../utils/number";
 
 const spinnerContainer = css`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
 `;
 
 export type AccountStatChartProps = {
@@ -25,14 +25,6 @@ export const AccountStatChart = (props: AccountStatChartProps) => {
 		accountStats: { loading, data },
 	} = props;
 
-	const totalAccount = useMemo(() => {
-		if (!data) return 0;
-		const resp = (data as any).reduce(
-			(prev: number, cur: AccountStats) => parseInt(cur.total.toString()),
-			0
-		);
-		return resp;
-	}, [data]);
 	const timestamps = useMemo(
 		() => (!data ? [] : data.map(({ timestamp }) => timestamp)),
 		[data]
@@ -41,6 +33,7 @@ export const AccountStatChart = (props: AccountStatChartProps) => {
 		() => (!data ? [] : data.map(({ total }) => Number(total))),
 		[data]
 	);
+	const totalAccount = Math.max(...totalAccounts);
 	const holders = useMemo(
 		() => (!data ? [] : data.map(({ holders }) => Number(holders))),
 		[data]
