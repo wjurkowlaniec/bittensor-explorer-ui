@@ -471,10 +471,10 @@ export const ValidatorPage = () => {
 						</div>
 					</TabPane>
 					<TabPane
-						label="Norminator Return"
+						label="Nomination return"
 						loading={sevenDaysMA.loading}
 						error={!!sevenDaysMA.error}
-						value="norminator-return"
+						value="nomination-return"
 					>
 						<Validator7DayMAChart
 							address={address}

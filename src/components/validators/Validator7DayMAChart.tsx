@@ -50,11 +50,6 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 		if (!movingAverage.data) return [];
 		return movingAverage.data.map(({ take }) => (take / 65535) * 100);
 	}, [movingAverage]);
-	const [minTake, maxTake] = useMemo(() => {
-		if (!movingAverage.data) return [0, 0];
-		const data = movingAverage.data.map(({ take }) => (take / 65535) * 100);
-		return [Math.min(...data), Math.max(...data)];
-	}, [movingAverage]);
 
 	return loading ? (
 		<div css={spinnerContainer}>
@@ -65,7 +60,7 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 			height={400}
 			series={[
 				{
-					name: "Weekly Avg",
+					name: `NOM. / 7d / k${NETWORK_CONFIG.currency}`,
 					type: "area",
 					data: weeklyAvg,
 				},
@@ -184,7 +179,7 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 						formatter: (val: number, { seriesIndex }) => {
 							if (seriesIndex === 0)
 								return (
-									NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString()
+									NETWORK_CONFIG.currency + " " + nFormatter(val, 3).toString()
 								);
 							return nFormatter(val, 2).toString() + "%";
 						},
@@ -211,10 +206,10 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 							style: {
 								colors: theme.palette.success.main,
 							},
-							formatter: (val: number) => nFormatter(val, 2).toString(),
+							formatter: (val: number) => nFormatter(val, 3).toString(),
 						},
 						title: {
-							text: `Weekly Avg (${NETWORK_CONFIG.currency})`,
+							text: `NOM. / 7d / k${NETWORK_CONFIG.currency}`,
 							style: {
 								color: theme.palette.success.main,
 							},
@@ -248,8 +243,8 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 						axisBorder: {
 							show: false,
 						},
-						min: minTake * 0.95,
-						max: maxTake * 1.05,
+						min: 0,
+						max: 20,
 					},
 				],
 			}}
