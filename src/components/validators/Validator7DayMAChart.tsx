@@ -48,11 +48,11 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 	}, [movingAverage]);
 	const take = useMemo(() => {
 		if (!movingAverage.data) return [];
-		return movingAverage.data.map(({ take }) => take / 1000);
+		return movingAverage.data.map(({ take }) => take / 65535);
 	}, [movingAverage]);
 	const [minTake, maxTake] = useMemo(() => {
 		if (!movingAverage.data) return [0, 0];
-		const data = movingAverage.data.map(({ take }) => take / 1000);
+		const data = movingAverage.data.map(({ take }) => take / 65535);
 		return [Math.min(...data), Math.max(...data)];
 	}, [movingAverage]);
 
