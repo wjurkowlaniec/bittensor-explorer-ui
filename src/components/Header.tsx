@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Marquee from "react-fast-marquee";
 import Logo from "../assets/logo.png";
 import PolygonGray from "../assets/polygon-gray.svg";
 import { useAppStats } from "../contexts";
@@ -43,16 +42,6 @@ export const Header = () => {
 
 	return (
 		<header className="new-site-header">
-			<!-- <Marquee
-				style={{
-					backgroundColor: "#FB4137",
-				}}
-			>
-				Notice: Update in progress! Block times may be temporarily
-				delayed and the latest data might not be immediately reflected on
-				taostats.io. We appreciate your patience and understanding during this
-				update period.
-			</Marquee> -->
 			<div className="header-top">
 				<div className="container">
 					<div className="ht-inner">
