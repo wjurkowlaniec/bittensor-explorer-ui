@@ -59,7 +59,7 @@ export type Validator7DayMA = {
 	address: bigint;
 	height: number;
 	normWeeklyAvg: bigint;
-	nominatorReturnPerK: bigint;
+	take: number;
 	timestamp: string;
 };
 

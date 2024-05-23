@@ -46,6 +46,15 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 		);
 		return [Math.min(...data), Math.max(...data)];
 	}, [movingAverage]);
+	const take = useMemo(() => {
+		if (!movingAverage.data) return [];
+		return movingAverage.data.map(({ take }) => take / 1000);
+	}, [movingAverage]);
+	const [minTake, maxTake] = useMemo(() => {
+		if (!movingAverage.data) return [0, 0];
+		const data = movingAverage.data.map(({ take }) => take / 1000);
+		return [Math.min(...data), Math.max(...data)];
+	}, [movingAverage]);
 
 	return loading ? (
 		<div css={spinnerContainer}>
@@ -59,6 +68,11 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 					name: "Weekly Avg",
 					type: "area",
 					data: weeklyAvg,
+				},
+				{
+					name: "Take",
+					type: "area",
+					data: take,
 				},
 			]}
 			options={{
@@ -93,7 +107,7 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 						enabled: true,
 					},
 				},
-				colors: [theme.palette.success.main],
+				colors: [theme.palette.success.main, theme.palette.neutral.main],
 				dataLabels: {
 					enabled: false,
 				},
@@ -167,10 +181,12 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 						},
 					},
 					y: {
-						formatter: (val: number) => {
-							return (
-								NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString()
-							);
+						formatter: (val: number, { seriesIndex }) => {
+							if (seriesIndex === 0)
+								return (
+									NETWORK_CONFIG.currency + " " + nFormatter(val, 2).toString()
+								);
+							return nFormatter(val, 2).toString() + "%";
 						},
 					},
 				},
@@ -211,6 +227,29 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 						},
 						min: minWeeklyAvg,
 						max: maxWeeklyAvg,
+					},
+					{
+						opposite: true,
+						labels: {
+							style: {
+								colors: theme.palette.neutral.main,
+							},
+							formatter: (val: number) => nFormatter(val, 2).toString(),
+						},
+						title: {
+							text: "Take (%)",
+							style: {
+								color: theme.palette.neutral.main,
+							},
+						},
+						axisTicks: {
+							show: false,
+						},
+						axisBorder: {
+							show: false,
+						},
+						min: minTake * 0.9,
+						max: maxTake * 1.1,
 					},
 				],
 			}}

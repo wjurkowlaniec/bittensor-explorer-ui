@@ -198,7 +198,7 @@ export async function getValidator7DayMA(
 					address
 					height
 					normWeeklyAvg
-					nominatorReturnPerK
+					take
 					timestamp
 				}
 				pageInfo {
