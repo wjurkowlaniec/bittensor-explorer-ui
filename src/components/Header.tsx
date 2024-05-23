@@ -43,7 +43,7 @@ export const Header = () => {
 
 	return (
 		<header className="new-site-header">
-			<Marquee
+			<!-- <Marquee
 				style={{
 					backgroundColor: "#FB4137",
 				}}
@@ -52,7 +52,7 @@ export const Header = () => {
 				delayed and the latest data might not be immediately reflected on
 				taostats.io. We appreciate your patience and understanding during this
 				update period.
-			</Marquee>
+			</Marquee> -->
 			<div className="header-top">
 				<div className="container">
 					<div className="ht-inner">
