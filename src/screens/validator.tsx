@@ -220,7 +220,7 @@ export const ValidatorPage = () => {
 		tokenLoading || tokenStats === undefined || tokenStats.delegatedSupply === 0
 			? 0
 			: rawAmountToDecimal(balance.data).toNumber() /
-			tokenStats.delegatedSupply;
+			  tokenStats.delegatedSupply;
 
 	const validatorStakeHistory = useValidatorStakeHistory(address);
 
@@ -471,10 +471,10 @@ export const ValidatorPage = () => {
 						</div>
 					</TabPane>
 					<TabPane
-						label="Nomination return"
+						label="Reward"
 						loading={sevenDaysMA.loading}
 						error={!!sevenDaysMA.error}
-						value="nomination-return"
+						value="reward"
 					>
 						<Validator7DayMAChart
 							address={address}
