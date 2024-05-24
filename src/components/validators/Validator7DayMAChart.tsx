@@ -60,7 +60,7 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 			height={400}
 			series={[
 				{
-					name: `NOM. / 7d / k${NETWORK_CONFIG.currency}`,
+					name: `NOM./7d/K${NETWORK_CONFIG.currency} 7DMA`,
 					type: "area",
 					data: weeklyAvg,
 				},
@@ -209,7 +209,7 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 							formatter: (val: number) => nFormatter(val, 3).toString(),
 						},
 						title: {
-							text: `NOM. / 7d / k${NETWORK_CONFIG.currency}`,
+							text: `NOM./7d/K${NETWORK_CONFIG.currency} 7DMA`,
 							style: {
 								color: theme.palette.success.main,
 							},
