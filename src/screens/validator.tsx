@@ -220,7 +220,7 @@ export const ValidatorPage = () => {
 		tokenLoading || tokenStats === undefined || tokenStats.delegatedSupply === 0
 			? 0
 			: rawAmountToDecimal(balance.data).toNumber() /
-			  tokenStats.delegatedSupply;
+			tokenStats.delegatedSupply;
 
 	const validatorStakeHistory = useValidatorStakeHistory(address);
 
