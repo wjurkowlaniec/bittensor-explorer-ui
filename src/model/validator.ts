@@ -54,3 +54,23 @@ export type ValidatorsStakeHistoryResponse = {
 		data: ValidatorStakeHistory[];
 	}[];
 };
+
+export type Validator7DayMA = {
+	address: bigint;
+	height: number;
+	normWeeklyAvg: bigint;
+	take: number;
+	timestamp: string;
+};
+
+export type Validator7DayMAPaginatedResponse = {
+	hasNextPage: boolean;
+	endCursor: string;
+	data: Validator7DayMA[];
+};
+
+export type Validator7DayMAResponse = {
+	loading: boolean;
+	error?: DataError;
+	data: Validator7DayMA[];
+};

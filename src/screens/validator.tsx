@@ -36,6 +36,8 @@ import {
 	shortenIP,
 } from "../utils/number";
 import { useAppStats } from "../contexts";
+import { useValidator7DayMA } from "../hooks/useValidators7DayMA";
+import { Validator7DayMAChart } from "../components/validators/Validator7DayMAChart";
 
 const validatorHeader = (theme: Theme) => css`
 	display: flex;
@@ -301,6 +303,8 @@ export const ValidatorPage = () => {
 		if (activeSubnet === -1 && firstId !== -1) setActiveSubnet(firstId);
 	}, [neuronMetagraph]);
 
+	const sevenDaysMA = useValidator7DayMA(address);
+
 	return validator.notFound ? (
 		<CardRow css={infoSection}>
 			<Card>Invalid validator address</Card>
@@ -465,6 +469,17 @@ export const ValidatorPage = () => {
 								/>
 							)}
 						</div>
+					</TabPane>
+					<TabPane
+						label="Reward"
+						loading={sevenDaysMA.loading}
+						error={!!sevenDaysMA.error}
+						value="reward"
+					>
+						<Validator7DayMAChart
+							address={address}
+							movingAverage={sevenDaysMA}
+						/>
 					</TabPane>
 				</TabbedContent>
 			</Card>
