@@ -274,7 +274,7 @@ function StakingCalculator({
 						{NETWORK_CONFIG.currency}
 					</div>
 					<div css={usdValue}>${result.dailyUSD.toFixed(2)}</div>
-					<div css={returnTitle}>Monthlly Staking Return</div>
+					<div css={returnTitle}>Monthly Staking Return</div>
 					<div css={taoValue}>
 						{result.monthlyTAO.toFixed(2)}
 						{NETWORK_CONFIG.currency}
