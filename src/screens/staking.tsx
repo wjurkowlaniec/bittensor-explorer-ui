@@ -135,15 +135,15 @@ export const StakingPage = () => {
 						Enter TAO quantity and price to calculate staking returns
 					</div>
 					<div css={description}>
-						The APR is based on the total validator emissions for ALL validators
+						The APR above isa network average based on the total validator emissions for ALL validators
 						across the network and does not take into account differences in
-						validator performance or subnet allocation. The APR does not
+						validator performance, take, or subnet allocation. The APR does not
 						calculate compounding as it would be a false metric to provide APY
 						based on declining APR.
 					</div>
 					<div css={description}>
-						Staking APR follows the same conditions as the validator APR but
-						also applies the 18% validator commission.
+						The APR used the caluclate the returns below uses the specific take and 30 day Moving Average of the selected validator to give a more accurate result.
+						Past performance is not a guarentee of future returns.
 					</div>
 				</div>
 				<StakingCalculator
@@ -151,129 +151,7 @@ export const StakingPage = () => {
 					totalStake={chain.staked}
 					validators={validators.data ?? []}
 				/>
-				<div css={header}>HOW TO EARN TAO</div>
-				<div css={smallLayout}>
-					<div css={description}>
-						<span css={greenText}>
-							It is possible to earn TAO is through mining, validating or
-							delegating stake.
-						</span>{" "}
-						Mining and validating require running a CPU or GPU server and
-						further knowledge to ensure your miner/validator stays online
-						consistently and remains competitive.
-					</div>
-					<div css={smallHeader}>MINING</div>
-					<div css={description}>
-						Since there is a knowledge barrier to mining, unlike BTC or ETH
-						mining, you must first learn to fine tune AI models in order to
-						remain competitive on the network. Please see the{" "}
-						<Link
-							to="https://taostats.io/#resources"
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							Resources
-						</Link>{" "}
-						and also{" "}
-						<Link
-							to="https://docs.taostats.io/Fine_tuning.html?_gl=1*ac72g9*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNjg1NjA3My4yMi4wLjE3MTY4NTYwNzMuMC4wLjA."
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							docs.taostats.io/fine-tuning-examples-mining
-						</Link>{" "}
-						for more information on mining and fine tuning examples.
-					</div>
-					<div css={smallHeader}>VALIDATING</div>
-					<div css={description}>
-						Validating, whilst not requiring any knowledge beyond the setup of
-						the validator on a Linux server, does have a financial barrier to
-						entry as there is a minimum TAO requirement to be in the allotted
-						number of network validators to successfully receive rewards.
-						Validators must also run different servers with varying requirements
-						across multiple subnets in order to earn the maximum amount of
-						dividends and attract delegated stake from nominators to increase
-						their overall stake and priority in the network. Please see{" "}
-						<Link
-							to="https://docs.taostats.io/generate_signature.html?_gl=1*1q46dgc*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNjg1NjA3My4yMi4wLjE3MTY4NTYwNzMuMC4wLjA."
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							docs.taostats.io/information-for-validation
-						</Link>{" "}
-						and{" "}
-						<Link
-							to="https://taostats.io/#resources"
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							Resources
-						</Link>{" "}
-						for more information on validating.
-					</div>
-					<div css={smallHeader}>STAKING</div>
-					<div css={description}>
-						<span css={greenText}>
-							Since the successful launch of the Finney network, users are able
-							to delegate a stake to any validator for a share of the validation
-							rewards
-						</span>{" "}
-						(a fixed commission of 17.99% will be applied to all delegations).
-					</div>
-					<div css={description}>
-						<span css={greenText}>
-							This enables all holders of the TAO token to earn passive income
-							rewards regardless of the size of their holdings.
-						</span>{" "}
-						It is intended to encourage users to delegate to the Foundation
-						validator or support the projects and teams promoting the growth of
-						the network.
-					</div>
-					<div css={description}>
-						It is possible to delegate to any active validator who has elected
-						to receive nominations.
-					</div>
-					<div css={description}>
-						In order to stake (delegate) your Tao you must nominate it to a
-						validator. There are a number of ways to do this through a command
-						line installation of{" "}
-						<Link
-							to="https://bittensor.com/documentation/delegation_staking"
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							Bittensor
-						</Link>
-						, using{" "}
-						<Link
-							to="https://docs.bittensor.com/StakingGuide.html"
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							PolkadotJS
-						</Link>
-						, but the simplest is using our{" "}
-						<Link
-							to="https://delegate.taostats.io/?_gl=1*ac72g9*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNjg1NjA3My4yMi4wLjE3MTY4NTYwNzMuMC4wLjA."
-							color="#fff"
-							underline="always"
-							style={{ textDecorationColor: "#fff", textUnderlineOffset: 5 }}
-						>
-							Delegation App
-						</Link>{" "}
-						provided by TaoStats.
-					</div>
-					<div css={description}>
-						You can see a list of all Verified Validators and their details and
-						hotkeys here.
-					</div>
-				</div>
+				
 			</div>
 		</>
 	);
