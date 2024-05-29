@@ -11,6 +11,7 @@ import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import StakingCalculator from "../components/StakingCalculator";
 import { useValidators } from "../hooks/useValidators";
 import { useMemo } from "react";
+import ValidatorsTable from "../components/validators/ValidatorsTable";
 
 const defaultText = (theme: Theme) => css`
 	color: ${theme.palette.secondary.dark};
@@ -52,6 +53,10 @@ const statItemsRow = css`
 
 const font30 = css`
 	font-size: 30px;
+`;
+
+const valisTable = css`
+	margin-top: 25px;
 `;
 
 export const StakingPage = () => {
@@ -153,6 +158,9 @@ export const StakingPage = () => {
 					totalStake={chain.staked}
 					validators={sortedValis}
 				/>
+				<div css={valisTable}>
+					<ValidatorsTable validators={validators} sortable={false} />
+				</div>
 			</div>
 		</>
 	);

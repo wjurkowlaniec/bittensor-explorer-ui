@@ -13,12 +13,18 @@ import { SortOrder } from "../../model/sortOrder";
 import { PaginatedResource } from "../../model/paginatedResource";
 import { weightCopiers } from "../../consts";
 import { Tooltip } from "@mui/material";
-import { formatCurrency, formatNumber, rawAmountToDecimal, rawAmountToDecimalBy } from "../../utils/number";
+import {
+	formatCurrency,
+	formatNumber,
+	rawAmountToDecimal,
+	rawAmountToDecimalBy,
+} from "../../utils/number";
 
 export type ValidatorsTableProps = {
 	validators: PaginatedResource<Validator>;
 	initialSort?: string;
 	onSortChange?: (orderBy: ValidatorsOrder) => void;
+	sortable?: boolean;
 };
 
 const day_change_css = css`
@@ -69,7 +75,7 @@ const orderMappings = {
 };
 
 function ValidatorsTable(props: ValidatorsTableProps) {
-	const { validators, initialSort, onSortChange } = props;
+	const { validators, initialSort, onSortChange, sortable = true } = props;
 
 	const { currency, prefix } = NETWORK_CONFIG;
 
@@ -153,7 +159,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						/>
 					);
 				}}
-				sortable
+				sortable={sortable}
 				sortProperty="amount"
 			/>
 			<ValidatorsTableAttribute
@@ -180,7 +186,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						</>
 					);
 				}}
-				sortable
+				sortable={sortable}
 				sortProperty="amountChange"
 			/>
 
@@ -190,7 +196,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 				render={(validator) => {
 					return <>{validator.nominators}</>;
 				}}
-				sortable
+				sortable={sortable}
 				sortProperty="nominators"
 			/>
 			<ValidatorsTableAttribute
@@ -212,7 +218,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						</>
 					);
 				}}
-				sortable
+				sortable={sortable}
 				sortProperty="nominatorChange"
 			/>
 			<ValidatorsTableAttribute
@@ -224,7 +230,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						{ decimalPlaces: 2 }
 					)} %`
 				}
-				sortable
+				sortable={sortable}
 				sortProperty="take"
 			/>
 			<ValidatorsTableAttribute
@@ -254,7 +260,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						/>
 					);
 				}}
-				sortable
+				sortable={sortable}
 				sortProperty="nominatorReturnPerK"
 			/>
 
@@ -271,7 +277,7 @@ function ValidatorsTable(props: ValidatorsTableProps) {
 						/>
 					);
 				}}
-				sortable
+				sortable={sortable}
 				sortProperty="validatorReturn"
 			/>
 		</ItemsTable>
