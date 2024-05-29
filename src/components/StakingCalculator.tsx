@@ -230,16 +230,6 @@ function StakingCalculator({
 					</div>
 				</div>
 				<div css={maCss}>
-					<span>7 Days Moving Average</span>
-					<span>
-						{formatNumber(
-							rawAmountToDecimal(movingAvg.data[0]?.normWeeklyAvg.toString()),
-							{ decimalPlaces: 2 }
-						)}
-						{NETWORK_CONFIG.currency}
-					</span>
-				</div>
-				<div css={maCss}>
 					<span>30 Days Moving Average</span>
 					<span>
 						{formatNumber(
@@ -262,28 +252,22 @@ function StakingCalculator({
 			<div>
 				<div css={returnTitle}>Daily Staking Return</div>
 				<div css={taoValue}>
-					{formatNumber(result.dailyTAO, { decimalPlaces: 2 })}
+					{result.dailyTAO.toFixed(2)}
 					{NETWORK_CONFIG.currency}
 				</div>
-				<div css={usdValue}>
-					${formatNumber(result.dailyUSD, { decimalPlaces: 2 })}
-				</div>
+				<div css={usdValue}>${result.dailyTAO.toFixed(2)}</div>
 				<div css={returnTitle}>Monthlly Staking Return</div>
 				<div css={taoValue}>
-					{formatNumber(result.monthlyTAO, { decimalPlaces: 2 })}
+					{result.monthlyTAO.toFixed(2)}
 					{NETWORK_CONFIG.currency}
 				</div>
-				<div css={usdValue}>
-					${formatNumber(result.monthlyUSD, { decimalPlaces: 2 })}
-				</div>
+				<div css={usdValue}>${result.monthlyUSD.toFixed(2)}</div>
 				<div css={returnTitle}>Yearly Staking Return</div>
 				<div css={taoValue}>
-					{formatNumber(result.yearlyTAO, { decimalPlaces: 2 })}
+					{result.yearlyTAO.toFixed(2)}
 					{NETWORK_CONFIG.currency}
 				</div>
-				<div css={usdValue}>
-					${formatNumber(result.yearlyUSD, { decimalPlaces: 2 })}
-				</div>
+				<div css={usdValue}>${result.yearlyUSD.toFixed(2)}</div>
 				<div css={returnTitle}>Ready to delegate some stake?</div>
 				<ButtonLink
 					to={`https://delegate.taostats.io/staking/?hkey=${validator?.address}&_gl=1*1n668ce*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNjkzNzQ5NS4yNS4xLjE3MTY5MzkzOTkuMC4wLjA.`}
