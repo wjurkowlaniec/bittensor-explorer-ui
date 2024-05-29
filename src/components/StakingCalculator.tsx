@@ -165,9 +165,7 @@ function StakingCalculator({
 	}, [movingAvg]);
 
 	const calcReturn = () => {
-		const validatorsAPR =
-			((0.1 * 365.25) / rawAmountToDecimal(totalStake.toString()).toNumber()) *
-			100;
+		const validatorsAPR = ((0.1 * 365.25) / rawAmountToDecimal(totalStake.toString()).toNumber()) * 100;
 		const valTake = 1 - (validator?.take ?? 0) / 65535;
 		const dailyAPRUnit = validatorsAPR * (isStaker ? valTake : 1) * 0.82;
 		const amountDecimal = parseFloat(amount);
