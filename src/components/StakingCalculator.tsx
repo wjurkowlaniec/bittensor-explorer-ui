@@ -82,6 +82,16 @@ const checkedRadio = css`
 	border-color: #f90;
 `;
 
+const maCss = css`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	color: #fff;
+	font-size: 13px;
+	margin: 5px 0;
+`;
+
 const calcButton = (theme: Theme) => css`
 	width: 100%;
 	padding: 17px;
@@ -219,6 +229,26 @@ function StakingCalculator({
 						<div css={[normalRadio, !isStaker && checkedRadio]} /> Validator
 					</div>
 				</div>
+				<div css={maCss}>
+					<span>7 Days Moving Average</span>
+					<span>
+						{formatNumber(
+							rawAmountToDecimal(movingAvg.data[0]?.normWeeklyAvg.toString()),
+							{ decimalPlaces: 2 }
+						)}
+						{NETWORK_CONFIG.currency}
+					</span>
+				</div>
+				<div css={maCss}>
+					<span>30 Days Moving Average</span>
+					<span>
+						{formatNumber(
+							rawAmountToDecimal(movingAvg.data[0]?.norm30DayAvg.toString()),
+							{ decimalPlaces: 2 }
+						)}
+						{NETWORK_CONFIG.currency}
+					</span>
+				</div>
 				<Button
 					size="small"
 					variant="contained"
@@ -230,22 +260,6 @@ function StakingCalculator({
 				</Button>
 			</div>
 			<div>
-				<div css={returnTitle}>Weekly Moving Average</div>
-				<div css={taoValue}>
-					{formatNumber(
-						rawAmountToDecimal(movingAvg.data[0]?.normWeeklyAvg.toString()),
-						{ decimalPlaces: 2 }
-					)}
-					{NETWORK_CONFIG.currency}
-				</div>
-				<div css={returnTitle}>Monthly Moving Average</div>
-				<div css={taoValue}>
-					{formatNumber(
-						rawAmountToDecimal(movingAvg.data[0]?.norm30DayAvg.toString()),
-						{ decimalPlaces: 2 }
-					)}
-					{NETWORK_CONFIG.currency}
-				</div>
 				<div css={returnTitle}>Daily Staking Return</div>
 				<div css={taoValue}>
 					{formatNumber(result.dailyTAO, { decimalPlaces: 2 })}
