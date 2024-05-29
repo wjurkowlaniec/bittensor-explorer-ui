@@ -2,7 +2,6 @@
 import { Theme, css } from "@emotion/react";
 import Decimal from "decimal.js";
 
-import { Link } from "../components/Link";
 import Loading from "../components/Loading";
 import NotFound from "../components/NotFound";
 import { StatItem } from "../components/network/StatItem";
@@ -16,10 +15,6 @@ const defaultText = (theme: Theme) => css`
 	color: ${theme.palette.secondary.dark};
 `;
 
-const greenText = (theme: Theme) => css`
-	color: ${theme.palette.success.main};
-`;
-
 const header = css`
 	font-size: 19px;
 	color: white;
@@ -30,14 +25,6 @@ const smallLayout = css`
 	width: 1000px;
 	max-width: 100%;
 	margin: 20px 0;
-`;
-
-const smallHeader = css`
-	padding: 2px 8px;
-	background-color: #e5e3e3;
-	color: #000;
-	display: inline-block;
-	margin-top: 20px;
 `;
 
 const description = css`
@@ -135,15 +122,17 @@ export const StakingPage = () => {
 						Enter TAO quantity and price to calculate staking returns
 					</div>
 					<div css={description}>
-						The APR above isa network average based on the total validator emissions for ALL validators
-						across the network and does not take into account differences in
-						validator performance, take, or subnet allocation. The APR does not
-						calculate compounding as it would be a false metric to provide APY
-						based on declining APR.
+						The APR above isa network average based on the total validator
+						emissions for ALL validators across the network and does not take
+						into account differences in validator performance, take, or subnet
+						allocation. The APR does not calculate compounding as it would be a
+						false metric to provide APY based on declining APR.
 					</div>
 					<div css={description}>
-						The APR used the caluclate the returns below uses the specific take and 30 day Moving Average of the selected validator to give a more accurate result.
-						Past performance is not a guarentee of future returns.
+						The APR used the caluclate the returns below uses the specific take
+						and 30 day Moving Average of the selected validator to give a more
+						accurate result. Past performance is not a guarentee of future
+						returns.
 					</div>
 				</div>
 				<StakingCalculator
@@ -151,7 +140,6 @@ export const StakingPage = () => {
 					totalStake={chain.staked}
 					validators={validators.data ?? []}
 				/>
-				
 			</div>
 		</>
 	);
