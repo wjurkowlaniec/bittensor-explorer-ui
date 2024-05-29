@@ -5,10 +5,7 @@ import Chart from "react-apexcharts";
 import LoadingSpinner from "../../assets/loading.svg";
 import { useMemo } from "react";
 import { nFormatter, rawAmountToDecimal } from "../../utils/number";
-import {
-	Validator7DayMA,
-	Validator7DayMAResponse,
-} from "../../model/validator";
+import { ValidatorMovingAverageResponse } from "../../model/validator";
 import { NETWORK_CONFIG } from "../../config";
 
 const spinnerContainer = css`
@@ -20,7 +17,7 @@ const spinnerContainer = css`
 
 export type Validator7DayMAChartProps = {
 	address: string;
-	movingAverage: Validator7DayMAResponse;
+	movingAverage: ValidatorMovingAverageResponse;
 };
 
 export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
@@ -31,7 +28,7 @@ export const Validator7DayMAChart = (props: Validator7DayMAChartProps) => {
 	const loading = movingAverage.loading;
 	const timestamps = useMemo(() => {
 		if (!movingAverage.data) return [];
-		return movingAverage.data.map((x: Validator7DayMA) => x.timestamp);
+		return movingAverage.data.map(({ timestamp }) => timestamp);
 	}, [movingAverage]);
 	const weeklyAvg = useMemo(() => {
 		if (!movingAverage.data) return [];

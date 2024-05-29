@@ -3,8 +3,8 @@ import {
 	ValidatorStakeHistory,
 	ValidatorStakeHistoryPaginatedResponse,
 	Validator,
-	Validator7DayMAPaginatedResponse,
-	Validator7DayMA,
+	ValidatorMovingAveragePaginatedResponse,
+	ValidatorMovingAverage,
 } from "../model/validator";
 import { ResponseItems } from "../model/itemsConnection";
 import { PaginationOptions } from "../model/paginationOptions";
@@ -185,19 +185,22 @@ export async function getValidatorStakeHistory(
 	};
 }
 
-export async function getValidator7DayMA(
+export async function getValidatorsMovingAverage(
 	filter: any,
-	after?: string
-): Promise<Validator7DayMAPaginatedResponse> {
+	order?: any,
+	after?: string,
+	first?: number
+): Promise<ValidatorMovingAveragePaginatedResponse> {
 	const response = await fetchHistorical<{
-		validators: ResponseItems<Validator7DayMA>;
+		validators: ResponseItems<ValidatorMovingAverage>;
 	}>(
-		`query($after: Cursor, $filter: ValidatorFilter) {
-			validators(after: $after, filter: $filter, orderBy: HEIGHT_ASC) {
+		`query($first: Int, $after: Cursor, $filter: ValidatorFilter, $order: [ValidatorsOrderBy!]!) {
+			validators(first: $first, after: $after, filter: $filter, orderBy: $order) {
 				nodes {
 					address
 					height
 					normWeeklyAvg
+					norm30DayAvg
 					take
 					timestamp
 				}
@@ -209,7 +212,9 @@ export async function getValidator7DayMA(
 		}`,
 		{
 			filter,
+			order,
 			after,
+			first,
 		}
 	);
 

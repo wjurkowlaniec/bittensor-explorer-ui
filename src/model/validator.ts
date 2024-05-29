@@ -55,22 +55,23 @@ export type ValidatorsStakeHistoryResponse = {
 	}[];
 };
 
-export type Validator7DayMA = {
+export type ValidatorMovingAverage = {
 	address: bigint;
 	height: number;
 	normWeeklyAvg: bigint;
+	norm30DayAvg: bigint;
 	take: number;
 	timestamp: string;
 };
 
-export type Validator7DayMAPaginatedResponse = {
+export type ValidatorMovingAveragePaginatedResponse = {
 	hasNextPage: boolean;
 	endCursor: string;
-	data: Validator7DayMA[];
+	data: ValidatorMovingAverage[];
 };
 
-export type Validator7DayMAResponse = {
+export type ValidatorMovingAverageResponse = {
 	loading: boolean;
 	error?: DataError;
-	data: Validator7DayMA[];
+	data: ValidatorMovingAverage[];
 };

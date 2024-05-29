@@ -7,6 +7,7 @@ import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import { ButtonLink } from "./ButtonLink";
 import { Validator } from "../model/validator";
 import { useSearchParams } from "react-router-dom";
+import { useValidatorMovingAverage } from "../hooks/useValidatorMovingAverage";
 
 const calcLayout = css`
 	display: flex;
@@ -145,6 +146,8 @@ function StakingCalculator({
 		setValidator(defaultVal ?? validators[0]);
 	}, [valAddr]);
 
+	const movingAvg = useValidatorMovingAverage(validator?.address ?? "");
+
 	const calcReturn = () => {
 		const validatorsAPR =
 			((0.1 * 365.25) / rawAmountToDecimal(totalStake.toString()).toNumber()) *
@@ -170,7 +173,7 @@ function StakingCalculator({
 
 	useEffect(() => {
 		calcReturn();
-	}, []);
+	}, [validator?.address]);
 
 	return (
 		<div css={calcLayout}>
@@ -227,6 +230,22 @@ function StakingCalculator({
 				</Button>
 			</div>
 			<div>
+				<div css={returnTitle}>Weekly Moving Average</div>
+				<div css={taoValue}>
+					{formatNumber(
+						rawAmountToDecimal(movingAvg.data[0]?.normWeeklyAvg.toString()),
+						{ decimalPlaces: 2 }
+					)}
+					{NETWORK_CONFIG.currency}
+				</div>
+				<div css={returnTitle}>Monthly Moving Average</div>
+				<div css={taoValue}>
+					{formatNumber(
+						rawAmountToDecimal(movingAvg.data[0]?.norm30DayAvg.toString()),
+						{ decimalPlaces: 2 }
+					)}
+					{NETWORK_CONFIG.currency}
+				</div>
 				<div css={returnTitle}>Daily Staking Return</div>
 				<div css={taoValue}>
 					{formatNumber(result.dailyTAO, { decimalPlaces: 2 })}
