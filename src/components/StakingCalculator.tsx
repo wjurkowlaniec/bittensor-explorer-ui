@@ -5,15 +5,16 @@ import { css, Theme } from "@emotion/react";
 import { NETWORK_CONFIG } from "../config";
 import { rawAmountToDecimal } from "../utils/number";
 import { ButtonLink } from "./ButtonLink";
-import { Validator } from "../model/validator";
+import { Validator, ValidatorMovingAverageResponse } from "../model/validator";
 import { useSearchParams } from "react-router-dom";
-import { useValidatorMovingAverage } from "../hooks/useValidatorMovingAverage";
+import ValidatorsStakingInfoTable from "./validators/ValidatorsStakingInfoTable";
 
 const calcLayout = css`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	gap: 35px;
+	margin-bottom: 25px;
 `;
 
 const calcPanel = (theme: Theme) => css`
@@ -130,10 +131,12 @@ function StakingCalculator({
 	tokenPrice,
 	totalStake,
 	validators,
+	movingAvg,
 }: {
 	tokenPrice: number;
 	totalStake: bigint;
 	validators: Validator[];
+	movingAvg: ValidatorMovingAverageResponse;
 }) {
 	const [qs] = useSearchParams();
 	const valAddr = qs.get("query") || "";
@@ -149,24 +152,14 @@ function StakingCalculator({
 		monthlyUSD: 0,
 		yearlyTAO: 0,
 		yearlyUSD: 0,
+		apr: 0,
 	});
 
-	useEffect(() => {
-		const defaultVal = validators.find((val) => val.address === valAddr);
-		setValidator(defaultVal ?? validators[0]);
-	}, [valAddr]);
-
-	const movingAvg = useValidatorMovingAverage(validator?.address ?? "");
-	const apr = useMemo(() => {
-		if (movingAvg.data) {
-			return rawAmountToDecimal(movingAvg.data[0]?.norm30DayAvg.toString()).toNumber() * 0.1 * 365;
-		}
-		return 0;
-	}, [movingAvg]);
-
-	const calcReturn = () => {
-		const validatorsAPR = ((0.1 * 365.25) / rawAmountToDecimal(totalStake.toString()).toNumber()) * 100;
-		const valTake = 1 - (validator?.take ?? 0) / 65535;
+	const calcReturn = (vali: any) => {
+		const validatorsAPR =
+			((0.1 * 365.25) / rawAmountToDecimal(totalStake.toString()).toNumber()) *
+			100;
+		const valTake = 1 - (vali.take ?? 0) / 65535;
 		const dailyAPRUnit = validatorsAPR * (isStaker ? valTake : 1) * 0.82;
 		const amountDecimal = parseFloat(amount);
 		const priceDecimal = parseFloat(price);
@@ -175,108 +168,140 @@ function StakingCalculator({
 		const monthlyAPR = dailyAPR * 30;
 		const yaerlyAPR = monthlyAPR * 12;
 
-		setResult({
+		const ma = movingAvg.data.find((x) => x.address === vali.address);
+		const apr =
+			rawAmountToDecimal(ma?.norm30DayAvg.toString()).toNumber() * 0.1 * 365;
+
+		return {
 			dailyTAO: dailyAPR,
 			dailyUSD: dailyAPR * priceDecimal,
 			monthlyTAO: monthlyAPR,
 			monthlyUSD: monthlyAPR * priceDecimal,
 			yearlyTAO: yaerlyAPR,
 			yearlyUSD: yaerlyAPR * priceDecimal,
-		});
+			apr: apr,
+		};
 	};
 
 	useEffect(() => {
-		calcReturn();
-	}, [validator?.address]);
+		const defaultVal = validators.find((val) => val.address === valAddr);
+		setValidator(defaultVal ?? validators[0]);
+	}, [valAddr]);
+
+	useEffect(() => {
+		if (validator) setResult(calcReturn(validator));
+	}, [validator]);
+
+	const valisForTable = useMemo(() => {
+		const newValis = [];
+		for (let i = 0; i < validators.length; i++) {
+			const ma = movingAvg.data.find(
+				(x) => x.address === validators[i]?.address
+			);
+			const ret = calcReturn(validators[i]);
+			newValis.push({
+				...validators[i],
+				...ma,
+				...ret,
+			});
+		}
+		return newValis;
+	}, [validators]);
 
 	return (
-		<div css={calcLayout}>
-			<div css={calcPanel}>
-				<div css={inputLayout}>
-					<span css={inputSuffix}>{NETWORK_CONFIG.currency}</span>
-					<input
-						css={inputBody}
-						value={amount}
-						onChange={(e) => setAmount(e.target.value)}
-					/>
-				</div>
-				<div css={inputLayout}>
-					<span css={inputSuffix}>$</span>
-					<input
-						css={inputBody}
-						value={price}
-						onChange={(e) => setPrice(e.target.value)}
-					/>
-				</div>
-				<div css={inputLayout}>
-					<select
-						css={valSelect}
-						value={validator?.address}
-						onChange={(e) =>
-							setValidator(
-								validators.find((val) => val.address === e.target.value)
-							)
-						}
+		<div>
+			<div css={calcLayout}>
+				<div css={calcPanel}>
+					<div css={inputLayout}>
+						<span css={inputSuffix}>{NETWORK_CONFIG.currency}</span>
+						<input
+							css={inputBody}
+							value={amount}
+							onChange={(e) => setAmount(e.target.value)}
+						/>
+					</div>
+					<div css={inputLayout}>
+						<span css={inputSuffix}>$</span>
+						<input
+							css={inputBody}
+							value={price}
+							onChange={(e) => setPrice(e.target.value)}
+						/>
+					</div>
+					<div css={inputLayout}>
+						<select
+							css={valSelect}
+							value={validator?.address}
+							onChange={(e) =>
+								setValidator(
+									validators.find((val) => val.address === e.target.value)
+								)
+							}
+						>
+							{validators.map((val) => (
+								<option value={val.address} key={val.id}>
+									{val.name ?? val.address}
+								</option>
+							))}
+						</select>
+					</div>
+					<div css={inputLayout}>
+						<div css={radioLayout} onClick={() => setAsStaker(true)}>
+							<div css={[normalRadio, isStaker && checkedRadio]} /> Staker
+						</div>
+						<div css={radioLayout} onClick={() => setAsStaker(false)}>
+							<div css={[normalRadio, !isStaker && checkedRadio]} /> Validator
+						</div>
+					</div>
+					<div css={maCss}>
+						<span>30 Days Moving Average</span>
+						<span>{result.apr.toFixed(2)}%</span>
+					</div>
+					<Button
+						size="small"
+						variant="contained"
+						color="secondary"
+						css={calcButton}
+						onClick={() => calcReturn(validator)}
 					>
-						{validators.map((val) => (
-							<option value={val.address} key={val.id}>
-								{val.name ?? val.address}
-							</option>
-						))}
-					</select>
+						CALCULATE
+					</Button>
 				</div>
-				<div css={inputLayout}>
-					<div css={radioLayout} onClick={() => setAsStaker(true)}>
-						<div css={[normalRadio, isStaker && checkedRadio]} /> Staker
+				<div>
+					<div css={returnTitle}>Daily Staking Return</div>
+					<div css={taoValue}>
+						{result.dailyTAO.toFixed(2)}
+						{NETWORK_CONFIG.currency}
 					</div>
-					<div css={radioLayout} onClick={() => setAsStaker(false)}>
-						<div css={[normalRadio, !isStaker && checkedRadio]} /> Validator
+					<div css={usdValue}>${result.dailyUSD.toFixed(2)}</div>
+					<div css={returnTitle}>Monthlly Staking Return</div>
+					<div css={taoValue}>
+						{result.monthlyTAO.toFixed(2)}
+						{NETWORK_CONFIG.currency}
 					</div>
+					<div css={usdValue}>${result.monthlyUSD.toFixed(2)}</div>
+					<div css={returnTitle}>Yearly Staking Return</div>
+					<div css={taoValue}>
+						{result.yearlyTAO.toFixed(2)}
+						{NETWORK_CONFIG.currency}
+					</div>
+					<div css={usdValue}>${result.yearlyUSD.toFixed(2)}</div>
+					<div css={returnTitle}>Ready to delegate some stake?</div>
+					<ButtonLink
+						to={`https://delegate.taostats.io/staking/?hkey=${validator?.address}&_gl=1*1n668ce*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNjkzNzQ5NS4yNS4xLjE3MTY5MzkzOTkuMC4wLjA.`}
+						size="small"
+						color="secondary"
+						variant="contained"
+						css={stakeCalc}
+					>
+						STAKE TAO
+					</ButtonLink>
 				</div>
-				<div css={maCss}>
-					<span>30 Days Moving Average</span>
-					<span>{apr.toFixed(2)}%</span>
-				</div>
-				<Button
-					size="small"
-					variant="contained"
-					color="secondary"
-					css={calcButton}
-					onClick={() => calcReturn()}
-				>
-					CALCULATE
-				</Button>
 			</div>
-			<div>
-				<div css={returnTitle}>Daily Staking Return</div>
-				<div css={taoValue}>
-					{result.dailyTAO.toFixed(2)}
-					{NETWORK_CONFIG.currency}
-				</div>
-				<div css={usdValue}>${result.dailyTAO.toFixed(2)}</div>
-				<div css={returnTitle}>Monthlly Staking Return</div>
-				<div css={taoValue}>
-					{result.monthlyTAO.toFixed(2)}
-					{NETWORK_CONFIG.currency}
-				</div>
-				<div css={usdValue}>${result.monthlyUSD.toFixed(2)}</div>
-				<div css={returnTitle}>Yearly Staking Return</div>
-				<div css={taoValue}>
-					{result.yearlyTAO.toFixed(2)}
-					{NETWORK_CONFIG.currency}
-				</div>
-				<div css={usdValue}>${result.yearlyUSD.toFixed(2)}</div>
-				<div css={returnTitle}>Ready to delegate some stake?</div>
-				<ButtonLink
-					to={`https://delegate.taostats.io/staking/?hkey=${validator?.address}&_gl=1*1n668ce*_ga*MTg2NzIzMTA0Ny4xNzEyMDc3NDk3*_ga_VCM7H6TDR4*MTcxNjkzNzQ5NS4yNS4xLjE3MTY5MzkzOTkuMC4wLjA.`}
-					size="small"
-					color="secondary"
-					variant="contained"
-					css={stakeCalc}
-				>
-					STAKE TAO
-				</ButtonLink>
-			</div>
+			<ValidatorsStakingInfoTable
+				validators={valisForTable}
+				selected={validator}
+			/>
 		</div>
 	);
 }

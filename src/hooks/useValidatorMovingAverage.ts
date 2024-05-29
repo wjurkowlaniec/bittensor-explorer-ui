@@ -9,7 +9,7 @@ import {
 } from "../model/validator";
 
 export function useValidatorMovingAverage(
-	address: string
+	addresses: string[]
 ): ValidatorMovingAverageResponse {
 	const rollbar = useRollbar();
 
@@ -17,13 +17,13 @@ export function useValidatorMovingAverage(
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
 
-	const fetchData = useCallback(async (addr: string) => {
+	const fetchData = useCallback(async (addrs: string[]) => {
 		try {
 			const movingAvg = await getValidatorsMovingAverage(
-				{ address: { equalTo: addr } },
+				{ address: { in: addrs } },
 				"HEIGHT_DESC",
 				undefined,
-				1
+				addrs.length
 			);
 			setData(movingAvg.data);
 		} catch (e) {
@@ -41,8 +41,8 @@ export function useValidatorMovingAverage(
 	useEffect(() => {
 		setError(undefined);
 		setLoading(true);
-		fetchData(address);
-	}, [fetchData, address]);
+		fetchData(addresses);
+	}, [fetchData, addresses.length]);
 
 	return {
 		loading,

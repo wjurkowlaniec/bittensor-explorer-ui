@@ -11,6 +11,7 @@ import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import StakingCalculator from "../components/StakingCalculator";
 import { useValidators } from "../hooks/useValidators";
 import { useMemo } from "react";
+import { useValidatorMovingAverage } from "../hooks/useValidatorMovingAverage";
 
 const defaultText = (theme: Theme) => css`
 	color: ${theme.palette.secondary.dark};
@@ -64,6 +65,9 @@ export const StakingPage = () => {
 		},
 	} = useAppStats();
 	const validators = useValidators();
+	const movingAvg = useValidatorMovingAverage(
+		validators.data?.map((x) => x.address) ?? []
+	);
 	const sortedValis = useMemo(() => {
 		if (validators.data) {
 			const matched = validators.data.filter(
@@ -77,7 +81,11 @@ export const StakingPage = () => {
 		return [];
 	}, [validators]);
 
-	const loading = chainStatsLoading || tokenStatsLoading || validators.loading;
+	const loading =
+		chainStatsLoading ||
+		tokenStatsLoading ||
+		validators.loading ||
+		movingAvg.loading;
 
 	if (loading) return <Loading />;
 	if (chain === undefined || token === undefined) {
@@ -152,6 +160,7 @@ export const StakingPage = () => {
 					tokenPrice={token.price}
 					totalStake={chain.staked}
 					validators={sortedValis}
+					movingAvg={movingAvg}
 				/>
 			</div>
 		</>

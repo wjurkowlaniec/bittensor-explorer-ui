@@ -56,7 +56,7 @@ export type ValidatorsStakeHistoryResponse = {
 };
 
 export type ValidatorMovingAverage = {
-	address: bigint;
+	address: string;
 	height: number;
 	normWeeklyAvg: bigint;
 	norm30DayAvg: bigint;

@@ -83,6 +83,10 @@ const activeHeader = (theme: Theme) => css`
 	color: ${theme.palette.secondary.light} !important;
 `;
 
+const activeRow = css`
+	background-color: rgba(215, 134, 95, 0.4) !important;
+`;
+
 const sortableHeaderBase = css`
 	cursor: pointer;
 `;
@@ -258,6 +262,7 @@ export type ItemsTableProps<
 	searchPlaceholder?: string;
 	searchBackground?: string;
 	getExportCSV?: () => Promise<CSVData>;
+	active?: string;
 };
 
 export const ItemsTable = <
@@ -289,6 +294,7 @@ export const ItemsTable = <
 		searchPlaceholder,
 		searchBackground,
 		getExportCSV,
+		active,
 		...restProps
 	} = props;
 
@@ -432,7 +438,7 @@ export const ItemsTable = <
 							!notFound &&
 							!error &&
 							data?.map((item, index) => (
-								<TableRow key={item.id}>
+								<TableRow key={item.id} css={item.id === active && activeRow}>
 									{showRank ? (
 										<TableCell>
 											{pagination
