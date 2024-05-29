@@ -35,3 +35,6 @@ export const NETWORK_CONFIG = {
 };
 
 export const MIN_DELEGATION_AMOUNT = 1000000;
+
+export const TAOSTATS_VALIDATOR_ADDRESS =
+	"5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8";

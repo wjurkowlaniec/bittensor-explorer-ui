@@ -5,11 +5,12 @@ import Decimal from "decimal.js";
 import Loading from "../components/Loading";
 import NotFound from "../components/NotFound";
 import { StatItem } from "../components/network/StatItem";
-import { NETWORK_CONFIG } from "../config";
+import { NETWORK_CONFIG, TAOSTATS_VALIDATOR_ADDRESS } from "../config";
 import { useAppStats } from "../contexts";
 import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import StakingCalculator from "../components/StakingCalculator";
 import { useValidators } from "../hooks/useValidators";
+import { useMemo } from "react";
 
 const defaultText = (theme: Theme) => css`
 	color: ${theme.palette.secondary.dark};
@@ -63,6 +64,18 @@ export const StakingPage = () => {
 		},
 	} = useAppStats();
 	const validators = useValidators();
+	const sortedValis = useMemo(() => {
+		if (validators.data) {
+			const matched = validators.data.filter(
+				(x) => x.address === TAOSTATS_VALIDATOR_ADDRESS
+			);
+			const filtered = validators.data.filter(
+				(x) => x.address !== TAOSTATS_VALIDATOR_ADDRESS
+			);
+			return [...matched, ...filtered];
+		}
+		return [];
+	}, [validators]);
 
 	const loading = chainStatsLoading || tokenStatsLoading || validators.loading;
 
@@ -138,7 +151,7 @@ export const StakingPage = () => {
 				<StakingCalculator
 					tokenPrice={token.price}
 					totalStake={chain.staked}
-					validators={validators.data ?? []}
+					validators={sortedValis}
 				/>
 			</div>
 		</>
