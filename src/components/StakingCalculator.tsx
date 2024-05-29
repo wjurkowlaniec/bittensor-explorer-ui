@@ -262,7 +262,7 @@ function StakingCalculator({
 						variant="contained"
 						color="secondary"
 						css={calcButton}
-						onClick={() => calcReturn(validator)}
+						onClick={() => setResult(calcReturn(validator))}
 					>
 						CALCULATE
 					</Button>
