@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@mui/material";
 import { css, Theme } from "@emotion/react";
 import { NETWORK_CONFIG } from "../config";
-import { formatNumber, rawAmountToDecimal } from "../utils/number";
+import { rawAmountToDecimal } from "../utils/number";
 import { ButtonLink } from "./ButtonLink";
 import { Validator } from "../model/validator";
 import { useSearchParams } from "react-router-dom";
@@ -157,6 +157,12 @@ function StakingCalculator({
 	}, [valAddr]);
 
 	const movingAvg = useValidatorMovingAverage(validator?.address ?? "");
+	const apr = useMemo(() => {
+		if (movingAvg.data) {
+			return rawAmountToDecimal(movingAvg.data[0]?.norm30DayAvg.toString()).toNumber() * 0.1 * 365;
+		}
+		return 0;
+	}, [movingAvg]);
 
 	const calcReturn = () => {
 		const validatorsAPR =
@@ -231,13 +237,7 @@ function StakingCalculator({
 				</div>
 				<div css={maCss}>
 					<span>30 Days Moving Average</span>
-					<span>
-						{formatNumber(
-							rawAmountToDecimal(movingAvg.data[0]?.norm30DayAvg.toString()),
-							{ decimalPlaces: 2 }
-						)}
-						{NETWORK_CONFIG.currency}
-					</span>
+					<span>{apr.toFixed(2)}%</span>
 				</div>
 				<Button
 					size="small"
