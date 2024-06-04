@@ -84,7 +84,7 @@ const activeHeader = (theme: Theme) => css`
 `;
 
 const activeRow = css`
-	background-color: rgba(215, 134, 95, 0.4) !important;
+	background-color: rgba(150, 150, 150, 0.4) !important;
 `;
 
 const sortableHeaderBase = css`

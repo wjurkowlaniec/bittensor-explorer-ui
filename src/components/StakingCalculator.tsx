@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { css, Theme } from "@emotion/react";
 import { NETWORK_CONFIG } from "../config";
@@ -154,6 +154,7 @@ function StakingCalculator({
 		yearlyUSD: 0,
 		apr: 0,
 	});
+	const [valisForTable, setValisForTable] = useState<any[]>([]);
 
 	const calcReturn = (vali: any) => {
 		const validatorsAPR =
@@ -192,7 +193,7 @@ function StakingCalculator({
 		if (validator) setResult(calcReturn(validator));
 	}, [validator]);
 
-	const valisForTable = useMemo(() => {
+	const calcValidatorsForTable = () => {
 		const newValis = [];
 		for (let i = 0; i < validators.length; i++) {
 			const ma = movingAvg.data.find(
@@ -205,7 +206,11 @@ function StakingCalculator({
 				...ret,
 			});
 		}
-		return newValis;
+		setValisForTable(newValis);
+	};
+
+	useEffect(() => {
+		calcValidatorsForTable();
 	}, [validators]);
 
 	return (
@@ -262,7 +267,10 @@ function StakingCalculator({
 						variant="contained"
 						color="secondary"
 						css={calcButton}
-						onClick={() => setResult(calcReturn(validator))}
+						onClick={() => {
+							setResult(calcReturn(validator));
+							calcValidatorsForTable();
+						}}
 					>
 						CALCULATE
 					</Button>
@@ -270,7 +278,7 @@ function StakingCalculator({
 				<div>
 					<div css={returnTitle}>Daily Staking Return</div>
 					<div css={taoValue}>
-						{result.dailyTAO.toFixed(2)}
+						{result.dailyTAO.toFixed(4)}
 						{NETWORK_CONFIG.currency}
 					</div>
 					<div css={usdValue}>${result.dailyUSD.toFixed(2)}</div>

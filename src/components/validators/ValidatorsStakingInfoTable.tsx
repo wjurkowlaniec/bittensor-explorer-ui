@@ -44,12 +44,11 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label="Daily"
-				align="right"
+				label={`${NETWORK_CONFIG.currency}/day`}
 				render={({ dailyTAO }) => {
 					return (
 						<>
-							{dailyTAO.toFixed(2)}
+							{dailyTAO.toFixed(4)}
 							{currency}
 						</>
 					);
@@ -57,15 +56,14 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label=""
+				label="$/day"
 				render={({ dailyUSD }) => {
 					return <>${dailyUSD.toFixed(2)}</>;
 				}}
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label="Monthly"
-				align="right"
+				label={`${NETWORK_CONFIG.currency}/month`}
 				render={({ monthlyTAO }) => {
 					return (
 						<>
@@ -77,15 +75,14 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label=""
+				label="$/month"
 				render={({ monthlyUSD }) => {
 					return <>${monthlyUSD.toFixed(2)}</>;
 				}}
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label="Yearly"
-				align="right"
+				label={`${NETWORK_CONFIG.currency}/year`}
 				render={({ yearlyTAO }) => {
 					return (
 						<>
@@ -97,7 +94,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label=""
+				label="$/year"
 				render={({ yearlyUSD }) => {
 					return <>${yearlyUSD.toFixed(2)}</>;
 				}}
@@ -119,7 +116,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 						<>
 							{rawAmountToDecimal(norm30DayAvg?.toString())
 								.toNumber()
-								.toFixed(2)}
+								.toFixed(3)}
 							{currency}
 						</>
 					);
