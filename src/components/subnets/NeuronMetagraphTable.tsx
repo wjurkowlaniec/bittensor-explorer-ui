@@ -14,7 +14,6 @@ import {
 	rawAmountToDecimal,
 	rawAmountToDecimalBy,
 } from "../../utils/number";
-import { shortenHash } from "../../utils/shortenHash";
 import { useTaoPrice } from "../../hooks/useTaoPrice";
 import CheckShield from "../../assets/check-shield.svg";
 import Certification from "../../assets/certification.svg";
@@ -35,6 +34,13 @@ const iconContainer = css`
 	flex-direction: row;
 	gap: 5px;
 	align-items: center;
+`;
+const ellipsisText = css`
+	text-overflow: ellipsis;
+	overflow: hidden;
+	whit-space: nowrap;
+	width: 65px;
+	display: block;
 `;
 
 export type NeuronMetagraphTableProps = {
@@ -172,11 +178,12 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 	}, [search]);
 
 	const data = useMemo(() => {
-		if (metagraph.loading || !metagraph.data) return [];
+		const { loading, data } = metagraph;
+		if (loading || !data) return [];
 
 		const result: NeuronMetagraph[] = [];
 		if (showAll) {
-			const { dailyReward, stake } = metagraph.data.reduce(
+			const { dailyReward, stake } = data.reduce(
 				(
 					{ dailyReward, stake }: { dailyReward: bigint; stake: bigint },
 					cur
@@ -199,7 +206,7 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			} as NeuronMetagraph);
 		}
 
-		return [...metagraph.data, ...result];
+		return [...data, ...result];
 	}, [metagraph, showAll]);
 
 	return (
@@ -221,25 +228,20 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 		>
 			<NeuronMetagraphTableAttribute
 				label=""
-				render={(data) => (
+				render={({ validatorPermit, isImmunityPeriod }) => (
 					<div css={iconContainer}>
-						{data.validatorPermit && <img src={CheckShield} alt="validator" />}
-						{data.isImmunityPeriod && (
-							<img src={Certification} alt="immunity" />
-						)}
+						{validatorPermit && <img src={CheckShield} alt="validator" />}
+						{isImmunityPeriod && <img src={Certification} alt="immunity" />}
 					</div>
 				)}
 			/>
 			<NeuronMetagraphTableAttribute
 				label="uid"
 				sortable
-				render={(data) =>
-					data.emission >= 0 ? (
-						<Link
-							to={`/hotkey/${data.hotkey}`}
-							css={boldText}
-						>
-							{data.uid}
+				render={({ emission, hotkey, uid }) =>
+					emission >= 0 ? (
+						<Link to={`/hotkey/${hotkey}`} css={boldText}>
+							{uid}
 						</Link>
 					) : (
 						"Total"
@@ -250,10 +252,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label={`${NETWORK_CONFIG.currency}stake`}
 				sortable
-				render={(data) => (
+				render={({ emission, stake }) => (
 					<span css={orangeText}>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimal(data.stake.toString()), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimal(stake.toString()), {
 								decimalPlaces: 0,
 							})}
 					</span>
@@ -263,10 +265,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="vTrust"
 				sortable
-				render={(data) => (
+				render={({ emission, validatorTrust }) => (
 					<>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimalBy(data.validatorTrust, 65535), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimalBy(validatorTrust, 65535), {
 								decimalPlaces: 5,
 							})}
 					</>
@@ -276,10 +278,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="trust"
 				sortable
-				render={(data) => (
+				render={({ emission, trust }) => (
 					<>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimalBy(data.trust, 65535), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimalBy(trust, 65535), {
 								decimalPlaces: 5,
 							})}
 					</>
@@ -289,10 +291,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="consensus"
 				sortable
-				render={(data) => (
+				render={({ emission, consensus }) => (
 					<>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimalBy(data.consensus, 65535), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimalBy(consensus, 65535), {
 								decimalPlaces: 5,
 							})}
 					</>
@@ -302,10 +304,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="incentive"
 				sortable
-				render={(data) => (
+				render={({ emission, incentive }) => (
 					<>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimalBy(data.incentive, 65535), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimalBy(incentive, 65535), {
 								decimalPlaces: 5,
 							})}
 					</>
@@ -315,10 +317,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="dividends"
 				sortable
-				render={(data) => (
+				render={({ emission, dividends }) => (
 					<>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimalBy(data.dividends, 65535), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimalBy(dividends, 65535), {
 								decimalPlaces: 5,
 							})}
 					</>
@@ -328,10 +330,10 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="emission(p)"
 				sortable
-				render={(data) => (
+				render={({ emission }) => (
 					<>
-						{data.emission >= 0 &&
-							formatNumber(rawAmountToDecimal(data.emission.toString()), {
+						{emission >= 0 &&
+							formatNumber(rawAmountToDecimal(emission.toString()), {
 								decimalPlaces: 5,
 							})}
 					</>
@@ -341,31 +343,33 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="updated"
 				sortable
-				render={({emission, updated}) => (
-					<span css={whiteText}>
-						{emission >= 0 && updated}
-					</span>
+				render={({ emission, updated }) => (
+					<span css={whiteText}>{emission >= 0 && updated}</span>
 				)}
 				sortProperty="updated"
 			/>
 			<NeuronMetagraphTableAttribute
 				label="active"
 				sortable
-				render={(data) => <>{data.emission >= 0 && (data.active ? 1 : 0)}</>}
+				render={({ emission, active }) => (
+					<>{emission >= 0 && (active ? 1 : 0)}</>
+				)}
 				sortProperty="active"
 			/>
 			<NeuronMetagraphTableAttribute
 				label="axon"
 				sortable
-				render={(data) => <>{data.emission >= 0 && shortenIP(data.axonIp)}</>}
+				render={({ emission, axonIp }) => (
+					<>{emission >= 0 && shortenIP(axonIp)}</>
+				)}
 				sortProperty="axon"
 			/>
 			<NeuronMetagraphTableAttribute
 				label="hotkey"
 				sortable
-				render={(data) => (
-					<Link to={`/hotkey/${data.hotkey}`} color="white">
-						{shortenHash(data.hotkey, true, false)}
+				render={({ hotkey }) => (
+					<Link to={`/hotkey/${hotkey}`} color="white" css={ellipsisText}>
+						{hotkey}
 					</Link>
 				)}
 				sortProperty="hotkey"
@@ -373,9 +377,9 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="coldkey"
 				sortable
-				render={(data) => (
-					<Link to={`/coldkey/${data.coldkey}`} color="white">
-						{shortenHash(data.coldkey, true, false)}
+				render={({ coldkey }) => (
+					<Link to={`/coldkey/${coldkey}`} color="white" css={ellipsisText}>
+						{coldkey}
 					</Link>
 				)}
 				sortProperty="coldkey"
@@ -383,9 +387,9 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label={`daily ${NETWORK_CONFIG.currency}`}
 				sortable
-				render={(data) => (
+				render={({ dailyReward }) => (
 					<span css={orangeText}>
-						{formatNumber(rawAmountToDecimal(data.dailyReward.toString()), {
+						{formatNumber(rawAmountToDecimal(dailyReward.toString()), {
 							decimalPlaces: 3,
 						})}
 					</span>
@@ -395,14 +399,14 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="daily $"
 				sortable
-				render={(data) =>
+				render={({ dailyReward }) =>
 					taoPrice.loading ? (
 						<Spinner small />
 					) : (
 						<span css={whiteText}>
 							$
 							{formatNumber(
-								rawAmountToDecimal(data.dailyReward.toString()).mul(
+								rawAmountToDecimal(dailyReward.toString()).mul(
 									taoPrice.data || 0
 								),
 								{
@@ -417,16 +421,14 @@ function NeuronMetagraphTable(props: NeuronMetagraphTableProps) {
 			<NeuronMetagraphTableAttribute
 				label="total $"
 				sortable
-				render={(data) =>
+				render={({ stake }) =>
 					taoPrice.loading ? (
 						<Spinner small />
 					) : (
 						<span css={whiteText}>
 							$
 							{formatNumber(
-								rawAmountToDecimal(data.stake.toString()).mul(
-									taoPrice.data || 0
-								),
+								rawAmountToDecimal(stake.toString()).mul(taoPrice.data || 0),
 								{
 									decimalPlaces: 0,
 								}

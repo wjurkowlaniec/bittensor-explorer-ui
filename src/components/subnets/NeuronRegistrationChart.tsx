@@ -13,10 +13,10 @@ import { NETWORK_CONFIG } from "../../config";
 import { Resource } from "../../model/resource";
 
 const spinnerContainer = css`
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
 `;
 
 export type NeuronRegistrationChartProps = {
@@ -165,7 +165,6 @@ export const NeuronRegistrationChart = (
 							const options: Intl.DateTimeFormatOptions = {
 								day: "2-digit",
 								month: "short",
-								year: "2-digit",
 								hour: "numeric",
 								minute: "numeric",
 							};
@@ -215,8 +214,9 @@ export const NeuronRegistrationChart = (
 					axisBorder: {
 						show: false,
 					},
-					min: minValue,
-					max: maxValue,
+					min: minValue - 0.01,
+					max: maxValue + 0.01,
+					tickAmount: Math.min(8, Math.ceil((maxValue - minValue) / 0.01)) + 2,
 				},
 			}}
 		/>
