@@ -27,20 +27,20 @@ export const NeuronDeregistrationChart = (
 	const { neuronDeregistrations } = props;
 
 	const loading = neuronDeregistrations.loading;
-	
+
 	const timestamps = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [];
 		return data.map(({ timestamp }) => timestamp);
 	}, [neuronDeregistrations]);
-	
+
 	const [minIncentive, maxIncentive] = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [0, 0];
 		const dat = data.map(({ incentive }) => incentive / 65535);
 		return [Math.min(...dat), Math.max(...dat)];
 	}, [neuronDeregistrations]);
-	
+
 	const [minEmission, maxEmission] = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [0, 0];
@@ -49,13 +49,13 @@ export const NeuronDeregistrationChart = (
 		);
 		return [Math.min(...dat), Math.max(...dat)];
 	}, [neuronDeregistrations]);
-	
+
 	const incentives = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [];
 		return data.map(({ incentive }) => incentive / 65535);
 	}, [neuronDeregistrations]);
-	
+
 	const emissions = useMemo(() => {
 		const { data } = neuronDeregistrations;
 		if (!data) return [];
@@ -217,8 +217,12 @@ export const NeuronDeregistrationChart = (
 						axisBorder: {
 							show: false,
 						},
-						min: minIncentive,
-						max: maxIncentive,
+						min: minIncentive - 0.000001,
+						max: maxIncentive + 0.000001,
+
+						tickAmount:
+							Math.min(8, Math.ceil((maxIncentive - minIncentive) / 0.000001)) +
+							2,
 					},
 					{
 						opposite: true,
@@ -240,8 +244,11 @@ export const NeuronDeregistrationChart = (
 						axisBorder: {
 							show: false,
 						},
-						min: minEmission * 0.95,
-						max: maxEmission * 1.05,
+						min: minEmission - 0.000001,
+						max: maxEmission + 0.000001,
+						tickAmount:
+							Math.min(8, Math.ceil((maxEmission - minEmission) / 0.000001)) +
+							2,
 					},
 				],
 			}}
