@@ -158,7 +158,6 @@ export const StakingPage = () => {
 				</div>
 				<StakingCalculator
 					tokenPrice={token.price}
-					totalStake={chain.staked}
 					validators={sortedValis}
 					movingAvg={movingAvg}
 				/>

@@ -129,12 +129,10 @@ const stakeCalc = (theme: Theme) => css`
 
 function StakingCalculator({
 	tokenPrice,
-	totalStake,
 	validators,
 	movingAvg,
 }: {
 	tokenPrice: number;
-	totalStake: bigint;
 	validators: Validator[];
 	movingAvg: ValidatorMovingAverageResponse;
 }) {
@@ -157,29 +155,25 @@ function StakingCalculator({
 	const [valisForTable, setValisForTable] = useState<any[]>([]);
 
 	const calcReturn = (vali: any) => {
-		const validatorsAPR =
-			((0.1 * 365.25) / rawAmountToDecimal(totalStake.toString()).toNumber()) *
-			100;
-		const valTake = 1 - (vali.take ?? 0) / 65535;
-		const dailyAPRUnit = validatorsAPR * (isStaker ? valTake : 1) * 0.82;
 		const amountDecimal = parseFloat(amount);
 		const priceDecimal = parseFloat(price);
 
-		const dailyAPR = dailyAPRUnit * amountDecimal;
-		const monthlyAPR = dailyAPR * 30;
-		const yaerlyAPR = monthlyAPR * 12;
-
 		const ma = movingAvg.data.find((x) => x.address === vali.address);
 		const apr =
-			rawAmountToDecimal(ma?.norm30DayAvg.toString()).toNumber() * 0.1 * 365;
+			rawAmountToDecimal(ma?.norm30DayAvg.toString()).toNumber() * 365 * 0.1;
+		const valiTake = isStaker ? 1 - (vali.take ?? 0) / 65535 : 1;
+
+		const yearlyReturn = (amountDecimal * apr * valiTake) / 100;
+		const monthlyReturn = yearlyReturn / 12;
+		const dailyReturn = yearlyReturn / 365;
 
 		return {
-			dailyTAO: dailyAPR,
-			dailyUSD: dailyAPR * priceDecimal,
-			monthlyTAO: monthlyAPR,
-			monthlyUSD: monthlyAPR * priceDecimal,
-			yearlyTAO: yaerlyAPR,
-			yearlyUSD: yaerlyAPR * priceDecimal,
+			dailyTAO: dailyReturn,
+			dailyUSD: dailyReturn * priceDecimal,
+			monthlyTAO: monthlyReturn,
+			monthlyUSD: monthlyReturn * priceDecimal,
+			yearlyTAO: yearlyReturn,
+			yearlyUSD: yearlyReturn * priceDecimal,
 			apr: apr,
 		};
 	};
