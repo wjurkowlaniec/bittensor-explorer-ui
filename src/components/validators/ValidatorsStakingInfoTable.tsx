@@ -4,7 +4,7 @@ import { Link } from "../Link";
 import { Validator } from "../../model/validator";
 import { NETWORK_CONFIG } from "../../config";
 import { AccountAddress } from "../AccountAddress";
-import { rawAmountToDecimal } from "../../utils/number";
+import { formatNumber, rawAmountToDecimal } from "../../utils/number";
 
 export type ValidatorsStakingInfoTableProps = {
 	validators: any[];
@@ -48,7 +48,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ dailyTAO }) => {
 					return (
 						<>
-							{dailyTAO.toFixed(4)}
+							{formatNumber(dailyTAO, { decimalPlaces: 4 })}
 							{currency}
 						</>
 					);
@@ -58,7 +58,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			<ValidatorsStakingInfoTableAttribute
 				label="$/day"
 				render={({ dailyUSD }) => {
-					return <>${dailyUSD.toFixed(2)}</>;
+					return <>${formatNumber(dailyUSD, { decimalPlaces: 2 })}</>;
 				}}
 			/>
 
@@ -67,7 +67,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ monthlyTAO }) => {
 					return (
 						<>
-							{monthlyTAO.toFixed(2)}
+							{formatNumber(monthlyTAO, { decimalPlaces: 2 })}
 							{currency}
 						</>
 					);
@@ -77,7 +77,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			<ValidatorsStakingInfoTableAttribute
 				label="$/month"
 				render={({ monthlyUSD }) => {
-					return <>${monthlyUSD.toFixed(2)}</>;
+					return <>${formatNumber(monthlyUSD, { decimalPlaces: 2 })}</>;
 				}}
 			/>
 
@@ -86,7 +86,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ yearlyTAO }) => {
 					return (
 						<>
-							{yearlyTAO.toFixed(2)}
+							{formatNumber(yearlyTAO, { decimalPlaces: 2 })}
 							{currency}
 						</>
 					);
@@ -96,7 +96,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			<ValidatorsStakingInfoTableAttribute
 				label="$/year"
 				render={({ yearlyUSD }) => {
-					return <>${yearlyUSD.toFixed(2)}</>;
+					return <>${formatNumber(yearlyUSD, { decimalPlaces: 2 })}</>;
 				}}
 			/>
 
