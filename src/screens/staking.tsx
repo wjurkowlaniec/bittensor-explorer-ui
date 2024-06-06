@@ -12,6 +12,7 @@ import StakingCalculator from "../components/StakingCalculator";
 import { useValidators } from "../hooks/useValidators";
 import { useMemo } from "react";
 import { useValidatorMovingAverage } from "../hooks/useValidatorMovingAverage";
+import { weightCopiers } from "../consts";
 
 const defaultText = (theme: Theme) => css`
 	color: ${theme.palette.secondary.dark};
@@ -74,7 +75,10 @@ export const StakingPage = () => {
 				(x) => x.address === TAOSTATS_VALIDATOR_ADDRESS
 			);
 			const filtered = validators.data.filter(
-				(x) => x.address !== TAOSTATS_VALIDATOR_ADDRESS
+				(x) =>
+					x.address !== TAOSTATS_VALIDATOR_ADDRESS &&
+					!weightCopiers.includes(x.address) &&
+					x.name
 			);
 			return [...matched, ...filtered];
 		}
