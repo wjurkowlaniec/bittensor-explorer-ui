@@ -87,6 +87,10 @@ const activeRow = css`
 	background-color: rgba(150, 150, 150, 0.4) !important;
 `;
 
+const hightlightRow = css`
+	background-color: rgba(255, 127, 127, 0.4) !important;
+`;
+
 const sortableHeaderBase = css`
 	cursor: pointer;
 `;
@@ -169,6 +173,7 @@ const spinnerStyle = css`
 
 type ItemsTableItem = {
 	id: string;
+	highlighted?: boolean;
 };
 
 type ItemsTableDataFn<T, A extends any[], R> = (
@@ -438,7 +443,13 @@ export const ItemsTable = <
 							!notFound &&
 							!error &&
 							data?.map((item, index) => (
-								<TableRow key={item.id} css={item.id === active && activeRow}>
+								<TableRow
+									key={item.id}
+									css={[
+										item.highlighted && hightlightRow,
+										item.id === active && activeRow,
+									]}
+								>
 									{showRank ? (
 										<TableCell>
 											{pagination
