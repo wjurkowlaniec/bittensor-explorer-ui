@@ -25,8 +25,8 @@ const header = css`
 `;
 
 const smallLayout = css`
-	width: 1000px;
-	max-width: 100%;
+	max-width: 1000px;
+	width: 100%;
 	margin: 20px 0;
 `;
 
@@ -40,20 +40,25 @@ const statItems = css`
 	flex-direction: column;
 	gap: 8px;
 	flex-grow: 1;
-	width: 1000px;
-	max-width: 100%;
+	max-width: 1000px;
+	width: 100%;
 `;
 
 const statItemsRow = css`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	gap: 40px;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-gap: 20px;
+	@media only screen and (max-width: 899px) {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	@media only screen and (max-width: 779px) {
+		grid-template-columns: repeat(2, 1fr);
+	}
 	width: 100%;
 `;
 
 const font30 = css`
-	font-size: 30px;
+	font-size: 30px !important;
 `;
 
 export const StakingPage = () => {
