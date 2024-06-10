@@ -5,14 +5,15 @@ import Decimal from "decimal.js";
 import Loading from "../components/Loading";
 import NotFound from "../components/NotFound";
 import { StatItem } from "../components/network/StatItem";
-import { NETWORK_CONFIG, TAOSTATS_VALIDATOR_ADDRESS } from "../config";
+import { NETWORK_CONFIG } from "../config";
 import { useAppStats } from "../contexts";
 import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import StakingCalculator from "../components/StakingCalculator";
 import { useValidators } from "../hooks/useValidators";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useValidatorMovingAverage } from "../hooks/useValidatorMovingAverage";
 import { weightCopiers } from "../consts";
+import { Toggle } from "../components/Toggle";
 
 const defaultText = (theme: Theme) => css`
 	color: ${theme.palette.secondary.dark};
@@ -22,6 +23,10 @@ const header = css`
 	font-size: 19px;
 	color: white;
 	margin-top: 40px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 50px;
 `;
 
 const smallLayout = css`
@@ -70,25 +75,21 @@ export const StakingPage = () => {
 			tokenLoading: tokenStatsLoading,
 		},
 	} = useAppStats();
+	const [includesWeightCopiers, setWeightCopiers] = useState(false);
 	const validators = useValidators();
 	const movingAvg = useValidatorMovingAverage(
 		validators.data?.map((x) => x.address) ?? []
 	);
 	const sortedValis = useMemo(() => {
 		if (validators.data) {
-			const matched = validators.data.filter(
-				(x) => x.address === TAOSTATS_VALIDATOR_ADDRESS
-			);
-			const filtered = validators.data.filter(
+			return validators.data.filter(
 				(x) =>
-					x.address !== TAOSTATS_VALIDATOR_ADDRESS &&
-					!weightCopiers.includes(x.address) &&
+					(includesWeightCopiers || !weightCopiers.includes(x.address)) &&
 					x.name
 			);
-			return [...matched, ...filtered];
 		}
 		return [];
-	}, [validators]);
+	}, [validators, includesWeightCopiers]);
 
 	const loading =
 		chainStatsLoading ||
@@ -146,7 +147,15 @@ export const StakingPage = () => {
 						/>
 					</div>
 				</div>
-				<div css={header}>STAKING CALCULATOR</div>
+				<div css={header}>
+					<span>STAKING CALCULATOR</span>
+					<Toggle
+						id="weight_copiers"
+						label="Weight Copiers"
+						value={includesWeightCopiers}
+						onChange={setWeightCopiers}
+					/>
+				</div>
 				<div css={smallLayout}>
 					<div css={description}>
 						Enter TAO quantity and price to calculate staking returns

@@ -2,12 +2,13 @@
 import { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { css, Theme } from "@emotion/react";
-import { NETWORK_CONFIG } from "../config";
+import { NETWORK_CONFIG, TAOSTATS_VALIDATOR_ADDRESS } from "../config";
 import { formatNumber, rawAmountToDecimal } from "../utils/number";
 import { ButtonLink } from "./ButtonLink";
 import { Validator, ValidatorMovingAverageResponse } from "../model/validator";
 import { useSearchParams } from "react-router-dom";
 import ValidatorsStakingInfoTable from "./validators/ValidatorsStakingInfoTable";
+import { weightCopiers } from "../consts";
 
 const calcLayout = css`
 	display: flex;
@@ -179,9 +180,15 @@ function StakingCalculator({
 	};
 
 	useEffect(() => {
-		const defaultVal = validators.find((val) => val.address === valAddr);
-		setValidator(defaultVal ?? validators[0]);
-	}, [valAddr]);
+		const defaultVal = validators.find(
+			(val) => val.address === validator?.address ?? valAddr
+		);
+		const taostatsValidator = validators.find(
+			(val) => val.address === TAOSTATS_VALIDATOR_ADDRESS
+		);
+
+		setValidator(defaultVal ?? taostatsValidator);
+	}, [validators, valAddr]);
 
 	useEffect(() => {
 		if (validator) setResult(calcReturn(validator));
@@ -198,6 +205,7 @@ function StakingCalculator({
 				...validators[i],
 				...ma,
 				...ret,
+				highlighted: weightCopiers.includes(validators[i]?.address ?? ""),
 			});
 		}
 		setValisForTable(newValis);
