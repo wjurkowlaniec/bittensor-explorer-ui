@@ -1,9 +1,12 @@
 /** @jsxImportSource @emotion/react */
+import { useMemo, useState } from "react";
+import { AccountAddress } from "../AccountAddress";
 import { ItemsTable, ItemsTableAttribute } from "../ItemsTable";
 import { Link } from "../Link";
-import { Validator } from "../../model/validator";
 import { NETWORK_CONFIG } from "../../config";
-import { AccountAddress } from "../AccountAddress";
+import { SortDirection } from "../../model/sortDirection";
+import { SortOrder } from "../../model/sortOrder";
+import { Validator } from "../../model/validator";
 import { formatNumber, rawAmountToDecimal } from "../../utils/number";
 
 export type ValidatorsStakingInfoTableProps = {
@@ -18,13 +21,47 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 
 	const { currency, prefix } = NETWORK_CONFIG;
 
+	const [sort, setSort] = useState<SortOrder<string>>({
+		property: "amount",
+		direction: SortDirection.DESC,
+	});
+
+	const handleSortChange = (property?: string) => {
+		if (!property) return;
+		if (property === sort?.property) {
+			setSort({
+				...sort,
+				direction:
+					sort.direction === SortDirection.ASC
+						? SortDirection.DESC
+						: SortDirection.ASC,
+			});
+		} else {
+			setSort({
+				property,
+				direction: SortDirection.DESC,
+			});
+		}
+	};
+
+	const sortedValis = useMemo(() => {
+		return validators.sort((leftObj, rightObj) => {
+			const leftVal = leftObj[sort.property ?? ""],
+				rightVal = rightObj[sort.property ?? ""];
+			if (sort.direction === SortDirection.ASC) return leftVal - rightVal;
+			return rightVal - leftVal;
+		});
+	}, [validators, sort]);
+
 	return (
 		<ItemsTable
-			data={validators}
+			data={sortedValis}
 			notFoundMessage="No validators found"
 			data-test="validators-table"
 			showRank
 			active={selected?.id}
+			sort={sort}
+			onSortChange={handleSortChange}
 		>
 			<ValidatorsStakingInfoTableAttribute
 				label="Validator"
@@ -53,6 +90,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 						</>
 					);
 				}}
+				sortable
+				sortProperty="dailyTAO"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -60,6 +99,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ dailyUSD }) => {
 					return <>${formatNumber(dailyUSD, { decimalPlaces: 2 })}</>;
 				}}
+				sortable
+				sortProperty="dailyUSD"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -72,6 +113,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 						</>
 					);
 				}}
+				sortable
+				sortProperty="monthlyTAO"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -79,6 +122,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ monthlyUSD }) => {
 					return <>${formatNumber(monthlyUSD, { decimalPlaces: 2 })}</>;
 				}}
+				sortable
+				sortProperty="monthlyUSD"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -91,6 +136,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 						</>
 					);
 				}}
+				sortable
+				sortProperty="yearlyTAO"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -98,6 +145,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ yearlyUSD }) => {
 					return <>${formatNumber(yearlyUSD, { decimalPlaces: 2 })}</>;
 				}}
+				sortable
+				sortProperty="yearlyUSD"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -106,6 +155,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ apr }) => {
 					return <>{apr.toFixed(2)}%</>;
 				}}
+				sortable
+				sortProperty="apr"
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
@@ -121,6 +172,8 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 						</>
 					);
 				}}
+				sortable
+				sortProperty="norm30DayAvg"
 			/>
 		</ItemsTable>
 	);
