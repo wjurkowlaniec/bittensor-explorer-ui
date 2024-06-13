@@ -84,16 +84,6 @@ const checkedRadio = css`
 	border-color: #f90;
 `;
 
-const maCss = css`
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	color: #fff;
-	font-size: 13px;
-	margin: 5px 0;
-`;
-
 const calcButton = (theme: Theme) => css`
 	width: 100%;
 	padding: 17px;
@@ -259,10 +249,6 @@ function StakingCalculator({
 						<div css={radioLayout} onClick={() => setAsStaker(false)}>
 							<div css={[normalRadio, !isStaker && checkedRadio]} /> Validator
 						</div>
-					</div>
-					<div css={maCss}>
-						<span>30 Days Moving Average</span>
-						<span>{result.apr.toFixed(2)}%</span>
 					</div>
 					<Button
 						size="small"
