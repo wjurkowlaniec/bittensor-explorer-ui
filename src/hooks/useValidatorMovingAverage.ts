@@ -5,12 +5,11 @@ import { getValidatorsMovingAverage } from "../services/validatorService";
 import { DataError } from "../utils/error";
 import {
 	ValidatorMovingAverage,
-	ValidatorMovingAveragePaginatedResponse,
 	ValidatorMovingAverageResponse,
 } from "../model/validator";
 
-export function useValidator7DayMA(
-	address: string
+export function useValidatorMovingAverage(
+	addresses: string[]
 ): ValidatorMovingAverageResponse {
 	const rollbar = useRollbar();
 
@@ -18,24 +17,15 @@ export function useValidator7DayMA(
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<DataError>();
 
-	const fetchData = useCallback(async () => {
+	const fetchData = useCallback(async (addrs: string[]) => {
 		try {
-			let finished = false;
-			let after: string | undefined = undefined;
-
-			const result: ValidatorMovingAverage[] = [];
-			while (!finished) {
-				const stats: ValidatorMovingAveragePaginatedResponse =
-					await getValidatorsMovingAverage(
-						{ address: { equalTo: address } },
-						"HEIGHT_ASC",
-						after
-					);
-				result.push(...stats.data);
-				finished = !stats.hasNextPage;
-				after = stats.endCursor;
-			}
-			setData(result);
+			const movingAvg = await getValidatorsMovingAverage(
+				{ address: { in: addrs } },
+				"HEIGHT_DESC",
+				undefined,
+				addrs.length
+			);
+			setData(movingAvg.data);
 		} catch (e) {
 			if (e instanceof DataError) {
 				rollbar.error(e);
@@ -49,11 +39,10 @@ export function useValidator7DayMA(
 	}, []);
 
 	useEffect(() => {
-		setData([]);
 		setError(undefined);
 		setLoading(true);
-		fetchData();
-	}, [fetchData]);
+		fetchData(addresses);
+	}, [fetchData, addresses.length]);
 
 	return {
 		loading,

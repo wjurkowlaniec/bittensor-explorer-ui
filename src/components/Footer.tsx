@@ -94,9 +94,7 @@ export const Footer = () => {
 										</a>
 									</li>
 									<li>
-										<a href="https://taostats.io/staking/">
-											Delegation/Staking
-										</a>
+										<a href="/staking">Delegation/Staking</a>
 									</li>
 								</ul>
 								<h5>Resources</h5>

@@ -324,9 +324,7 @@ export const Header = () => {
 													</a>
 												</li>
 												<li>
-													<a href="https://taostats.io/staking/">
-														Delegation/Staking
-													</a>
+													<a href="/staking">Delegation/Staking</a>
 												</li>
 											</ul>
 											<span className="menuItem-glow"></span>
