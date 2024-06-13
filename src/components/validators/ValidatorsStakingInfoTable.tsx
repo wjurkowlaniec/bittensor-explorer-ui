@@ -160,7 +160,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 			/>
 
 			<ValidatorsStakingInfoTableAttribute
-				label={`NOM. / 24h / k${currency}`}
+				label={`NOM./24h/k${currency}`}
 				align="right"
 				render={({ norm30DayAvg }) => {
 					return (
