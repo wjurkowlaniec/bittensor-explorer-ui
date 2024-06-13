@@ -175,7 +175,7 @@ function StakingCalculator({
 			monthlyUSD: monthlyReturn * priceDecimal,
 			yearlyTAO: yearlyReturn,
 			yearlyUSD: yearlyReturn * priceDecimal,
-			apr: apr,
+			apr: apr * valiTake,
 		};
 	};
 
