@@ -105,9 +105,9 @@
         "description": ""
     },
     "21": {
-        "name": "Filetao",
-        "github": "https://github.com/ifrit98/storage-subnet",
-        "description": ""
+        "name": "Omega Any-to-Any",
+        "github": "https://github.com/omegalabsinc/omegalabs-anytoany-bittensor",
+        "description": "OMEGA Any-to-Any is a decentralized, open-source AI project built on the Bittensor blockchain by OMEGA Labs. "
     },
     "22": {
         "name": "Meta Search",
