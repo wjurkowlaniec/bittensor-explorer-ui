@@ -8,6 +8,8 @@ import Spinner from "../Spinner";
 import Decimal from "decimal.js";
 import { NETWORK_CONFIG } from "../../config";
 import { DataError } from "../../utils/error";
+import { css } from "@emotion/react";
+import { Link } from "../Link";
 
 export type ColdkeyInfoTableProps = {
 	coldkey: string;
@@ -17,6 +19,12 @@ export type ColdkeyInfoTableProps = {
 		error?: DataError;
 	};
 };
+
+const addressItem = css`
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+`;
 
 const ColdkeyInfoTableAttribute = InfoTableAttribute<any>;
 
@@ -56,7 +64,16 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 		>
 			<ColdkeyInfoTableAttribute
 				label="Coldkey"
-				render={() => coldkey}
+				render={() => (
+					<Link
+						href={`/account/${coldkey}`}
+						color="white"
+						target="_self"
+						css={addressItem}
+					>
+						{coldkey} ▶
+					</Link>
+				)}
 				copyToClipboard={() => coldkey}
 			/>
 			<ColdkeyInfoTableAttribute
