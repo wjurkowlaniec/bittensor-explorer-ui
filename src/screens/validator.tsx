@@ -515,7 +515,7 @@ export const ValidatorPage = () => {
 						error={extrinsics.error}
 						value="extrinsics"
 					>
-						<ExtrinsicsTable extrinsics={extrinsics} />
+						<ExtrinsicsTable extrinsics={extrinsics} showTime />
 					</TabPane>
 					<TabPane
 						label="Delegation"
