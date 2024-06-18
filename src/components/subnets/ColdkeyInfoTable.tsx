@@ -56,8 +56,8 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 		>
 			<ColdkeyInfoTableAttribute
 				label="Coldkey"
-				render={() => coldkey
-				copyToClipboard={() => coldkey}}
+				render={() => coldkey}
+				copyToClipboard={() => coldkey}
 			/>
 			<ColdkeyInfoTableAttribute
 				label="Total Neurons"
