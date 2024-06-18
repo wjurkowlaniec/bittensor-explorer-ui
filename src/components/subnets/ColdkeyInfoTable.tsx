@@ -10,6 +10,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { DataError } from "../../utils/error";
 
 export type ColdkeyInfoTableProps = {
+	coldkey: string;
 	info: {
 		loading: boolean;
 		data: ColdkeyInfo[];
@@ -20,7 +21,7 @@ export type ColdkeyInfoTableProps = {
 const ColdkeyInfoTableAttribute = InfoTableAttribute<any>;
 
 export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
-	const { info } = props;
+	const { coldkey, info } = props;
 
 	const taoPrice = useTaoPrice();
 
@@ -33,17 +34,14 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 			if (info.loading || !info.data)
 				return [hotkeys.size, 0, totalStake, totalDailyReward];
 
-			info.data.forEach(({hotkey, stake, dailyReward}) => {
+			info.data.forEach(({ hotkey, stake, dailyReward }) => {
 				totalDailyReward = totalDailyReward.add(
 					rawAmountToDecimal(dailyReward.toString())
 				);
 				if (hotkeys.has(hotkey)) return;
 				hotkeys.add(hotkey);
-				totalStake = totalStake.add(
-					rawAmountToDecimal(stake.toString())
-				);
+				totalStake = totalStake.add(rawAmountToDecimal(stake.toString()));
 			});
-
 
 			return [hotkeys.size, info.data.length, totalStake, totalDailyReward];
 		}, [info]);
@@ -56,6 +54,7 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 			notFoundMessage="Invalid coldkey."
 			error={info.error}
 		>
+			<ColdkeyInfoTableAttribute label="Coldkey" render={() => coldkey} />
 			<ColdkeyInfoTableAttribute
 				label="Total Neurons"
 				render={() => totalNeurons}
