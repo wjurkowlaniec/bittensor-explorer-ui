@@ -54,7 +54,11 @@ export const ColdkeyInfoTable = (props: ColdkeyInfoTableProps) => {
 			notFoundMessage="Invalid coldkey."
 			error={info.error}
 		>
-			<ColdkeyInfoTableAttribute label="Coldkey" render={() => coldkey} />
+			<ColdkeyInfoTableAttribute
+				label="Coldkey"
+				render={() => coldkey
+				copyToClipboard={() => coldkey}}
+			/>
 			<ColdkeyInfoTableAttribute
 				label="Total Neurons"
 				render={() => totalNeurons}
