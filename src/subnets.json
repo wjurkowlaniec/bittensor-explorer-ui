@@ -185,12 +185,47 @@
         "description": "The HIP (Human Intelligence Primitive) Subnet is a Bittensor subnet designed to provide human intelligence services to other subnets."
     },
     "37": {
-        "name": "Unknown",
-        "github": "",
-        "description": " "
+        "name": "Finetuning",
+        "github": "https://github.com/macrocosm-os/finetuning",
+        "description": "The Finetuning subnet 37 rewards miners for fine-tuning Large Language Models (LLMs)."
     },
     "38": {
-        "name": "Unknown",
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "39": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "40": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "41": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "42": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "43": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "44": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "45": {
+        "name": "Unregistered",
         "github": "",
         "description": ""
     }
