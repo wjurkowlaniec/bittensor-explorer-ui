@@ -7,7 +7,7 @@ import { NETWORK_CONFIG } from "../../config";
 import { SortDirection } from "../../model/sortDirection";
 import { SortOrder } from "../../model/sortOrder";
 import { Validator } from "../../model/validator";
-import { formatNumber, rawAmountToDecimal } from "../../utils/number";
+import { formatNumber } from "../../utils/number";
 
 export type ValidatorsStakingInfoTableProps = {
 	validators: any[];
@@ -165,9 +165,7 @@ function ValidatorsStakingInfoTable(props: ValidatorsStakingInfoTableProps) {
 				render={({ norm30DayAvg }) => {
 					return (
 						<>
-							{rawAmountToDecimal(norm30DayAvg?.toString())
-								.toNumber()
-								.toFixed(3)}
+							{norm30DayAvg.toFixed(3)}
 							{currency}
 						</>
 					);

@@ -142,6 +142,7 @@ function StakingCalculator({
 		yearlyTAO: 0,
 		yearlyUSD: 0,
 		apr: 0,
+		take: 1,
 	});
 	const [valisForTable, setValisForTable] = useState<any[]>([]);
 
@@ -151,7 +152,7 @@ function StakingCalculator({
 
 		const ma = movingAvg.data.find((x) => x.address === vali.address);
 		const apr =
-			rawAmountToDecimal(ma?.norm30DayAvg.toString()).toNumber() * 365 * 0.1;
+			rawAmountToDecimal(ma?.norm30DayAvg.toString()).toNumber() * 365 / 1000 * 100;
 		const valiTake = isStaker ? 1 - (vali.take ?? 0) / 65535 : 1;
 
 		const yearlyReturn = (amountDecimal * apr * valiTake) / 100;
@@ -166,6 +167,7 @@ function StakingCalculator({
 			yearlyTAO: yearlyReturn,
 			yearlyUSD: yearlyReturn * priceDecimal,
 			apr: apr * valiTake,
+			take: valiTake,
 		};
 	};
 
@@ -193,7 +195,7 @@ function StakingCalculator({
 			const ret = calcReturn(validators[i]);
 			newValis.push({
 				...validators[i],
-				...ma,
+				norm30DayAvg: rawAmountToDecimal(ma?.norm30DayAvg.toString()).toNumber() * ret.take,
 				...ret,
 				highlighted: weightCopiers.includes(validators[i]?.address ?? ""),
 			});
