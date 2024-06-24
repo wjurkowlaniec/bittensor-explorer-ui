@@ -175,9 +175,9 @@
         "description": "Leverages AI to predict health outcomes by analyzing electronic health records."
     },
     "35": {
-        "name": "Unknown",
-        "github": "",
-        "description": ""
+        "name": "Einstein - AIT",
+        "github": "https://github.com/AIT-Protocol/einstein-ait-prod",
+        "description": "Einstein-AIT is a decentralized network utilizing the Bittensor protocol for advanced AI/ML model development focused on mathematics, computational thinking, and data analysis. "
     },
     "36": {
         "name": "Human Intelligence Primitive",
