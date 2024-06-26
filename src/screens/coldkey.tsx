@@ -1,12 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { useDOMEventTrigger } from "../hooks/useDOMEventTrigger";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { css } from "@emotion/react";
 import Certification from "../assets/certification.svg";
 import { useColdKeySubnets } from "../hooks/useColdKeySubnets";
 import { ColdkeySubnets } from "../components/subnets/ColdkeySubnets";
 import { useColdKeyInfo } from "../hooks/useColdKeyInfo";
 import { ColdkeyInfoTable } from "../components/subnets/ColdkeyInfoTable";
+import { useAddressInfo } from "../hooks/useAddressInfo";
 
 const metagraphComment = () => css`
 	font-size: 13px;
@@ -37,7 +38,15 @@ export const ColdkeyPage = () => {
 	const subnetIds = useColdKeySubnets(coldkey);
 	const coldkeyInfo = useColdKeyInfo(coldkey);
 
+	const {
+		data: { loading, isColdkey },
+	} = useAddressInfo(coldkey);
+
 	useDOMEventTrigger("data-loaded", !subnetIds.loading);
+
+	if (!loading && !isColdkey) {
+		return <Navigate to={`/account/${coldkey}`} replace />;
+	}
 
 	return (
 		<>
