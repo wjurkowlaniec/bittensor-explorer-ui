@@ -9,10 +9,21 @@ import { ValidatorsOrder } from "../services/validatorService";
 import { useValidatorsStakeHistory } from "../hooks/useValidatorHistory";
 import { ValidatorsStakeHistoryChart } from "../components/validators/ValidatorsStakeHistoryChart";
 import { css } from "@emotion/react";
+import { Link } from "../components/Link";
 
 const toggleStyle = css`
 	margin-bottom: 20px;
 	display: none;
+`;
+
+const header = css`
+	font-size: 19px;
+	color: white;
+`;
+
+const smallLayout = css`
+	font-size: 14px;
+	margin-top: 15px;
 `;
 
 export const ValidatorsPage = () => {
@@ -31,6 +42,16 @@ export const ValidatorsPage = () => {
 
 	return (
 		<>
+			<Card>
+				<div css={header}>
+					VALIDATORS
+				</div>
+				<div css={smallLayout}>
+					The charts below use live chain data to show current performance of validators. <br/>
+					It should be noted that this data can fluctuate greatly from epoch to epoch and should not be used as a measure of long term validator performance, it is a metric of current performance only. <br/>
+					The top chart plots this data over a 7 day period, however in order to give a more accurate understanding of delegation returns, our {" "}<Link href="/staking">Staking Calculator</Link> uses a 30 day moving average derived from these values over a longer time frame to show a more accurate evaluation of long term validator performance.
+				</div>
+			</Card>
 			<Card data-test="validators-history-chart">
 				<div css={toggleStyle} className="toggle_btn_block">
 					<div className="on-off-toggle">
