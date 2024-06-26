@@ -47,8 +47,9 @@ export const ValidatorsPage = () => {
 					VALIDATORS
 				</div>
 				<div css={smallLayout}>
-					The charts below use live chain data to show current performance of validators. It should be noted that this data can fluctuate greatly from epoch to epoch and should not be used as a measure of long term validaotr performance, it is a metric of current performance only. The top chart plots this data over a 7 day period, however in order to give a more accurate understanding of delegation returns, our 
-					{" "}<Link href="/staking">Staking Calculator</Link> uses a 30 day moving average derived from these values over a longer time frame the show a more accurate evaluation of long term validaotr performance.
+					The charts below use live chain data to show current performance of validators. <br/>
+					It should be noted that this data can fluctuate greatly from epoch to epoch and should not be used as a measure of long term validator performance, it is a metric of current performance only. <br/>
+					The top chart plots this data over a 7 day period, however in order to give a more accurate understanding of delegation returns, our {" "}<Link href="/staking">Staking Calculator</Link> uses a 30 day moving average derived from these values over a longer time frame to show a more accurate evaluation of long term validator performance.
 				</div>
 			</Card>
 			<Card data-test="validators-history-chart">
