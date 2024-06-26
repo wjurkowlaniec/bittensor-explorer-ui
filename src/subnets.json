@@ -150,9 +150,9 @@
         "description": ""
     },
     "30": {
-        "name": "",
-        "github": "",
-        "description": ""
+        "name": "Bettensor",
+        "github": "https://github.com/Bettensor/bettensor",
+        "description": "Bettensor is a sports prediction subnet. The goal of Bettensor is to provide a platform for sports fans to predict the outcomes of their favorite sporting events, and ML/AI researchers to develop new models and strategies to benchmark against good, old fashioned human intelligence and intuition"
     },
     "31": {
         "name": "NAS Chain",
