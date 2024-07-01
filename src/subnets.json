@@ -20,9 +20,9 @@
         "description": ""
     },
     "4": {
-        "name": "Multi Modality",
-        "github": "https://taostats.readme.io/docs/subnet-4-multi-modality",
-        "description": ""
+        "name": "Targon",
+        "github": "https://github.com/manifold-inc/targon",
+        "description": "TARGON (Bittensor Subnet 4) is a redundant deterministic verification mechanism that can be used to interpret and analyze ground truth sources and a query."
     },
     "5": {
         "name": "Open Kaito",
