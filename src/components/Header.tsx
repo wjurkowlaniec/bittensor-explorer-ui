@@ -49,7 +49,7 @@ export const Header = () => {
 				<Marquee
 					speed={0}
 					style={{
-						backgroundColor: "#191919",
+						backgroundColor: "#c27502",
 						borderBottom: "1px solid #333",
 						fontSize: "12px",
 						paddingLeft: "10px",
