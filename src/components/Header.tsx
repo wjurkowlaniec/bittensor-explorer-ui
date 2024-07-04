@@ -4,6 +4,7 @@ import PolygonGray from "../assets/polygon-gray.svg";
 import { useAppStats } from "../contexts";
 import { nFormatter } from "../utils/number";
 import subnets from "../subnets.json";
+import Marquee from "react-fast-marquee";
 
 export const Header = () => {
 	const {
@@ -42,6 +43,20 @@ export const Header = () => {
 
 	return (
 		<header className="new-site-header">
+			<a href="https://keycheck.taostats.io/" 
+				rel="noreferrer"
+				target="_blank">
+				<Marquee
+					speed={0}
+					style={{
+						backgroundColor: "#c27502",
+						borderBottom: "1px solid #333",
+						fontSize: "12px",
+						paddingLeft: "10px",
+					}}
+				>
+					After the recent attack, taostats.io have released an interface to help you determine if your key may have been affected. Click here to check your key.
+				</Marquee></a>
 			<div className="header-top">
 				<div className="container">
 					<div className="ht-inner">
