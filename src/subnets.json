@@ -156,7 +156,7 @@
     },
     "31": {
         "name": "NAS Chain",
-        "github": "https://github.com/nimaaghli/NASChain",
+        "github": "https://github.com/neuronlogic/NASChain",
         "description": "Neural Architecture Search (NAS) is a critical field in machine learning that focuses on automating the design of artificial neural network architectures."
     },
     "32": {
