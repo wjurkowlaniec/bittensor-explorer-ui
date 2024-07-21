@@ -215,9 +215,9 @@
         "description": ""
     },
     "43": {
-        "name": "",
-        "github": "",
-        "description": ""
+        "name": "Graphite",
+        "github": "https://github.com/GraphiteAI/Graphite-Subnet",
+        "description": "A decentralized network for solving graph optimization problems, built on Bittensor, the foremost decentralised AI network."
     },
     "44": {
         "name": "",
