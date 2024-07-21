@@ -145,9 +145,9 @@
         "description": ""
     },
     "29": {
-        "name": "Fractal",
-        "github": "https://github.com/fractal-net/fractal",
-        "description": ""
+        "name": "Coldint",
+        "github": "https://github.com/coldint",
+        "description": "Bittensor COLaborative Destributed INcentivized Training (coldint) Subnet"
     },
     "30": {
         "name": "Bettensor",
