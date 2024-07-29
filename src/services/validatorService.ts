@@ -82,6 +82,9 @@ export async function getValidators(
 				filter: {
 					amount: {
 						greaterThanOrEqualTo: "${rawAmountToDecimaledString(1024)}"
+					},
+					address: {
+						notEqualTo: "5CaNj3BarTHotEK1n513aoTtFeXcjf6uvKzAyzNuv9cirUoW"
 					}
 				}
 			) {
