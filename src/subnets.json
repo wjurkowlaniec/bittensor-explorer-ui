@@ -210,9 +210,9 @@
         "description": "Sportstensor is pioneering the world's most accurate decentralized sports prediction algorithm, built on the Bittensor network."
     },
     "42": {
-        "name": "",
-        "github": "",
-        "description": ""
+        "name": "Code",
+        "github": "https://github.com/brokespace/code/",
+        "description": "Gen42 leverages the Bittensor network to provide decentralized code generation services."
     },
     "43": {
         "name": "Graphite",
