@@ -225,8 +225,8 @@
         "description": "Score Predict is a Bittensor subnet designed to incentivize accurate football (soccer) match predictions."
     },
     "45": {
-        "name": "Palaidn",
-        "github": "https://github.com/palaidn/palaidn_subnet",
-        "description": "Decentralized Fraud Detection on Bittensor"
+        "name": "Unknown",
+        "github": "",
+        "description": ""
     }
 }
