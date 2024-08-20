@@ -225,8 +225,8 @@
         "description": "Score Predict is a Bittensor subnet designed to incentivize accurate football (soccer) match predictions."
     },
     "45": {
-        "name": "Unknown",
-        "github": "",
-        "description": ""
+        "name": "Gen42",
+        "github": "https://github.com/brokespace/code/",
+        "description": "Gen42 leverages the Bittensor network to provide decentralized code generation services. "
     }
 }
