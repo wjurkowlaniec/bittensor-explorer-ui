@@ -190,9 +190,9 @@
         "description": "The Finetuning subnet 37 rewards miners for fine-tuning Large Language Models (LLMs)."
     },
     "38": {
-        "name": "Unknown",
-        "github": "",
-        "description": ""
+        "name": "Tatsu Identity",
+        "github": "https://github.com/TatsuProject/Identity-Subnet",
+        "description": "The Identity Subnet project aims to calculate a human score based on various metrics such as GitHub account, Ethereum balance, Tao balance, Tao staked, and other relevant data points."
     },
     "39": {
         "name": "EdgeMaxxing",
