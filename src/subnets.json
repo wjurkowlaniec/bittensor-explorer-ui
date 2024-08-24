@@ -192,7 +192,7 @@
     "38": {
         "name": "Tatsu Identity",
         "github": "https://github.com/TatsuProject/Identity-Subnet",
-        "description": "The Identity Subnet project aims to calculate a human score based on various metrics such as GitHub account, Ethereum balance, Tao balance, Tao staked, and other relevant data points."
+        "description": "Tatsu Identity is a decentralized protocol that uses a humanized scoring model to securely verify digital identities while preserving privacy."
     },
     "39": {
         "name": "EdgeMaxxing",
