@@ -70,9 +70,9 @@
         "description": ""
     },
     "14": {
-        "name": "LLM Defender",
-        "github": "https://github.com/ceterum1/llm-defender-subnet",
-        "description": ""
+        "name": "Palaidn",
+        "github": "https://github.com/palaidn/palaidn_subnet",
+        "description": "Harnessing the power of decentralization for fraud detection."
     },
     "15": {
         "name": "De-Val",
