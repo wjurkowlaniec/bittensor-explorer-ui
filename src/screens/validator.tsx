@@ -363,7 +363,7 @@ export const ValidatorPage = () => {
 					/>
 					<div css={stakeButton}>
 						<ButtonLink
-							to={`https://delegate.taostats.io/delegate?hotkey=${address}`}
+							to={`https://delegate.taostats.io/staking?hkey=${address}`}
 							size="small"
 							variant="outlined"
 							color="secondary"
