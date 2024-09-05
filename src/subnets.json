@@ -190,9 +190,9 @@
         "description": "The Finetuning subnet 37 rewards miners for fine-tuning Large Language Models (LLMs)."
     },
     "38": {
-        "name": "Tatsu Identity",
-        "github": "https://github.com/TatsuProject/Identity-Subnet",
-        "description": "Tatsu Identity is a decentralized protocol that uses a humanized scoring model to securely verify digital identities while preserving privacy."
+        "name": "Unknown",
+        "github": "",
+        "description": ""
     },
     "39": {
         "name": "EdgeMaxxing",
