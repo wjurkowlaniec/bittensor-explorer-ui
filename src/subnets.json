@@ -180,9 +180,9 @@
         "description": "LogicNet is a decentralized network utilizing the Bittensor protocol for advanced AI/ML model development focused on mathematics, computational thinking, and data analysis. "
     },
     "36": {
-        "name": "Human Intelligence Primitive",
-        "github": "https://github.com/HIP-Labs/HIP-Subnet",
-        "description": "The HIP (Human Intelligence Primitive) Subnet is a Bittensor subnet designed to provide human intelligence services to other subnets."
+        "name": "Unknown",
+        "github": "",
+        "description": ""
     },
     "37": {
         "name": "Finetuning",
