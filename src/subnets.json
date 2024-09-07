@@ -228,5 +228,40 @@
         "name": "Gen42",
         "github": "https://github.com/brokespace/code/",
         "description": "Gen42 leverages the Bittensor network to provide decentralized code generation services. "
+    },
+    "46": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "47": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "48": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "49": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "50": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "51": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
+    },
+    "52": {
+        "name": "Unregistered",
+        "github": "",
+        "description": ""
     }
 }
