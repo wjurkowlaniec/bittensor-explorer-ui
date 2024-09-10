@@ -84,7 +84,7 @@ export async function getValidators(
 						greaterThanOrEqualTo: "${rawAmountToDecimaledString(1024)}"
 					},
 					address: {
-						notEqualTo: "5CaNj3BarTHotEK1n513aoTtFeXcjf6uvKzAyzNuv9cirUoW"
+						notIn: ["5CaNj3BarTHotEK1n513aoTtFeXcjf6uvKzAyzNuv9cirUoW", "5Hddm3iBFD2GLT5ik7LZnT3XJUnRnN8PoeCFgGQgawUVKNm8"]
 					}
 				}
 			) {
